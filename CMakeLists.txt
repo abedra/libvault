@@ -10,7 +10,7 @@ else(CURL_FOUND)
     message(FATAL_ERROR "CURL not found")
 endif(CURL_FOUND)
 
-add_library(libvault SHARED src/libvault.cpp src/libvault.h)
+# add_library(libvault SHARED src/VaultClient.h)
 
-add_executable(example src/libvault.h src/libvault.cpp test.cpp src/VaultClient.cpp src/VaultClient.h src/HttpClient.cpp src/HttpClient.h src/json.hpp)
+add_executable(example test.cpp src/VaultClient.cpp src/VaultClient.h src/HttpClient.cpp src/HttpClient.h src/json.hpp)
 target_link_libraries(example curl)
