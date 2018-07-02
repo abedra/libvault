@@ -39,7 +39,7 @@ auto main() -> int
 This project uses [nlohmann/json](https://github.com/nlohmann/json) internally but does not expose it. This project makes no assumptions about serialization and returns `std:string` values that can be serialized by the tooling of your choice. Should you choose to use [nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp` file to your project and turn the result of  `VaultClient::get()` into a usable structure using the following example:
 
 ```cpp
-# include "json.hpp"
+#include "json.hpp"
 
 using json = nlohmann::json;
 
