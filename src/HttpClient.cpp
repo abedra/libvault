@@ -19,7 +19,7 @@ std::string HttpClient::get(std::string url, std::string token) {
     // curl                                                        \
     //    -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
     //    -X GET                                                   \
-    //    http://localhost:8200/v1/secret/hello
+    //    http://localhost:8200/v1/secret/data/hello
 
     CURL *curl;
     std::string readBuffer;
@@ -56,8 +56,8 @@ int HttpClient::post(std::string url, std::string token, std::string value) {
     //    -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
     //    -H "Content-Type: application/json"                      \
     //    -X POST                                                  \
-    //    -d '{"value":"world"}'                                   \
-    //    http://localhost:8200/v1/secret/hello
+    //    -d '{"data": {"foo":"bar"}}'                                   \
+    //    http://localhost:8200/v1/secret/data/hello
 
     CURL *curl;
     CURLcode res = CURLE_SEND_ERROR;
