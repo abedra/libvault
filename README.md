@@ -8,7 +8,7 @@ This repository contains a C++ library for accessing the KV secret store inside 
 
 ## Usage
 
-The following example shows both a secret put and get. The most common scenario is get for most applications and the put will happen outside of the application by another process.
+The following example shows both a secret put and get. The most common scenario is get for most applications and the put will happen outside of the application by another process. Additional examples are located in the [example](example) directory.
 
 ```cpp
 #include <iostream>
@@ -46,14 +46,15 @@ using json = nlohmann::json;
 // additional code removed for brevity, see example above
 auto data = json::parse(vaultClient.get("my_application");
 std::cout << data["data"] << std::endl;
-``` 
+```
 
 ## Compile and Install
 
 This project uses [CMake](https://cmake.org/). To build the library run the following commands from the project root:
 
 ```sh
-cmake .
+mkdir build
+cd build
+cmake ../
 make
-sudo make install
 ```

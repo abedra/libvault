@@ -1,5 +1,5 @@
 #include <iostream>
-#include "src/VaultClient.h"
+#include "VaultClient.h"
 
 auto main() -> int
 {
