@@ -34,5 +34,6 @@ int VaultClient::put(std::string path, std::unordered_map<std::string, std::stri
     return httpClient.post(vaultUrl(path), token, j.dump());
 }
 
-
-
+int VaultClient::del(std::string path) {
+  return httpClient.del(vaultUrl(path), token);
+}

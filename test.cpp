@@ -3,7 +3,7 @@
 
 auto main() -> int
 {
-    VaultClient vaultClient = VaultClient("localhost", "8200", "3b6122de-3948-8a16-55d3-322e8bab43d8", true);
+    VaultClient vaultClient = VaultClient("localhost", "8200", "s.P8ScpzeiJPp3YcwhA6ja3UpO");
 
     std::unordered_map<std::string, std::string> data(
     {
@@ -16,6 +16,8 @@ auto main() -> int
 
     std::string getResponse = vaultClient.get("hello");
     std::cout << getResponse << std::endl;
+
+    vaultClient.del("hello");
 
     return 0;
 }
