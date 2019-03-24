@@ -1,5 +1,4 @@
-#ifndef LIBVAULT_HTTPCLIENT_H
-#define LIBVAULT_HTTPCLIENT_H
+#pragma once
 
 class HttpClient {
 private:
@@ -12,4 +11,3 @@ public:
     int del(std::string url, std::string token);
 };
 
-#endif //LIBVAULT_HTTPCLIENT_H

@@ -1,5 +1,4 @@
-#ifndef LIBVAULT_VAULTCLIENT_H
-#define LIBVAULT_VAULTCLIENT_H
+#pragma once
 
 #include <unordered_map>
 #include "HttpClient.h"
@@ -20,5 +19,3 @@ public:
     int del(std::string path);
     // TODO: add del with list of versions
 };
-
-#endif //LIBVAULT_VAULTCLIENT_H
