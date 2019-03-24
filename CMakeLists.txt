@@ -23,7 +23,7 @@ add_library(vault SHARED
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
-  SOVERSION 1
+  SOVERSION 0
   PUBLIC_HEADER "include/VaultClient.h;include/HttpClient.h")
 
 target_include_directories(vault PRIVATE include)
