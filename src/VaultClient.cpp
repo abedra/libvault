@@ -27,9 +27,9 @@ std::string VaultClient::get(std::string path) {
 int VaultClient::put(std::string path, std::unordered_map<std::string, std::string> map) {
   json j;
   j["data"] = json::object();
-  std::for_each(map.begin(), map.end(), [&](std::pair<std::string, std::string> pair) {
-                                          j["data"][pair.first] = pair.second;
-                                        });
+  std::for_each(map.begin(), map.end(), [&](auto pair) {
+    j["data"][pair.first] = pair.second;
+  });
 
   return httpClient.post(vaultUrl(path), token, j.dump());
 }
