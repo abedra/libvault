@@ -34,7 +34,8 @@ int VaultClient::put(std::string path,
 		     std::unordered_map<std::string, std::string> map) {
   json j;
   j["data"] = json::object();
-  std::for_each(map.begin(), map.end(), [&](auto pair) {
+  std::for_each(map.begin(), map.end(),
+		[&](std::pair<std::string, std::string> pair) {
     j["data"][pair.first] = pair.second;
   });
 
