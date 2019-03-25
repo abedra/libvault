@@ -7,9 +7,15 @@
 
 using json = nlohmann::json;
 
-VaultClient::VaultClient(std::string host, std::string port, std::string token) : VaultClient(host, port, token, false){}
+VaultClient::VaultClient(std::string host,
+			 std::string port,
+			 std::string token) :
+  VaultClient(host, port, token, false) {}
 
-VaultClient::VaultClient(std::string host, std::string port, std::string token, bool debug) {
+VaultClient::VaultClient(std::string host,
+			 std::string port,
+			 std::string token,
+			 bool debug) {
   this->host = host;
   this->port = port;
   this->token = token;
@@ -24,7 +30,8 @@ std::string VaultClient::get(std::string path) {
   return httpClient.get(vaultUrl(path), token);
 }
 
-int VaultClient::put(std::string path, std::unordered_map<std::string, std::string> map) {
+int VaultClient::put(std::string path,
+		     std::unordered_map<std::string, std::string> map) {
   json j;
   j["data"] = json::object();
   std::for_each(map.begin(), map.end(), [&](auto pair) {

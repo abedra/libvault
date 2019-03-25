@@ -3,7 +3,10 @@
 
 #include "HttpClient.h"
 
-static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp)
+static size_t writeCallback(void *contents,
+			    size_t size,
+			    size_t nmemb,
+			    void *userp)
 {
   ((std::string *) userp)->append((char *) contents, size * nmemb);
   return size * nmemb;
@@ -16,10 +19,10 @@ HttpClient::HttpClient(bool debug) {
 }
 
 std::string HttpClient::get(std::string url, std::string token) {
-  // curl                                                        \
-  //    -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
-  //    -X GET                                                   \
-  //    http://localhost:8200/v1/secret/data/hello
+  // curl                                                     \
+  // -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
+  // -X GET                                                   \
+  // http://localhost:8200/v1/secret/data/hello
 
   CURL *curl;
   std::string readBuffer;
@@ -41,7 +44,8 @@ std::string HttpClient::get(std::string url, std::string token) {
 
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
-      std::cout << "GET " << url << " failed: " << curl_easy_strerror(res) << std::endl;
+      std::cout << "GET " << url << " failed: " << curl_easy_strerror(res)
+		<< std::endl;
     }
 
     curl_easy_cleanup(curl);
@@ -52,12 +56,12 @@ std::string HttpClient::get(std::string url, std::string token) {
 }
 
 int HttpClient::post(std::string url, std::string token, std::string value) {
-  // curl                                                        \
-  //    -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
-  //    -H "Content-Type: application/json"                      \
-  //    -X POST                                                  \
-  //    -d '{"data": {"foo":"bar"}}'                             \
-  //    http://localhost:8200/v1/secret/data/hello
+  // curl                                                     \
+  // -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
+  // -H "Content-Type: application/json"                      \
+  // -X POST                                                  \
+  // -d '{"data": {"foo":"bar"}}'                             \
+  // http://localhost:8200/v1/secret/data/hello
 
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
@@ -83,7 +87,8 @@ int HttpClient::post(std::string url, std::string token, std::string value) {
     res = curl_easy_perform(curl);
 
     if (res != CURLE_OK) {
-      std::cout << "POST " << url << " failed: " << curl_easy_strerror(res) << std::endl;
+      std::cout << "POST " << url << " failed: " << curl_easy_strerror(res)
+		<< std::endl;
     }
 
     curl_easy_cleanup(curl);
@@ -94,11 +99,11 @@ int HttpClient::post(std::string url, std::string token, std::string value) {
 }
 
 int HttpClient::del(std::string url, std::string token) {
-  // curl                                                        \
-  //    -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
-  //    -H "Content-Type: application/json"                      \
-  //    -X DELETE                                                \
-  //    http://localhost:8200/v1/secret/data/hello
+  // curl                                                     \
+  // -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
+  // -H "Content-Type: application/json"                      \
+  // -X DELETE                                                \
+  // http://localhost:8200/v1/secret/data/hello
 
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
@@ -124,7 +129,8 @@ int HttpClient::del(std::string url, std::string token) {
     res = curl_easy_perform(curl);
 
     if (res != CURLE_OK) {
-      std::cout << "DELETE " << url << " failed: " << curl_easy_strerror(res) << std::endl;
+      std::cout << "DELETE " << url << " failed: " << curl_easy_strerror(res)
+		<< std::endl;
     }
 
     curl_easy_cleanup(curl);
