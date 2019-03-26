@@ -5,17 +5,17 @@
 
 class VaultClient {
 private:
-    std::string host;
-    std::string port;
-    std::string token;
-    bool debug;
-    HttpClient httpClient = (bool)nullptr;
-    std::string vaultUrl(std::string path);
+  std::string host;
+  std::string port;
+  std::string token;
+  bool debug;
+  HttpClient httpClient = (bool)nullptr;
+  std::string vaultUrl(std::string base, std::string path);
 public:
-    VaultClient(std::string host, std::string port, std::string token);
-    VaultClient(std::string host, std::string port, std::string token, bool debug);
-    std::string get(std::string path);
-    int put(std::string path, std::unordered_map<std::string, std::string> map);
-    int del(std::string path);
-    // TODO: add del with list of versions
+  VaultClient(std::string host, std::string port);
+  VaultClient(std::string host, std::string port, bool debug);
+  void authenticate(std::string role_id, std::string secret_id);
+  std::string get(std::string path);
+  std::string put(std::string path, std::unordered_map<std::string, std::string> map);
+  std::string del(std::string path);
 };

@@ -29,7 +29,7 @@ HttpClient::get(std::string url, std::string token) {
   return result.second;
 }
 
-int
+std::string
 HttpClient::post(std::string url, std::string token, std::string value) {
   auto result = executeRequest(url, token, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
@@ -39,12 +39,14 @@ HttpClient::post(std::string url, std::string token, std::string value) {
     std::cout
       << "POST " << url << " failed: " << curl_easy_strerror(result.first)
       << std::endl;
+
+    return "";
   }
 
-  return result.first;
+  return result.second;
 }
 
-int
+std::string
 HttpClient::del(std::string url, std::string token) {
   auto result = executeRequest(url, token, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
@@ -54,14 +56,16 @@ HttpClient::del(std::string url, std::string token) {
     std::cout
       << "DELETE " << url << " failed: " << curl_easy_strerror(result.first)
       << std::endl;
+
+    return "";
   }
 
-  return result.first;
+  return result.second;
 }
 
 std::pair<CURLcode, std::string>
-HttpClient::executeRequest(std::string &url,
-                           std::string &token,
+HttpClient::executeRequest(std::string url,
+                           std::string token,
                            std::function<void(CURL *curl)> callback) {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
@@ -70,7 +74,9 @@ HttpClient::executeRequest(std::string &url,
   curl = curl_easy_init();
   if (curl) {
     struct curl_slist *chunk = nullptr;
-    chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token).c_str());
+    if (!token.empty()) {
+      chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token).c_str());
+    }
     chunk = curl_slist_append(chunk, "Content-Type: application/json");
 
     // TODO: SSL verify host and peer
