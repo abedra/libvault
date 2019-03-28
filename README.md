@@ -12,25 +12,27 @@ The following example shows both a secret put and get. The most common scenario 
 
 ```cpp
 #include <iostream>
-#include "src/VaultClient.h"
+#include "VaultClient.h"
 
 auto main() -> int
 {
-    VaultClient vaultClient = VaultClient("localhost", "8200", "3b6122de-3948-8a16-55d3-322e8bab43d8", true);
+    auto authStrategy = AppRole("9ce0eddc-0cd5-dd87-4c08-eb5ee9b3eca6", "043f002e-de24-6cd0-a37c-d44601400fb1");
+    auto vaultClient = VaultClient("127.0.0.1", "8200", authStrategy);
+    auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
+    auto kv2 = KeyValue(vaultClient, "/test");
 
     std::unordered_map<std::string, std::string> data(
     {
-        {"db_user","user"},
-        {"db_pass","pass"},
-        {"api_key", "abc123"},
+        {"foo","world"},
+        {"baz","quux"},
+        {"something", "something else"},
     });
 
-    vaultClient.put("my_application", data);
+    kv.put("hello", data);
+    kv2.put("hello", data);
 
-    std::string getResponse = vaultClient.get("my_application");
-    std::cout << getResponse << std::endl;
-
-    return 0;
+    std::cout << kv.get("hello") << std::endl;
+    std::cout << kv2.get("hello") << std::endl;
 }
 ```
 
