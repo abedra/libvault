@@ -14,7 +14,14 @@ KeyValue::KeyValue(VaultClient &client, std::string mount, KeyValue::Version ver
   version_(version), client_(client), mount_(mount) {}
 
 std::string KeyValue::getUrl(std::string path) {
-  return client_.getUrl("/v1" + mount_ + "/", path);
+  switch (version_) {
+  case KeyValue::Version::v1:
+    return client_.getUrl("/v1" + mount_ + "/", path);
+  case KeyValue::Version::v2:
+    return client_.getUrl("/v1" + mount_ + "/data/", path);
+  default:
+    return "ERROR";
+  }
 }
 
 std::string KeyValue::get(std::string path) {
