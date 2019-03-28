@@ -17,7 +17,6 @@ add_subdirectory(nlohmann_json)
 
 add_library(vault SHARED
   include/VaultClient.h
-  include/HttpClient.h
   src/VaultClient.cpp
   src/HttpClient.cpp
   src/KeyValue.cpp)
@@ -25,7 +24,7 @@ add_library(vault SHARED
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION 0
-  PUBLIC_HEADER "include/VaultClient.h;include/HttpClient.h")
+  PUBLIC_HEADER "include/VaultClient.h")
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)

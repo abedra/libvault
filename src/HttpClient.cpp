@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "HttpClient.h"
+#include "VaultClient.h"
 
 static size_t
 writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {

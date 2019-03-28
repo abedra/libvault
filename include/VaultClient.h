@@ -1,21 +1,34 @@
 #pragma once
 
 #include <unordered_map>
-#include "HttpClient.h"
+#include <curl/curl.h>
+#include <functional>
+
+class HttpClient {
+private:
+  bool debug;
+  std::pair<CURLcode, std::string> executeRequest(std::string url, std::string token, std::function<void(CURL *curl)> callback);
+public:
+  HttpClient();
+  HttpClient(bool debug);
+  std::string get(std::string url, std::string string);
+  std::string post(std::string url, std::string token, std::string value);
+  std::string del(std::string url, std::string token);
+};
 
 class VaultClient {
 private:
-  std::string host;
-  std::string port;
-  std::string token;
-  bool debug;
-  HttpClient httpClient = (bool)nullptr;
+  std::string host_;
+  std::string port_;
+  std::string token_;
+  bool debug_;
+  HttpClient httpClient_ = (bool)nullptr;
 public:
   VaultClient(std::string host, std::string port);
   VaultClient(std::string host, std::string port, bool debug);
   void authenticate(std::string role_id, std::string secret_id);
-  std::string getToken() { return token; }
-  HttpClient getHttpClient() { return httpClient; }
+  std::string getToken() { return token_; }
+  HttpClient getHttpClient() { return httpClient_; }
   std::string getUrl(std::string base, std::string path);
 };
 
