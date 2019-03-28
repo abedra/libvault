@@ -8,11 +8,9 @@ writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
   return size * nmemb;
 }
 
-HttpClient::HttpClient() : HttpClient(false) {}
+HttpClient::HttpClient() : debug_(false) {}
 
-HttpClient::HttpClient(bool debug) {
-  this->debug = debug;
-}
+HttpClient::HttpClient(bool debug) : debug_(debug) {}
 
 std::string
 HttpClient::get(std::string url, std::string token) {
@@ -85,7 +83,7 @@ HttpClient::executeRequest(std::string url,
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
 
-    if (debug) {
+    if (debug_) {
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
     }
 

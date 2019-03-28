@@ -19,7 +19,8 @@ add_library(vault SHARED
   include/VaultClient.h
   src/VaultClient.cpp
   src/HttpClient.cpp
-  src/KeyValue.cpp)
+  src/KeyValue.cpp
+  src/AppRole.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}

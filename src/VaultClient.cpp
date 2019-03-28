@@ -1,23 +1,15 @@
-#include <string>
-#include <iostream>
-#include <nlohmann/json.hpp>
-
 #include "VaultClient.h"
 
-VaultClient::VaultClient(std::string host, std::string port) :
-  host_(host), port_(port), debug_(false) {}
+VaultClient::VaultClient(std::string host, std::string port, AppRole& appRole) :
+  host_(host), port_(port), appRole_(appRole) {
+  this->httpClient_ = HttpClient(false);
+  token_ = appRole_.authenticate(this);
+}
 
-VaultClient::VaultClient(std::string host, std::string port, bool debug) :
-  host_(host), port_(port), debug_(debug) {}
-
-void VaultClient::authenticate(std::string role_id, std::string secret_id) {
-  nlohmann::json j;
-  j = nlohmann::json::object();
-  j["role_id"] = role_id;
-  j["secret_id"] = secret_id;
-
-  auto response = httpClient_.post(getUrl("/v1/auth/approle", "/login"), token_, j.dump());
-  token_ = nlohmann::json::parse(response)["auth"]["client_token"];
+VaultClient::VaultClient(std::string host, std::string port, AppRole& appRole, bool debug) :
+  host_(host), port_(port), appRole_(appRole) {
+  this->httpClient_ = HttpClient(debug);
+  token_ = appRole_.authenticate(this);
 }
 
 std::string VaultClient::getUrl(std::string base, std::string path) {
