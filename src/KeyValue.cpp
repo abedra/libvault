@@ -24,12 +24,13 @@ std::string KeyValue::getUrl(std::string path) {
   }
 }
 
-std::string KeyValue::get(std::string path) {
-  return client_.getHttpClient().get(getUrl(path), client_.getToken());
+std::experimental::optional<std::string> KeyValue::get(std::string path) {
+  auto response = client_.getHttpClient().get(getUrl(path), client_.getToken());
+  return response ? std::experimental::optional<std::string>(response.value().body) : std::experimental::nullopt;
 }
 
-std::string KeyValue::put(std::string path,
-			  std::unordered_map<std::string, std::string> map) {
+std::experimental::optional<std::string> KeyValue::put(std::string path,
+						       std::unordered_map<std::string, std::string> map) {
   nlohmann::json j;
   j["data"] = nlohmann::json::object();
   std::for_each(map.begin(), map.end(),
@@ -37,9 +38,11 @@ std::string KeyValue::put(std::string path,
     j["data"][pair.first] = pair.second;
   });
 
-  return client_.getHttpClient().post(getUrl(path), client_.getToken(), j.dump());
+  auto response = client_.getHttpClient().post(getUrl(path), client_.getToken(), j.dump());
+  return response ? std::experimental::optional<std::string>(response.value().body) : std::experimental::nullopt;
 }
 
-std::string KeyValue::del(std::string path) {
-  return client_.getHttpClient().del(getUrl(path), client_.getToken());
+std::experimental::optional<std::string> KeyValue::del(std::string path) {
+  auto response = client_.getHttpClient().del(getUrl(path), client_.getToken());
+  return response ? std::experimental::optional<std::string>(response.value().body) : std::experimental::nullopt;
 }

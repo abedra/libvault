@@ -12,62 +12,63 @@ HttpClient::HttpClient() : debug_(false) {}
 
 HttpClient::HttpClient(bool debug) : debug_(debug) {}
 
-std::string
+std::experimental::optional<HttpResponse>
 HttpClient::get(std::string url, std::string token) {
-  auto result = executeRequest(url, token, [&](CURL *curl) {});
+  auto curlResponse = executeRequest(url, token, [&](CURL *curl) {});
 
-  if (result.first != CURLE_OK) {
+  if (curlResponse.curlCode != CURLE_OK) {
     std::cout
-      << "GET " << url << " failed: " << curl_easy_strerror(result.first)
+      << "GET " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
       << std::endl;
 
-    return "";
+    return std::experimental::nullopt;
   }
 
-  return result.second;
+  return std::experimental::optional<HttpResponse>(curlResponse);
 }
 
-std::string
+std::experimental::optional<HttpResponse>
 HttpClient::post(std::string url, std::string token, std::string value) {
-  auto result = executeRequest(url, token, [&](CURL *curl) {
+  auto curlResponse = executeRequest(url, token, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 
-  if (result.first != CURLE_OK) {
+  if (curlResponse.curlCode != CURLE_OK) {
     std::cout
-      << "POST " << url << " failed: " << curl_easy_strerror(result.first)
+      << "POST " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
       << std::endl;
 
-    return "";
+    return std::experimental::nullopt;
   }
 
-  return result.second;
+  return std::experimental::optional<HttpResponse>(curlResponse);
 }
 
-std::string
+std::experimental::optional<HttpResponse>
 HttpClient::del(std::string url, std::string token) {
-  auto result = executeRequest(url, token, [&](CURL *curl) {
+  auto curlResponse = executeRequest(url, token, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 
-  if (result.first != CURLE_OK) {
+  if (curlResponse.curlCode != CURLE_OK) {
     std::cout
-      << "DELETE " << url << " failed: " << curl_easy_strerror(result.first)
+      << "DELETE " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
       << std::endl;
 
-    return "";
+    return std::experimental::nullopt;
   }
 
-  return result.second;
+  return std::experimental::optional<HttpResponse>(curlResponse);
 }
 
-std::pair<CURLcode, std::string>
+CurlResponse
 HttpClient::executeRequest(std::string url,
                            std::string token,
                            std::function<void(CURL *curl)> callback) {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
   std::string buffer;
+  long response_code = 0;
 
   curl = curl_easy_init();
   if (curl) {
@@ -90,9 +91,14 @@ HttpClient::executeRequest(std::string url,
     callback(curl);
 
     res = curl_easy_perform(curl);
+
+    if (res == CURLE_OK) {
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+    }
+
     curl_easy_cleanup(curl);
     curl_slist_free_all(chunk);
   }
 
-  return std::make_pair(res, buffer);
+  return CurlResponse{res, response_code, buffer};
 }

@@ -3,20 +3,33 @@
 #include <unordered_map>
 #include <curl/curl.h>
 #include <functional>
+#include <experimental/optional>
 
 class AppRole;
+
+struct CurlResponse {
+  CURLcode curlCode;
+  long statusCode;
+  std::string body;
+};
+
+struct HttpResponse {
+  HttpResponse(CurlResponse curlResponse) : statusCode(curlResponse.statusCode), body(curlResponse.body) {}
+  long statusCode;
+  std::string body;
+};
 
 class HttpClient {
 public:
   HttpClient();
   HttpClient(bool debug);
 
-  std::string get(std::string url, std::string string);
-  std::string post(std::string url, std::string token, std::string value);
-  std::string del(std::string url, std::string token);
+  std::experimental::optional<HttpResponse> get(std::string url, std::string string);
+  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string value);
+  std::experimental::optional<HttpResponse> del(std::string url, std::string token);
 private:
   bool debug_;
-  std::pair<CURLcode, std::string> executeRequest(std::string url, std::string token, std::function<void(CURL *curl)> callback);
+  CurlResponse executeRequest(std::string url, std::string token, std::function<void(CURL *curl)> callback);
 };
 
 class VaultClient {
@@ -41,7 +54,7 @@ class AppRole {
 public:
   AppRole(std::string role_id, std::string secret_id);
 
-  std::string authenticate(VaultClient* vaultClient);
+  std::experimental::optional<std::string> authenticate(VaultClient* vaultClient);
 private:
   std::string role_id_;
   std::string secret_id_;
@@ -58,9 +71,9 @@ public:
   KeyValue(VaultClient& client, KeyValue::Version version);
   KeyValue(VaultClient& client, std::string mount, KeyValue::Version version);
 
-  std::string get(std::string path);
-  std::string put(std::string path, std::unordered_map<std::string, std::string> map);
-  std::string del(std::string path);
+  std::experimental::optional<std::string> get(std::string path);
+  std::experimental::optional<std::string> put(std::string path, std::unordered_map<std::string, std::string> map);
+  std::experimental::optional<std::string> del(std::string path);
 private:
   VaultClient client_;
   KeyValue::Version version_;

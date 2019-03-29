@@ -8,12 +8,16 @@ std::string AppRole::getUrl(VaultClient* vaultClient, std::string path) {
   return vaultClient->getUrl("/v1/auth/approle", path);
 }
 
-std::string AppRole::authenticate(VaultClient* vaultClient) {
+std::experimental::optional<std::string> AppRole::authenticate(VaultClient* vaultClient) {
   nlohmann::json j;
   j = nlohmann::json::object();
   j["role_id"] = role_id_;
   j["secret_id"] = secret_id_;
 
   auto response = vaultClient->getHttpClient().post(getUrl(vaultClient, "/login"), vaultClient->getToken(), j.dump());
-  return nlohmann::json::parse(response)["auth"]["client_token"];
+  if (response) {
+    return nlohmann::json::parse(response.value().body)["auth"]["client_token"];
+  } else {
+    return std::experimental::nullopt;
+  }
 }
