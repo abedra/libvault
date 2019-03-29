@@ -13,8 +13,8 @@ HttpClient::HttpClient() : debug_(false) {}
 HttpClient::HttpClient(bool debug) : debug_(debug) {}
 
 std::experimental::optional<HttpResponse>
-HttpClient::get(std::string url, std::string token) {
-  auto curlResponse = executeRequest(url, token, [&](CURL *curl) {});
+HttpClient::get(std::string url, std::string token, std::string ns) {
+  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {});
 
   if (curlResponse.curlCode != CURLE_OK) {
     std::cout
@@ -28,8 +28,8 @@ HttpClient::get(std::string url, std::string token) {
 }
 
 std::experimental::optional<HttpResponse>
-HttpClient::post(std::string url, std::string token, std::string value) {
-  auto curlResponse = executeRequest(url, token, [&](CURL *curl) {
+HttpClient::post(std::string url, std::string token, std::string ns, std::string value) {
+  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 
@@ -45,8 +45,8 @@ HttpClient::post(std::string url, std::string token, std::string value) {
 }
 
 std::experimental::optional<HttpResponse>
-HttpClient::del(std::string url, std::string token) {
-  auto curlResponse = executeRequest(url, token, [&](CURL *curl) {
+HttpClient::del(std::string url, std::string token, std::string ns) {
+  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 
@@ -64,6 +64,7 @@ HttpClient::del(std::string url, std::string token) {
 CurlResponse
 HttpClient::executeRequest(std::string url,
                            std::string token,
+			   std::string ns,
                            std::function<void(CURL *curl)> callback) {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
@@ -73,9 +74,15 @@ HttpClient::executeRequest(std::string url,
   curl = curl_easy_init();
   if (curl) {
     struct curl_slist *chunk = nullptr;
+
     if (!token.empty()) {
       chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token).c_str());
     }
+
+    if (!ns.empty()) {
+      chunk = curl_slist_append(chunk, ("X-Vault-Namespace: " + ns).c_str());
+    }
+
     chunk = curl_slist_append(chunk, "Content-Type: application/json");
 
     // TODO: SSL verify host and peer

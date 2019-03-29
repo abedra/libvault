@@ -24,12 +24,12 @@ public:
   HttpClient();
   HttpClient(bool debug);
 
-  std::experimental::optional<HttpResponse> get(std::string url, std::string string);
-  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string value);
-  std::experimental::optional<HttpResponse> del(std::string url, std::string token);
+  std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns);
+  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value);
+  std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns);
 private:
   bool debug_;
-  CurlResponse executeRequest(std::string url, std::string token, std::function<void(CURL *curl)> callback);
+  CurlResponse executeRequest(std::string url, std::string token, std::string ns, std::function<void(CURL *curl)> callback);
 };
 
 class VaultClient {
@@ -37,16 +37,20 @@ public:
   VaultClient(std::string host, std::string port, AppRole& appRole);
   VaultClient(std::string host, std::string port, AppRole& appRole, bool debug);
 
+  void setNamespace(std::string ns) { namespace_ = ns; }
+
   std::string getToken() { return token_; }
+  std::string getNamespace() { return namespace_; }
+  std::string getUrl(std::string base, std::string path);
   HttpClient& getHttpClient() { return httpClient_; }
 
-  std::string getUrl(std::string base, std::string path);
   bool isAuthenticated() { return !token_.empty(); }
 private:
   AppRole& appRole_;
   std::string host_;
   std::string port_;
   std::string token_;
+  std::string namespace_;
   bool debug_;
   HttpClient httpClient_ = (bool)nullptr;
 };
