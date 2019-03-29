@@ -41,6 +41,7 @@ public:
   HttpClient& getHttpClient() { return httpClient_; }
 
   std::string getUrl(std::string base, std::string path);
+  bool isAuthenticated() { return !token_.empty(); }
 private:
   AppRole& appRole_;
   std::string host_;
