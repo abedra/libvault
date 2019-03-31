@@ -4,9 +4,10 @@ language: cpp
 compiler:
   - gcc
 addons:
-  sources:
-    - ubuntu-toolchain-r-test
-  packages:
-    - g++-6
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-6
 script:
   - CXX=/usr/bin/g++-6 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make
