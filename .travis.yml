@@ -1,7 +1,7 @@
 distro: trusty
 sudo: true
 before_install:
-  - sudo apt-get -y install catch-devel
+  - sudo apt-get -y install catch
 language: cpp
 compiler:
   - gcc
