@@ -1,7 +1,5 @@
 distro: trusty
 sudo: true
-before_install:
-  - sudo apt-get -y install catch
 language: cpp
 compiler:
   - gcc
@@ -12,4 +10,8 @@ addons:
     packages:
       - g++-6
 script:
+  - git clone https://github.com/catchorg/Catch2.git
+  - cd Catch2
+  - cmake -Bbuild -H. -DBUILD_TESTING=OFF
+  - sudo cmake --build build/ --target install
   - CXX=/usr/bin/g++-6 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make
