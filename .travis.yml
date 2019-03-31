@@ -12,6 +12,7 @@ addons:
 script:
   - git clone https://github.com/catchorg/Catch2.git
   - cd Catch2
-  - cmake -Bbuild -H. -DBUILD_TESTING=OFF
-  - cmake --build build/ --target install
+  - cmake -Bbuild -H. -DCMAKE_INSTALL_PREFIX:PATH=/usr -DBUILD_TESTING=OFF
+  - cmake --build build/
+  - cd build && sudo make install
   - CXX=/usr/bin/g++-6 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make
