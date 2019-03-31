@@ -1,5 +1,12 @@
+distro: trusty
+sudo: true
 language: cpp
 compiler:
   - gcc
+addons:
+  sources:
+    - ubuntu-toolchain-r-test
+  packages:
+    - g++-6
 script:
-  - mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make
+  - CXX=/usr/bin/g++-6 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make
