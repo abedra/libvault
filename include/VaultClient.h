@@ -27,6 +27,7 @@ public:
   std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns);
   std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value);
   std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns);
+  std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns);
 private:
   bool debug_;
   CurlResponse executeRequest(std::string url, std::string token, std::string ns, std::function<void(CURL *curl)> callback);

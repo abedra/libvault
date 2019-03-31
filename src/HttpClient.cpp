@@ -61,6 +61,23 @@ HttpClient::del(std::string url, std::string token, std::string ns) {
   return std::experimental::optional<HttpResponse>(curlResponse);
 }
 
+std::experimental::optional<HttpResponse>
+HttpClient::list(std::string url, std::string token, std::string ns) {
+  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
+  });
+
+  if (curlResponse.curlCode != CURLE_OK) {
+    std::cout
+      << "LIST " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
+      << std::endl;
+
+    return std::experimental::nullopt;
+  }
+
+  return std::experimental::optional<HttpResponse>(curlResponse);
+}
+
 CurlResponse
 HttpClient::executeRequest(std::string url,
                            std::string token,
