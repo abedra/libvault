@@ -9,5 +9,6 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-6
+      - catch-devel
 script:
   - CXX=/usr/bin/g++-6 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make

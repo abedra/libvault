@@ -38,4 +38,12 @@ install(TARGETS vault
 
 configure_file(vault.pc.in vault.pc @ONLY)
 
-install(FILES ${CMAKE_BINARY_DIR}/vault.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+find_package(Catch2 REQUIRED)
+enable_testing()
+
+add_executable(libvault_test test/test.cpp)
+target_link_libraries(libvault_test Catch2::Catch2)
+
+include(CTest)
+include(Catch)
+catch_discover_tests(libvault_test)
