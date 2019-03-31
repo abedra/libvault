@@ -16,4 +16,4 @@ script:
   - cmake --build build/
   - cd build && sudo make install
   - cd ../..
-  - CXX=/usr/bin/g++-6 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make
+  - CXX=/usr/bin/g++-6 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make && make test
