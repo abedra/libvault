@@ -29,7 +29,6 @@ KeyValue::KeyValue(VaultClient &client,
   mount_(mount)
 {}
 
-// TODO: this should be an optional
 std::string
 KeyValue::getUrl(std::string path) {
   switch (version_) {
@@ -38,7 +37,7 @@ KeyValue::getUrl(std::string path) {
   case KeyValue::Version::v2:
     return client_.getUrl("/v1" + mount_ + "/data/", path);
   default:
-    return "ERROR";
+    return client_.getUrl("/v1" + mount_ + "/data/", path);
   }
 }
 
