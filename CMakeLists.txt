@@ -42,6 +42,9 @@ find_package(Catch2 REQUIRED)
 enable_testing()
 
 add_executable(libvault_test test/test.cpp)
+target_include_directories(libvault_test PRIVATE include)
+target_link_libraries(libvault_test vault)
+target_link_libraries(libvault_test curl)
 target_link_libraries(libvault_test Catch2::Catch2)
 
 include(CTest)

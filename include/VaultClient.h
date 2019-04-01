@@ -6,6 +6,7 @@
 #include <experimental/optional>
 
 class AppRole;
+class VaultClient;
 
 struct CurlResponse {
   CURLcode curlCode;
@@ -17,6 +18,11 @@ struct HttpResponse {
   HttpResponse(CurlResponse curlResponse) : statusCode(curlResponse.statusCode), body(curlResponse.body) {}
   long statusCode;
   std::string body;
+};
+
+class AuthenticationStrategy {
+public:
+  virtual std::experimental::optional<std::string> authenticate(VaultClient* client) = 0;
 };
 
 class HttpClient {
@@ -35,8 +41,8 @@ private:
 
 class VaultClient {
 public:
-  VaultClient(std::string host, std::string port, AppRole& appRole);
-  VaultClient(std::string host, std::string port, AppRole& appRole, bool debug);
+  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy);
+  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy, bool debug);
 
   void setNamespace(std::string ns) { namespace_ = ns; }
 
@@ -47,7 +53,7 @@ public:
 
   bool isAuthenticated() { return !token_.empty(); }
 private:
-  AppRole& appRole_;
+  AuthenticationStrategy& authStrategy_;
   std::string host_;
   std::string port_;
   std::string token_;
@@ -56,7 +62,7 @@ private:
   HttpClient httpClient_ = (bool)nullptr;
 };
 
-class AppRole {
+class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
 

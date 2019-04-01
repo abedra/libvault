@@ -2,10 +2,10 @@
 
 VaultClient::VaultClient(std::string host,
 			 std::string port,
-			 AppRole& appRole) :
-  host_(host), port_(port), appRole_(appRole) {
+			 AuthenticationStrategy& authStrategy) :
+  host_(host), port_(port), authStrategy_(authStrategy) {
   this->httpClient_ = HttpClient(false);
-  auto result = appRole_.authenticate(this);
+  auto result = authStrategy_.authenticate(this);
   if (result) {
     token_ = result.value();
   }
@@ -13,11 +13,11 @@ VaultClient::VaultClient(std::string host,
 
 VaultClient::VaultClient(std::string host,
 			 std::string port,
-			 AppRole& appRole,
+			 AuthenticationStrategy& authStrategy,
 			 bool debug) :
-  host_(host), port_(port), appRole_(appRole) {
+  host_(host), port_(port), authStrategy_(authStrategy) {
   this->httpClient_ = HttpClient(debug);
-  auto result = appRole_.authenticate(this);
+  auto result = authStrategy_.authenticate(this);
   if (result) {
     token_ = result.value();
   }
