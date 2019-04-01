@@ -29,9 +29,18 @@ HttpClient::get(std::string url, std::string token, std::string ns) {
 
 std::experimental::optional<HttpResponse>
 HttpClient::post(std::string url, std::string token, std::string ns, std::string value) {
-  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
-  });
+  std::function<void(CURL *curl)> callback;
+  if (value.empty()) {
+    callback = [&](CURL *curl) {
+      curl_easy_setopt(curl, CURLOPT_POST, 1);
+    };
+  } else {
+    callback = [&](CURL *curl) {
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
+    };
+  }
+
+  auto curlResponse = executeRequest(url, token, ns, callback);
 
   if (curlResponse.curlCode != CURLE_OK) {
     std::cout

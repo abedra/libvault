@@ -4,6 +4,7 @@
 #include <curl/curl.h>
 #include <functional>
 #include <experimental/optional>
+#include <vector>
 
 class AppRole;
 class VaultClient;
@@ -87,6 +88,8 @@ public:
   std::experimental::optional<std::string> get(std::string path);
   std::experimental::optional<std::string> put(std::string path, std::unordered_map<std::string, std::string> map);
   std::experimental::optional<std::string> del(std::string path);
+  std::experimental::optional<std::string> del(std::string path, std::vector<long> versions);
+  std::experimental::optional<std::string> destroy(std::string path, std::vector<long> versions);
 private:
   VaultClient client_;
   KeyValue::Version version_;

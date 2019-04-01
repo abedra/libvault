@@ -116,3 +116,47 @@ KeyValue::del(std::string path) {
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
+
+std::experimental::optional<std::string>
+KeyValue::del(std::string path, std::vector<long> versions) {
+  if (!client_.isAuthenticated() || version_ != KeyValue::Version::v2) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j;
+  j["versions"] = versions;
+
+  auto response = client_.getHttpClient()
+    .post(
+      client_.getUrl("/v1" + mount_ + "/delete/", path),
+      client_.getToken(),
+      client_.getNamespace(),
+      j.dump()
+    );
+
+  return response ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
+
+std::experimental::optional<std::string>
+KeyValue::destroy(std::string path, std::vector<long> versions) {
+  if (!client_.isAuthenticated() || version_ != KeyValue::Version::v2) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j;
+  j["versions"] = versions;
+
+  auto response = client_.getHttpClient()
+    .post(
+      client_.getUrl("/v1" + mount_ + "/destroy/", path),
+      client_.getToken(),
+      client_.getNamespace(),
+      j.dump()
+    );
+
+  return response ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
