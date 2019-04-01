@@ -83,6 +83,7 @@ public:
   KeyValue(VaultClient& client, KeyValue::Version version);
   KeyValue(VaultClient& client, std::string mount, KeyValue::Version version);
 
+  std::experimental::optional<std::string> list(std::string path);
   std::experimental::optional<std::string> get(std::string path);
   std::experimental::optional<std::string> put(std::string path, std::unordered_map<std::string, std::string> map);
   std::experimental::optional<std::string> del(std::string path);
@@ -92,4 +93,5 @@ private:
   std::string mount_;
 
   std::string getUrl(std::string path);
+  std::string getMetadataUrl(std::string path);
 };

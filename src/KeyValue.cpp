@@ -42,6 +42,32 @@ KeyValue::getUrl(std::string path) {
   }
 }
 
+std::string
+KeyValue::getMetadataUrl(std::string path) {
+  return client_.getUrl("/v1" + mount_ + "/metadata/", path);
+}
+
+std::experimental::optional<std::string>
+KeyValue::list(std::string path) {
+  if (!client_.isAuthenticated()) {
+    return std::experimental::nullopt;
+  }
+
+  std::experimental::optional<HttpResponse> response;
+
+  if (version_ == KeyValue::Version::v1) {
+    response = client_.getHttpClient()
+      .list(getUrl(path), client_.getToken(), client_.getNamespace());
+  } else {
+    response = client_.getHttpClient()
+      .list(getMetadataUrl(path), client_.getToken(), client_.getNamespace());
+  }
+
+  return response ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
+
 std::experimental::optional<std::string>
 KeyValue::get(std::string path) {
   if (!client_.isAuthenticated()) {
