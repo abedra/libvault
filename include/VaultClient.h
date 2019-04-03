@@ -33,13 +33,15 @@ public:
   bool getVerify() { return verify_; }
   std::string getHost() { return host_; }
   std::string getPort() { return port_; }
+  std::string getNamespace() { return ns_; }
 private:
-  VaultConfig() : tls_(true), debug_(false), host_("localhost"), port_("8200") {}
+  VaultConfig() : tls_(true), debug_(false), host_("localhost"), port_("8200"), ns_("") {}
   bool tls_;
   bool debug_;
   bool verify_;
   std::string host_;
   std::string port_;
+  std::string ns_;
 };
 
 class VaultConfigBuilder {
@@ -64,8 +66,13 @@ public:
     return *this;
   }
 
-  VaultConfigBuilder& port(std::string port){
+  VaultConfigBuilder& port(std::string port) {
     config_.port_ = port;
+    return *this;
+  }
+
+  VaultConfigBuilder& ns(std::string ns) {
+    config_.ns_ = ns;
     return *this;
   }
 
@@ -102,8 +109,6 @@ class VaultClient {
 public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
-
-  void setNamespace(std::string ns) { namespace_ = ns; }
 
   bool isAuthenticated() { return !token_.empty(); }
 

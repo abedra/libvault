@@ -60,8 +60,7 @@ TEST_CASE("VaultClient#getToken")
 TEST_CASE("VaultClient#getNamespace")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(config, strategy);
-  vaultClient.setNamespace("ns");
+  auto vaultClient = VaultClient(VaultConfig::make().ns("ns").getConfig(), strategy);
   REQUIRE(vaultClient.getNamespace() == "ns");
 }
 
