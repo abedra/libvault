@@ -1,27 +1,27 @@
 #include <nlohmann/json.hpp>
 #include "VaultClient.h"
 
-KeyValue::KeyValue(VaultClient &client) :
+KeyValue::KeyValue(const VaultClient& client) :
   version_(KeyValue::Version::v2),
   client_(client),
   mount_("/secret")
 {}
 
-KeyValue::KeyValue(VaultClient &client,
+KeyValue::KeyValue(const VaultClient& client,
 		   std::string mount) :
   version_(KeyValue::Version::v2),
   client_(client),
   mount_(mount)
 {}
 
-KeyValue::KeyValue(VaultClient &client,
+KeyValue::KeyValue(const VaultClient& client,
 		   KeyValue::Version version) :
   version_(version),
   client_(client),
   mount_("/secret")
 {}
 
-KeyValue::KeyValue(VaultClient &client,
+KeyValue::KeyValue(const VaultClient &client,
 		   std::string mount,
 		   KeyValue::Version version) :
   version_(version),

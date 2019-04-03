@@ -110,7 +110,7 @@ public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
-  bool isAuthenticated() { return !token_.empty(); }
+  bool isAuthenticated() const { return !token_.empty(); }
 
   std::string getToken() const { return token_; }
   std::string getNamespace() const { return namespace_; }
@@ -146,10 +146,10 @@ class KeyValue {
 public:
   enum Version { v1, v2 };
 
-  KeyValue(VaultClient& client);
-  KeyValue(VaultClient& client, std::string mount);
-  KeyValue(VaultClient& client, KeyValue::Version version);
-  KeyValue(VaultClient& client, std::string mount, KeyValue::Version version);
+  KeyValue(const VaultClient& client);
+  KeyValue(const VaultClient& client, std::string mount);
+  KeyValue(const VaultClient& client, KeyValue::Version version);
+  KeyValue(const VaultClient& client, std::string mount, KeyValue::Version version);
 
   std::experimental::optional<std::string> list(std::string path);
   std::experimental::optional<std::string> get(std::string path);
@@ -158,7 +158,7 @@ public:
   std::experimental::optional<std::string> del(std::string path, std::vector<long> versions);
   std::experimental::optional<std::string> destroy(std::string path, std::vector<long> versions);
 private:
-  VaultClient client_;
+  const VaultClient& client_;
   KeyValue::Version version_;
   std::string mount_;
 
