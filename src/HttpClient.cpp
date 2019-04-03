@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "VaultClient.h"
 
 static size_t
