@@ -33,6 +33,8 @@ public:
   std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value);
   std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns);
   std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns);
+
+  static bool is_success(std::experimental::optional<HttpResponse> response);
 private:
   bool debug_;
   HttpErrorCallback errorCallback_;

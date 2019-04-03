@@ -28,6 +28,14 @@ HttpClient::HttpClient(HttpErrorCallback errorCallback, bool debug) :
   errorCallback_(errorCallback)
 {}
 
+bool HttpClient::is_success(std::experimental::optional<HttpResponse> response) {
+  if (response && response.value().statusCode == 200) {
+    return true;
+  }
+
+  return false;
+}
+
 std::experimental::optional<HttpResponse>
 HttpClient::get(std::string url, std::string token, std::string ns) {
   return executeRequest(url, token, ns, [&](CURL *curl) {});

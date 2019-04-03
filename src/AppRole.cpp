@@ -20,7 +20,7 @@ std::experimental::optional<std::string> AppRole::authenticate(VaultClient* clie
 	  client->getNamespace(),
 	  j.dump());
 
-  if (response) {
+  if (HttpClient::is_success(response)) {
     return nlohmann::json::parse(response.value().body)["auth"]["client_token"];
   } else {
     return std::experimental::nullopt;

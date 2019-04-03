@@ -62,7 +62,7 @@ KeyValue::list(std::string path) {
       .list(getMetadataUrl(path), client_.getToken(), client_.getNamespace());
   }
 
-  return response ?
+  return HttpClient::is_success(response) ?
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
@@ -76,7 +76,7 @@ KeyValue::get(std::string path) {
   auto response = client_.getHttpClient()
     .get(getUrl(path), client_.getToken(), client_.getNamespace());
 
-  return response ?
+  return HttpClient::is_success(response) ?
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
@@ -112,7 +112,7 @@ KeyValue::del(std::string path) {
   auto response = client_.getHttpClient()
     .del(getUrl(path), client_.getToken(), client_.getNamespace());
 
-  return response ?
+  return HttpClient::is_success(response) ?
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
@@ -134,7 +134,7 @@ KeyValue::del(std::string path, std::vector<long> versions) {
       j.dump()
     );
 
-  return response ?
+  return HttpClient::is_success(response) ?
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
@@ -155,7 +155,7 @@ KeyValue::destroy(std::string path, std::vector<long> versions) {
     j.dump()
   );
 
-  return response ?
+  return HttpClient::is_success(response) ?
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }

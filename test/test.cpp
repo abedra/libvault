@@ -55,3 +55,21 @@ TEST_CASE("VaultClient#getNamespace")
   vaultClient.setNamespace("ns");
   REQUIRE(vaultClient.getNamespace() == "ns");
 }
+
+TEST_CASE("HttpClient#is_success when response is empty")
+{
+  auto response = std::experimental::nullopt;
+  REQUIRE(HttpClient::is_success(response) == false);
+}
+
+TEST_CASE("HttpClient#is_success when status code not 200")
+{
+  auto response = std::experimental::optional<HttpResponse>({403, "Permission Denied"});
+  REQUIRE(HttpClient::is_success(response) == false);
+}
+
+TEST_CASE("HttpClient#is_success when status 200")
+{
+  auto response = std::experimental::optional<HttpResponse>({200, "OK"});
+  REQUIRE(HttpClient::is_success(response) == true);
+}
