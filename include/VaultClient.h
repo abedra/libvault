@@ -22,12 +22,68 @@ public:
 using HttpErrorCallback = std::function<void(std::string)>;
 using CurlSetupCallback = std::function<void(CURL *curl)>;
 
+class VaultConfigBuilder;
+
+class VaultConfig {
+public:
+  friend class VaultConfigBuilder;
+  static VaultConfigBuilder make();
+  bool getTls() { return tls_; }
+  bool getDebug() { return debug_; }
+  bool getVerify() { return verify_; }
+  std::string getHost() { return host_; }
+  std::string getPort() { return port_; }
+private:
+  VaultConfig() : tls_(true), debug_(false), host_("localhost"), port_("8200") {}
+  bool tls_;
+  bool debug_;
+  bool verify_;
+  std::string host_;
+  std::string port_;
+};
+
+class VaultConfigBuilder {
+public:
+  VaultConfigBuilder& tls(bool flag) {
+    config_.tls_ = flag;
+    return *this;
+  }
+
+  VaultConfigBuilder& debug(bool flag) {
+    config_.debug_ = flag;
+    return *this;
+  }
+
+  VaultConfigBuilder& verify(bool flag) {
+    config_.verify_ = flag;
+    return *this;
+  }
+
+  VaultConfigBuilder& host(std::string host) {
+    config_.host_ = host;
+    return *this;
+  }
+
+  VaultConfigBuilder& port(std::string port){
+    config_.port_ = port;
+    return *this;
+  }
+
+  VaultConfig& getConfig() {
+    return config_;
+  }
+
+  operator VaultConfig&&() {
+    return std::move(config_);
+  }
+private:
+  VaultConfig config_;
+};
+
 class HttpClient {
 public:
-  HttpClient();
-  HttpClient(bool debug);
-  HttpClient(HttpErrorCallback errorCallback);
-  HttpClient(HttpErrorCallback errorCallback, bool debug);
+  HttpClient(VaultConfig& config);
+  HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
   std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns);
   std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value);
@@ -37,33 +93,36 @@ public:
   static bool is_success(std::experimental::optional<HttpResponse> response);
 private:
   bool debug_;
+  bool verify_;
   HttpErrorCallback errorCallback_;
   std::experimental::optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback);
 };
 
 class VaultClient {
 public:
-  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy);
-  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
-  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy, bool debug);
-  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback, bool debug);
+  VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
+  VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
   void setNamespace(std::string ns) { namespace_ = ns; }
+
+  bool isAuthenticated() { return !token_.empty(); }
 
   std::string getToken() { return token_; }
   std::string getNamespace() { return namespace_; }
   std::string getUrl(std::string base, std::string path);
-  HttpClient& getHttpClient() { return httpClient_; }
 
-  bool isAuthenticated() { return !token_.empty(); }
+  HttpClient& getHttpClient() { return httpClient_; }
 private:
-  AuthenticationStrategy& authStrategy_;
+  bool debug_;
+  bool tls_;
+
   std::string host_;
   std::string port_;
   std::string token_;
   std::string namespace_;
-  bool debug_;
-  HttpClient httpClient_ = (bool)nullptr;
+
+  HttpClient httpClient_;
+  AuthenticationStrategy& authStrategy_;
 };
 
 class AppRole : public AuthenticationStrategy {

@@ -8,23 +8,15 @@ writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
   return size * nmemb;
 }
 
-HttpClient::HttpClient() :
-  debug_(false),
+HttpClient::HttpClient(VaultConfig& config) :
+  debug_(config.getDebug()),
+  verify_(config.getVerify()),
   errorCallback_([&](std::string err){})
 {}
 
-HttpClient::HttpClient(bool debug) :
-  debug_(debug),
-  errorCallback_([&](std::string err){})
-{}
-
-HttpClient::HttpClient(HttpErrorCallback errorCallback) :
-  debug_(false),
-  errorCallback_(errorCallback)
-{}
-
-HttpClient::HttpClient(HttpErrorCallback errorCallback, bool debug) :
-  debug_(debug),
+HttpClient::HttpClient(VaultConfig& config, HttpErrorCallback errorCallback) :
+  debug_(config.getDebug()),
+  verify_(config.getVerify()),
   errorCallback_(errorCallback)
 {}
 
@@ -86,7 +78,12 @@ HttpClient::executeRequest(std::string url,
 
     chunk = curl_slist_append(chunk, "Content-Type: application/json");
 
-    // TODO: SSL verify host and peer
+    if (verify_) {
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
+    } else {
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+    }
+
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
