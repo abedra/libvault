@@ -9,14 +9,7 @@
 class AppRole;
 class VaultClient;
 
-struct CurlResponse {
-  CURLcode curlCode;
-  long statusCode;
-  std::string body;
-};
-
 struct HttpResponse {
-  HttpResponse(CurlResponse curlResponse) : statusCode(curlResponse.statusCode), body(curlResponse.body) {}
   long statusCode;
   std::string body;
 };
@@ -26,10 +19,15 @@ public:
   virtual std::experimental::optional<std::string> authenticate(VaultClient* client) = 0;
 };
 
+using HttpErrorCallback = std::function<void(std::string)>;
+using CurlSetupCallback = std::function<void(CURL *curl)>;
+
 class HttpClient {
 public:
   HttpClient();
   HttpClient(bool debug);
+  HttpClient(HttpErrorCallback errorCallback);
+  HttpClient(HttpErrorCallback errorCallback, bool debug);
 
   std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns);
   std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value);
@@ -37,13 +35,16 @@ public:
   std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns);
 private:
   bool debug_;
-  CurlResponse executeRequest(std::string url, std::string token, std::string ns, std::function<void(CURL *curl)> callback);
+  HttpErrorCallback errorCallback_;
+  std::experimental::optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback);
 };
 
 class VaultClient {
 public:
   VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy);
+  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
   VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy, bool debug);
+  VaultClient(std::string host, std::string port, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback, bool debug);
 
   void setNamespace(std::string ns) { namespace_ = ns; }
 

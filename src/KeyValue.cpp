@@ -148,13 +148,12 @@ KeyValue::destroy(std::string path, std::vector<long> versions) {
   nlohmann::json j;
   j["versions"] = versions;
 
-  auto response = client_.getHttpClient()
-    .post(
-      client_.getUrl("/v1" + mount_ + "/destroy/", path),
-      client_.getToken(),
-      client_.getNamespace(),
-      j.dump()
-    );
+  auto response = client_.getHttpClient().post(
+    client_.getUrl("/v1" + mount_ + "/destroy/", path),
+    client_.getToken(),
+    client_.getNamespace(),
+    j.dump()
+  );
 
   return response ?
     std::experimental::optional<std::string>(response.value().body) :

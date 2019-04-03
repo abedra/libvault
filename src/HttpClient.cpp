@@ -8,90 +8,57 @@ writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
   return size * nmemb;
 }
 
-HttpClient::HttpClient() : debug_(false) {}
+HttpClient::HttpClient() :
+  debug_(false),
+  errorCallback_([&](std::string err){})
+{}
 
-HttpClient::HttpClient(bool debug) : debug_(debug) {}
+HttpClient::HttpClient(bool debug) :
+  debug_(debug),
+  errorCallback_([&](std::string err){})
+{}
+
+HttpClient::HttpClient(HttpErrorCallback errorCallback) :
+  debug_(false),
+  errorCallback_(errorCallback)
+{}
+
+HttpClient::HttpClient(HttpErrorCallback errorCallback, bool debug) :
+  debug_(debug),
+  errorCallback_(errorCallback)
+{}
 
 std::experimental::optional<HttpResponse>
 HttpClient::get(std::string url, std::string token, std::string ns) {
-  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {});
-
-  if (curlResponse.curlCode != CURLE_OK) {
-    std::cout
-      << "GET " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
-      << std::endl;
-
-    return std::experimental::nullopt;
-  }
-
-  return std::experimental::optional<HttpResponse>(curlResponse);
+  return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
 std::experimental::optional<HttpResponse>
 HttpClient::post(std::string url, std::string token, std::string ns, std::string value) {
-  std::function<void(CURL *curl)> callback;
-  if (value.empty()) {
-    callback = [&](CURL *curl) {
-      curl_easy_setopt(curl, CURLOPT_POST, 1);
-    };
-  } else {
-    callback = [&](CURL *curl) {
-      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
-    };
-  }
-
-  auto curlResponse = executeRequest(url, token, ns, callback);
-
-  if (curlResponse.curlCode != CURLE_OK) {
-    std::cout
-      << "POST " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
-      << std::endl;
-
-    return std::experimental::nullopt;
-  }
-
-  return std::experimental::optional<HttpResponse>(curlResponse);
+  return executeRequest(url, token, ns, [&](CURL *curl) {
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
+  });
 }
 
 std::experimental::optional<HttpResponse>
 HttpClient::del(std::string url, std::string token, std::string ns) {
-  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {
+  return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
-
-  if (curlResponse.curlCode != CURLE_OK) {
-    std::cout
-      << "DELETE " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
-      << std::endl;
-
-    return std::experimental::nullopt;
-  }
-
-  return std::experimental::optional<HttpResponse>(curlResponse);
 }
 
 std::experimental::optional<HttpResponse>
 HttpClient::list(std::string url, std::string token, std::string ns) {
-  auto curlResponse = executeRequest(url, token, ns, [&](CURL *curl) {
+  return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
-
-  if (curlResponse.curlCode != CURLE_OK) {
-    std::cout
-      << "LIST " << url << " failed: " << curl_easy_strerror(curlResponse.curlCode)
-      << std::endl;
-
-    return std::experimental::nullopt;
-  }
-
-  return std::experimental::optional<HttpResponse>(curlResponse);
 }
 
-CurlResponse
+std::experimental::optional<HttpResponse>
 HttpClient::executeRequest(std::string url,
                            std::string token,
 			   std::string ns,
-                           std::function<void(CURL *curl)> callback) {
+                           CurlSetupCallback setupCallback) {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
   std::string buffer;
@@ -121,17 +88,23 @@ HttpClient::executeRequest(std::string url,
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
     }
 
-    callback(curl);
+    setupCallback(curl);
 
     res = curl_easy_perform(curl);
 
-    if (res == CURLE_OK) {
-      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+    if (res != CURLE_OK) {
+      errorCallback_(curl_easy_strerror(res));
+
+      curl_easy_cleanup(curl);
+      curl_slist_free_all(chunk);
+
+      return std::experimental::nullopt;
     }
 
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
     curl_easy_cleanup(curl);
     curl_slist_free_all(chunk);
   }
 
-  return CurlResponse{res, response_code, buffer};
+  return std::experimental::optional<HttpResponse>({response_code, buffer});
 }

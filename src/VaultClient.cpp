@@ -3,8 +3,11 @@
 VaultClient::VaultClient(std::string host,
 			 std::string port,
 			 AuthenticationStrategy& authStrategy) :
-  host_(host), port_(port), authStrategy_(authStrategy) {
-  this->httpClient_ = HttpClient(false);
+  host_(host),
+  port_(port),
+  authStrategy_(authStrategy),
+  httpClient_(HttpClient(false))
+{
   auto result = authStrategy_.authenticate(this);
   if (result) {
     token_ = result.value();
@@ -15,8 +18,42 @@ VaultClient::VaultClient(std::string host,
 			 std::string port,
 			 AuthenticationStrategy& authStrategy,
 			 bool debug) :
-  host_(host), port_(port), authStrategy_(authStrategy) {
-  this->httpClient_ = HttpClient(debug);
+  host_(host),
+  port_(port),
+  authStrategy_(authStrategy),
+  httpClient_(HttpClient(debug))
+{
+  auto result = authStrategy_.authenticate(this);
+  if (result) {
+    token_ = result.value();
+  }
+}
+
+VaultClient::VaultClient(std::string host,
+			 std::string port,
+			 AuthenticationStrategy& authStrategy,
+			 HttpErrorCallback httpErrorCallback) :
+  host_(host),
+  port_(port),
+  authStrategy_(authStrategy),
+  httpClient_(HttpClient(httpErrorCallback))
+{
+  auto result = authStrategy_.authenticate(this);
+  if (result) {
+    token_ = result.value();
+  }
+}
+
+VaultClient::VaultClient(std::string host,
+			 std::string port,
+			 AuthenticationStrategy& authStrategy,
+			 HttpErrorCallback httpErrorCallback,
+			 bool debug) :
+  host_(host),
+  port_(port),
+  authStrategy_(authStrategy),
+  httpClient_(HttpClient(httpErrorCallback, debug))
+{
   auto result = authStrategy_.authenticate(this);
   if (result) {
     token_ = result.value();
