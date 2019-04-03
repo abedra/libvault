@@ -16,7 +16,7 @@ struct HttpResponse {
 
 class AuthenticationStrategy {
 public:
-  virtual std::experimental::optional<std::string> authenticate(VaultClient* client) = 0;
+  virtual std::experimental::optional<std::string> authenticate(const VaultClient& client) = 0;
 };
 
 using HttpErrorCallback = std::function<void(std::string)>;
@@ -92,17 +92,17 @@ public:
   HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns);
-  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value);
-  std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns);
-  std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns);
+  std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns) const;
+  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value) const;
+  std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns) const;
+  std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns) const;
 
   static bool is_success(std::experimental::optional<HttpResponse> response);
 private:
   bool debug_;
   bool verify_;
   HttpErrorCallback errorCallback_;
-  std::experimental::optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback);
+  std::experimental::optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback) const;
 };
 
 class VaultClient {
@@ -112,11 +112,11 @@ public:
 
   bool isAuthenticated() { return !token_.empty(); }
 
-  std::string getToken() { return token_; }
-  std::string getNamespace() { return namespace_; }
-  std::string getUrl(std::string base, std::string path);
+  std::string getToken() const { return token_; }
+  std::string getNamespace() const { return namespace_; }
+  std::string getUrl(std::string base, std::string path) const;
 
-  HttpClient& getHttpClient() { return httpClient_; }
+  const HttpClient& getHttpClient() const { return httpClient_; }
 private:
   bool debug_;
   bool tls_;
@@ -134,12 +134,12 @@ class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
 
-  std::experimental::optional<std::string> authenticate(VaultClient* vaultClient);
+  std::experimental::optional<std::string> authenticate(const VaultClient& vaultClient);
 private:
   std::string role_id_;
   std::string secret_id_;
 
-  std::string getUrl(VaultClient* vaultClient, std::string path);
+  std::string getUrl(const VaultClient& vaultClient, std::string path);
 };
 
 class KeyValue {

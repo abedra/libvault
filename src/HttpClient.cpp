@@ -27,26 +27,26 @@ bool HttpClient::is_success(std::experimental::optional<HttpResponse> response) 
 }
 
 std::experimental::optional<HttpResponse>
-HttpClient::get(std::string url, std::string token, std::string ns) {
+HttpClient::get(std::string url, std::string token, std::string ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
 std::experimental::optional<HttpResponse>
-HttpClient::post(std::string url, std::string token, std::string ns, std::string value) {
+HttpClient::post(std::string url, std::string token, std::string ns, std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }
 
 std::experimental::optional<HttpResponse>
-HttpClient::del(std::string url, std::string token, std::string ns) {
+HttpClient::del(std::string url, std::string token, std::string ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 }
 
 std::experimental::optional<HttpResponse>
-HttpClient::list(std::string url, std::string token, std::string ns) {
+HttpClient::list(std::string url, std::string token, std::string ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
@@ -56,7 +56,7 @@ std::experimental::optional<HttpResponse>
 HttpClient::executeRequest(std::string url,
                            std::string token,
 			   std::string ns,
-                           CurlSetupCallback setupCallback) {
+                           CurlSetupCallback setupCallback) const {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
   std::string buffer;

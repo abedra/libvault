@@ -6,7 +6,7 @@
 
 class FailedAuth : public AuthenticationStrategy {
 public:
-  std::experimental::optional<std::string> authenticate(VaultClient* client) {
+  std::experimental::optional<std::string> authenticate(const VaultClient& client) {
     return std::experimental::nullopt;
   }
 private:
@@ -14,7 +14,7 @@ private:
 
 class SuccessfulAuth : public AuthenticationStrategy {
 public:
-  std::experimental::optional<std::string> authenticate(VaultClient* client) {
+  std::experimental::optional<std::string> authenticate(const VaultClient& client) {
     return std::experimental::optional<std::string>("success");
   }
 private:
