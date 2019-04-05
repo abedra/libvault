@@ -61,3 +61,49 @@ Transit::decrypt(std::string path, std::unordered_map<std::string, std::string> 
     return std::experimental::nullopt;
   }
 }
+
+std::experimental::optional<std::string>
+Transit::generate_data_key(std::string path, std::unordered_map<std::string, std::string> parameters) {
+  if (!client_.is_authenticated()) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j = nlohmann::json::object();
+  std::for_each(parameters.begin(), parameters.end(),
+		[&](std::pair<std::string, std::string> pair) {
+    j[pair.first] = pair.second;
+  });
+
+  auto response = client_.getHttpClient()
+    .post(getUrl("datakey/plaintext/" + path),
+	  client_.getToken(),
+	  client_.getNamespace(),
+	  j.dump());
+
+  return HttpClient::is_success(response) ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
+
+std::experimental::optional<std::string>
+Transit::generate_wrapped_data_key(std::string path, std::unordered_map<std::string, std::string> parameters) {
+  if (!client_.is_authenticated()) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j = nlohmann::json::object();
+  std::for_each(parameters.begin(), parameters.end(),
+		[&](std::pair<std::string, std::string> pair) {
+    j[pair.first] = pair.second;
+  });
+
+  auto response = client_.getHttpClient()
+    .post(getUrl("datakey/wrapped/" + path),
+	  client_.getToken(),
+	  client_.getNamespace(),
+	  j.dump());
+
+  return HttpClient::is_success(response) ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
