@@ -21,6 +21,7 @@ add_library(vault SHARED
   src/VaultClient.cpp
   src/HttpClient.cpp
   src/KeyValue.cpp
+  src/Transit.cpp
   src/AppRole.cpp)
 
 set_target_properties(vault PROPERTIES
