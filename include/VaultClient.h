@@ -277,6 +277,8 @@ public:
   std::experimental::optional<std::string> decrypt(std::string path, std::unordered_map<std::string, std::string> parameters);
   std::experimental::optional<std::string> generate_data_key(std::string path, std::unordered_map<std::string, std::string> parameters);
   std::experimental::optional<std::string> generate_wrapped_data_key(std::string path, std::unordered_map<std::string, std::string> parameters);
+  std::experimental::optional<std::string> generate_random_bytes(int num_bytes);
+  std::experimental::optional<std::string> generate_random_hex_bytes(int num_bytes);
 private:
   const VaultClient& client_;
   std::string getUrl(std::string path);

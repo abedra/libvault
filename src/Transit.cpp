@@ -107,3 +107,43 @@ Transit::generate_wrapped_data_key(std::string path, std::unordered_map<std::str
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
+
+std::experimental::optional<std::string>
+Transit::generate_random_bytes(int num_bytes) {
+  if (!client_.is_authenticated()) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j = nlohmann::json::object();
+  j["format"] = "base64";
+
+  auto response = client_.getHttpClient()
+    .post(getUrl("random/" + std::to_string(num_bytes)),
+	  client_.getToken(),
+	  client_.getNamespace(),
+	  j.dump());
+
+  return HttpClient::is_success(response) ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
+
+std::experimental::optional<std::string>
+Transit::generate_random_hex_bytes(int num_bytes) {
+  if (!client_.is_authenticated()) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j = nlohmann::json::object();
+  j["format"] = "hex";
+
+  auto response = client_.getHttpClient()
+    .post(getUrl("random/" + std::to_string(num_bytes)),
+	  client_.getToken(),
+	  client_.getNamespace(),
+	  j.dump());
+
+  return HttpClient::is_success(response) ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
