@@ -10,7 +10,7 @@ Transit::getUrl(std::string path) {
 
 std::experimental::optional<std::string>
 Transit::encrypt(std::string path, std::unordered_map<std::string, std::string> parameters) {
-  if (!client_.isAuthenticated()) {
+  if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
@@ -38,7 +38,7 @@ Transit::encrypt(std::string path, std::unordered_map<std::string, std::string> 
 
 std::experimental::optional<std::string>
 Transit::decrypt(std::string path, std::unordered_map<std::string, std::string>  parameters) {
-  if (!client_.isAuthenticated()) {
+  if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 

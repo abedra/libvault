@@ -48,7 +48,7 @@ KeyValue::getMetadataUrl(std::string path) {
 
 std::experimental::optional<std::string>
 KeyValue::list(std::string path) {
-  if (!client_.isAuthenticated()) {
+  if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
@@ -69,7 +69,7 @@ KeyValue::list(std::string path) {
 
 std::experimental::optional<std::string>
 KeyValue::get(std::string path) {
-  if (!client_.isAuthenticated()) {
+  if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
@@ -84,7 +84,7 @@ KeyValue::get(std::string path) {
 std::experimental::optional<std::string>
 KeyValue::put(std::string path,
 	      std::unordered_map<std::string, std::string> map) {
-  if (!client_.isAuthenticated()) {
+  if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
@@ -105,7 +105,7 @@ KeyValue::put(std::string path,
 
 std::experimental::optional<std::string>
 KeyValue::del(std::string path) {
-  if (!client_.isAuthenticated()) {
+  if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
@@ -119,7 +119,7 @@ KeyValue::del(std::string path) {
 
 std::experimental::optional<std::string>
 KeyValue::del(std::string path, std::vector<long> versions) {
-  if (!client_.isAuthenticated() || version_ != KeyValue::Version::v2) {
+  if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
   }
 
@@ -141,7 +141,7 @@ KeyValue::del(std::string path, std::vector<long> versions) {
 
 std::experimental::optional<std::string>
 KeyValue::destroy(std::string path, std::vector<long> versions) {
-  if (!client_.isAuthenticated() || version_ != KeyValue::Version::v2) {
+  if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
   }
 

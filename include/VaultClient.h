@@ -213,7 +213,7 @@ public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
-  bool isAuthenticated() const { return !token_.empty(); }
+  bool is_authenticated() const { return !token_.empty(); }
 
   std::string getToken() const { return token_; }
   std::string getNamespace() const { return namespace_; }

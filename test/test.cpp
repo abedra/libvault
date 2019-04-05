@@ -22,18 +22,18 @@ private:
 
 auto config = VaultConfig::make().getConfig();
 
-TEST_CASE("VaultClient#isAuthenticated failure")
+TEST_CASE("VaultClient#is_authenticated failure")
 {
   auto strategy = FailedAuth();
   auto vaultClient = VaultClient(config, strategy);
-  REQUIRE(vaultClient.isAuthenticated() == false);
+  REQUIRE(vaultClient.is_authenticated() == false);
 }
 
-TEST_CASE("VaultClient#isAuthenticated success")
+TEST_CASE("VaultClient#is_authenticated success")
 {
   auto strategy = SuccessfulAuth();
   auto vaultClient = VaultClient(config, strategy);
-  REQUIRE(vaultClient.isAuthenticated() == true);
+  REQUIRE(vaultClient.is_authenticated() == true);
 }
 
 TEST_CASE("VaultClient#getUrl")
