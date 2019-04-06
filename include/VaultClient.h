@@ -285,6 +285,7 @@ public:
   std::experimental::optional<std::string> generate_wrapped_data_key(std::string path, Parameters parameters);
   std::experimental::optional<std::string> generate_random_bytes(int num_bytes, Parameters parameters);
   std::experimental::optional<std::string> hash(std::string algorithm, Parameters parameters);
+  std::experimental::optional<std::string> hmac(std::string key, std::string algorithm, Parameters Parameters);
 private:
   const VaultClient& client_;
   std::string getUrl(std::string path);
