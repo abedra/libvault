@@ -6,8 +6,20 @@
 #include <experimental/optional>
 #include <vector>
 
+class VaultConfigBuilder;
 class AppRole;
 class VaultClient;
+class VaultConfig;
+class AuthenticationStrategy;
+
+using HttpErrorCallback = std::function<void(std::string)>;
+using CurlSetupCallback = std::function<void(CURL *curl)>;
+using Parameters = std::unordered_map<std::string, std::string>;
+
+struct HttpResponse {
+  long statusCode;
+  std::string body;
+};
 
 //TODO: kind of gross, do something else?
 class Base64 {
@@ -116,20 +128,23 @@ public:
   }
 };
 
-struct HttpResponse {
-  long statusCode;
-  std::string body;
-};
-
-class AuthenticationStrategy {
+class HttpClient {
 public:
-  virtual std::experimental::optional<std::string> authenticate(const VaultClient& client) = 0;
+  HttpClient(VaultConfig& config);
+  HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
+
+  std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns) const;
+  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value) const;
+  std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns) const;
+  std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns) const;
+
+  static bool is_success(std::experimental::optional<HttpResponse> response);
+private:
+  bool debug_;
+  bool verify_;
+  HttpErrorCallback errorCallback_;
+  std::experimental::optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback) const;
 };
-
-using HttpErrorCallback = std::function<void(std::string)>;
-using CurlSetupCallback = std::function<void(CURL *curl)>;
-
-class VaultConfigBuilder;
 
 class VaultConfig {
 public:
@@ -194,24 +209,6 @@ private:
   VaultConfig config_;
 };
 
-class HttpClient {
-public:
-  HttpClient(VaultConfig& config);
-  HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
-
-  std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns) const;
-  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value) const;
-  std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns) const;
-  std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns) const;
-
-  static bool is_success(std::experimental::optional<HttpResponse> response);
-private:
-  bool debug_;
-  bool verify_;
-  HttpErrorCallback errorCallback_;
-  std::experimental::optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback) const;
-};
-
 class VaultClient {
 public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
@@ -235,6 +232,16 @@ private:
 
   HttpClient httpClient_;
   AuthenticationStrategy& authStrategy_;
+};
+
+class AuthenticationStrategy {
+public:
+  virtual std::experimental::optional<std::string> authenticate(const VaultClient& client) = 0;
+};
+
+class VaultHttpConsumer {
+public:
+  static std::experimental::optional<std::string> post(const VaultClient& client, const std::string& uri, Parameters parameters);
 };
 
 class AppRole : public AuthenticationStrategy {
@@ -272,8 +279,6 @@ private:
   std::string getUrl(std::string path);
   std::string getMetadataUrl(std::string path);
 };
-
-using Parameters = std::unordered_map<std::string, std::string>;
 
 class Transit {
 public:

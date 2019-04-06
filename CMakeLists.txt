@@ -17,6 +17,7 @@ add_subdirectory(nlohmann_json)
 
 add_library(vault SHARED
   include/VaultClient.h
+  src/VaultHttpConsumer.cpp
   src/VaultConfig.cpp
   src/VaultClient.cpp
   src/HttpClient.cpp
