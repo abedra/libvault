@@ -9,15 +9,13 @@ Transit::getUrl(std::string path) {
 }
 
 std::experimental::optional<std::string>
-Transit::encrypt(std::string path, std::unordered_map<std::string, std::string> parameters) {
+Transit::encrypt(std::string path, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
-  parameters["plaintext"] = Base64::encode(
-    reinterpret_cast<const unsigned char*>(parameters["plaintext"].c_str()),
-    parameters["plaintext"].length()
-  );
+  // TODO: should it be encoded by default?
+  parameters["plaintext"] = Base64::encode(parameters["plaintext"]);
 
   nlohmann::json j = nlohmann::json::object();
   std::for_each(parameters.begin(), parameters.end(),
@@ -37,7 +35,7 @@ Transit::encrypt(std::string path, std::unordered_map<std::string, std::string> 
 }
 
 std::experimental::optional<std::string>
-Transit::decrypt(std::string path, std::unordered_map<std::string, std::string>  parameters) {
+Transit::decrypt(std::string path, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -63,7 +61,7 @@ Transit::decrypt(std::string path, std::unordered_map<std::string, std::string> 
 }
 
 std::experimental::optional<std::string>
-Transit::generate_data_key(std::string path, std::unordered_map<std::string, std::string> parameters) {
+Transit::generate_data_key(std::string path, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -86,7 +84,7 @@ Transit::generate_data_key(std::string path, std::unordered_map<std::string, std
 }
 
 std::experimental::optional<std::string>
-Transit::generate_wrapped_data_key(std::string path, std::unordered_map<std::string, std::string> parameters) {
+Transit::generate_wrapped_data_key(std::string path, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -109,13 +107,16 @@ Transit::generate_wrapped_data_key(std::string path, std::unordered_map<std::str
 }
 
 std::experimental::optional<std::string>
-Transit::generate_random_bytes(int num_bytes) {
+Transit::generate_random_bytes(int num_bytes, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
   nlohmann::json j = nlohmann::json::object();
-  j["format"] = "base64";
+  std::for_each(parameters.begin(), parameters.end(),
+		[&](std::pair<std::string, std::string> pair) {
+    j[pair.first] = pair.second;
+  });
 
   auto response = client_.getHttpClient()
     .post(getUrl("random/" + std::to_string(num_bytes)),
@@ -129,16 +130,19 @@ Transit::generate_random_bytes(int num_bytes) {
 }
 
 std::experimental::optional<std::string>
-Transit::generate_random_hex_bytes(int num_bytes) {
+Transit::hash(std::string algorithm, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
   nlohmann::json j = nlohmann::json::object();
-  j["format"] = "hex";
+  std::for_each(parameters.begin(), parameters.end(),
+		[&](std::pair<std::string, std::string> pair) {
+    j[pair.first] = pair.second;
+  });
 
   auto response = client_.getHttpClient()
-    .post(getUrl("random/" + std::to_string(num_bytes)),
+    .post(getUrl("hash/" + algorithm),
 	  client_.getToken(),
 	  client_.getNamespace(),
 	  j.dump());

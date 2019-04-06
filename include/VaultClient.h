@@ -16,6 +16,10 @@ public:
     return (isalnum(c) || (c == '+') || (c == '/'));
   }
 
+  static std::string encode(std::string value) {
+    return encode(reinterpret_cast<const unsigned char*>(value.c_str()), value.length());
+  }
+
   static std::string encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
     std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     std::string ret;
@@ -269,16 +273,18 @@ private:
   std::string getMetadataUrl(std::string path);
 };
 
+using Parameters = std::unordered_map<std::string, std::string>;
+
 class Transit {
 public:
   Transit(const VaultClient& client);
 
-  std::experimental::optional<std::string> encrypt(std::string path, std::unordered_map<std::string, std::string> parameters);
-  std::experimental::optional<std::string> decrypt(std::string path, std::unordered_map<std::string, std::string> parameters);
-  std::experimental::optional<std::string> generate_data_key(std::string path, std::unordered_map<std::string, std::string> parameters);
-  std::experimental::optional<std::string> generate_wrapped_data_key(std::string path, std::unordered_map<std::string, std::string> parameters);
-  std::experimental::optional<std::string> generate_random_bytes(int num_bytes);
-  std::experimental::optional<std::string> generate_random_hex_bytes(int num_bytes);
+  std::experimental::optional<std::string> encrypt(std::string path, Parameters parameters);
+  std::experimental::optional<std::string> decrypt(std::string path, Parameters parameters);
+  std::experimental::optional<std::string> generate_data_key(std::string path, Parameters parameters);
+  std::experimental::optional<std::string> generate_wrapped_data_key(std::string path, Parameters parameters);
+  std::experimental::optional<std::string> generate_random_bytes(int num_bytes, Parameters parameters);
+  std::experimental::optional<std::string> hash(std::string algorithm, Parameters parameters);
 private:
   const VaultClient& client_;
   std::string getUrl(std::string path);
