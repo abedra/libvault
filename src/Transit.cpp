@@ -14,9 +14,6 @@ Transit::encrypt(std::string path, Parameters parameters) {
     return std::experimental::nullopt;
   }
 
-  // TODO: should it be encoded by default?
-  parameters["plaintext"] = Base64::encode(parameters["plaintext"]);
-
   nlohmann::json j = nlohmann::json::object();
   std::for_each(parameters.begin(), parameters.end(),
 		[&](std::pair<std::string, std::string> pair) {
