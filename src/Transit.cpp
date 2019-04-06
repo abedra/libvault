@@ -171,3 +171,49 @@ Transit::hmac(std::string key, std::string algorithm, Parameters parameters) {
     std::experimental::optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
+
+std::experimental::optional<std::string>
+Transit::sign(std::string key, std::string algorithm, Parameters parameters) {
+  if (!client_.is_authenticated()) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j = nlohmann::json::object();
+  std::for_each(parameters.begin(), parameters.end(),
+		[&](std::pair<std::string, std::string> pair) {
+    j[pair.first] = pair.second;
+  });
+
+  auto response = client_.getHttpClient()
+    .post(getUrl("sign/" + key + "/" + algorithm),
+	  client_.getToken(),
+	  client_.getNamespace(),
+	  j.dump());
+
+  return HttpClient::is_success(response) ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
+
+std::experimental::optional<std::string>
+Transit::verify(std::string key, std::string algorithm, Parameters parameters) {
+  if (!client_.is_authenticated()) {
+    return std::experimental::nullopt;
+  }
+
+  nlohmann::json j = nlohmann::json::object();
+  std::for_each(parameters.begin(), parameters.end(),
+		[&](std::pair<std::string, std::string> pair) {
+    j[pair.first] = pair.second;
+  });
+
+  auto response = client_.getHttpClient()
+    .post(getUrl("verify/" + key + "/" + algorithm),
+	  client_.getToken(),
+	  client_.getNamespace(),
+	  j.dump());
+
+  return HttpClient::is_success(response) ?
+    std::experimental::optional<std::string>(response.value().body) :
+    std::experimental::nullopt;
+}
