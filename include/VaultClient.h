@@ -244,6 +244,16 @@ public:
   static std::experimental::optional<std::string> post(const VaultClient& client, const std::string& uri, Parameters parameters);
 };
 
+class Token : public AuthenticationStrategy {
+public:
+  Token(std::string token) : token_(token) {}
+  std::experimental::optional<std::string> authenticate(const VaultClient& vaultClient) {
+    return token_;
+  }
+private:
+  std::string token_;
+};
+
 class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
