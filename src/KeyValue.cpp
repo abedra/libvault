@@ -4,7 +4,7 @@
 KeyValue::KeyValue(const VaultClient& client) :
   version_(KeyValue::Version::v2),
   client_(client),
-  mount_("/secret")
+  mount_("secret")
 {}
 
 KeyValue::KeyValue(const VaultClient& client,
@@ -18,7 +18,7 @@ KeyValue::KeyValue(const VaultClient& client,
 		   KeyValue::Version version) :
   version_(version),
   client_(client),
-  mount_("/secret")
+  mount_("secret")
 {}
 
 KeyValue::KeyValue(const VaultClient &client,
@@ -33,17 +33,17 @@ std::string
 KeyValue::getUrl(std::string path) {
   switch (version_) {
   case KeyValue::Version::v1:
-    return client_.getUrl("/v1" + mount_ + "/", path);
+    return client_.getUrl("/v1/" + mount_ + "/", path);
   case KeyValue::Version::v2:
-    return client_.getUrl("/v1" + mount_ + "/data/", path);
+    return client_.getUrl("/v1/" + mount_ + "/data/", path);
   default:
-    return client_.getUrl("/v1" + mount_ + "/data/", path);
+    return client_.getUrl("/v1/" + mount_ + "/data/", path);
   }
 }
 
 std::string
 KeyValue::getMetadataUrl(std::string path) {
-  return client_.getUrl("/v1" + mount_ + "/metadata/", path);
+  return client_.getUrl("/v1/" + mount_ + "/metadata/", path);
 }
 
 optional<std::string>
