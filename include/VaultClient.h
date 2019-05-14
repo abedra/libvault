@@ -15,6 +15,7 @@ class AuthenticationStrategy;
 using HttpErrorCallback = std::function<void(std::string)>;
 using CurlSetupCallback = std::function<void(CURL *curl)>;
 using Parameters = std::unordered_map<std::string, std::string>;
+template <typename T> using optional = std::experimental::optional<T>;
 
 struct HttpResponse {
   long statusCode;
@@ -133,17 +134,17 @@ public:
   HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  std::experimental::optional<HttpResponse> get(std::string url, std::string string, std::string ns) const;
-  std::experimental::optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value) const;
-  std::experimental::optional<HttpResponse> del(std::string url, std::string token, std::string ns) const;
-  std::experimental::optional<HttpResponse> list(std::string url, std::string token, std::string ns) const;
+  optional<HttpResponse> get(std::string url, std::string string, std::string ns) const;
+  optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value) const;
+  optional<HttpResponse> del(std::string url, std::string token, std::string ns) const;
+  optional<HttpResponse> list(std::string url, std::string token, std::string ns) const;
 
-  static bool is_success(std::experimental::optional<HttpResponse> response);
+  static bool is_success(optional<HttpResponse> response);
 private:
   bool debug_;
   bool verify_;
   HttpErrorCallback errorCallback_;
-  std::experimental::optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback) const;
+  optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback) const;
 };
 
 class VaultConfig {
@@ -236,18 +237,18 @@ private:
 
 class AuthenticationStrategy {
 public:
-  virtual std::experimental::optional<std::string> authenticate(const VaultClient& client) = 0;
+  virtual optional<std::string> authenticate(const VaultClient& client) = 0;
 };
 
 class VaultHttpConsumer {
 public:
-  static std::experimental::optional<std::string> post(const VaultClient& client, const std::string& uri, Parameters parameters);
+  static optional<std::string> post(const VaultClient& client, const std::string& uri, Parameters parameters);
 };
 
 class Token : public AuthenticationStrategy {
 public:
   Token(std::string token) : token_(token) {}
-  std::experimental::optional<std::string> authenticate(const VaultClient& vaultClient) {
+  optional<std::string> authenticate(const VaultClient& vaultClient) {
     return token_;
   }
 private:
@@ -258,7 +259,7 @@ class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
 
-  std::experimental::optional<std::string> authenticate(const VaultClient& vaultClient);
+  optional<std::string> authenticate(const VaultClient& vaultClient);
 private:
   std::string role_id_;
   std::string secret_id_;
@@ -275,12 +276,12 @@ public:
   KeyValue(const VaultClient& client, KeyValue::Version version);
   KeyValue(const VaultClient& client, std::string mount, KeyValue::Version version);
 
-  std::experimental::optional<std::string> list(std::string path);
-  std::experimental::optional<std::string> get(std::string path);
-  std::experimental::optional<std::string> put(std::string path, std::unordered_map<std::string, std::string> map);
-  std::experimental::optional<std::string> del(std::string path);
-  std::experimental::optional<std::string> del(std::string path, std::vector<long> versions);
-  std::experimental::optional<std::string> destroy(std::string path, std::vector<long> versions);
+  optional<std::string> list(std::string path);
+  optional<std::string> get(std::string path);
+  optional<std::string> put(std::string path, std::unordered_map<std::string, std::string> map);
+  optional<std::string> del(std::string path);
+  optional<std::string> del(std::string path, std::vector<long> versions);
+  optional<std::string> destroy(std::string path, std::vector<long> versions);
 private:
   const VaultClient& client_;
   KeyValue::Version version_;
@@ -294,15 +295,15 @@ class Transit {
 public:
   Transit(const VaultClient& client);
 
-  std::experimental::optional<std::string> encrypt(std::string path, Parameters parameters);
-  std::experimental::optional<std::string> decrypt(std::string path, Parameters parameters);
-  std::experimental::optional<std::string> generate_data_key(std::string path, Parameters parameters);
-  std::experimental::optional<std::string> generate_wrapped_data_key(std::string path, Parameters parameters);
-  std::experimental::optional<std::string> generate_random_bytes(int num_bytes, Parameters parameters);
-  std::experimental::optional<std::string> hash(std::string algorithm, Parameters parameters);
-  std::experimental::optional<std::string> hmac(std::string key, std::string algorithm, Parameters Parameters);
-  std::experimental::optional<std::string> sign(std::string key, std::string algorithm, Parameters Parameters);
-  std::experimental::optional<std::string> verify(std::string key, std::string algorithm, Parameters Parameters);
+  optional<std::string> encrypt(std::string path, Parameters parameters);
+  optional<std::string> decrypt(std::string path, Parameters parameters);
+  optional<std::string> generate_data_key(std::string path, Parameters parameters);
+  optional<std::string> generate_wrapped_data_key(std::string path, Parameters parameters);
+  optional<std::string> generate_random_bytes(int num_bytes, Parameters parameters);
+  optional<std::string> hash(std::string algorithm, Parameters parameters);
+  optional<std::string> hmac(std::string key, std::string algorithm, Parameters Parameters);
+  optional<std::string> sign(std::string key, std::string algorithm, Parameters Parameters);
+  optional<std::string> verify(std::string key, std::string algorithm, Parameters Parameters);
 private:
   const VaultClient& client_;
   std::string getUrl(std::string path);

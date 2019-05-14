@@ -46,13 +46,13 @@ KeyValue::getMetadataUrl(std::string path) {
   return client_.getUrl("/v1" + mount_ + "/metadata/", path);
 }
 
-std::experimental::optional<std::string>
+optional<std::string>
 KeyValue::list(std::string path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
-  std::experimental::optional<HttpResponse> response;
+  optional<HttpResponse> response;
 
   if (version_ == KeyValue::Version::v1) {
     response = client_.getHttpClient()
@@ -63,11 +63,11 @@ KeyValue::list(std::string path) {
   }
 
   return HttpClient::is_success(response) ?
-    std::experimental::optional<std::string>(response.value().body) :
+    optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
 
-std::experimental::optional<std::string>
+optional<std::string>
 KeyValue::get(std::string path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
@@ -77,11 +77,11 @@ KeyValue::get(std::string path) {
     .get(getUrl(path), client_.getToken(), client_.getNamespace());
 
   return HttpClient::is_success(response) ?
-    std::experimental::optional<std::string>(response.value().body) :
+    optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
 
-std::experimental::optional<std::string>
+optional<std::string>
 KeyValue::put(std::string path,
 	      std::unordered_map<std::string, std::string> map) {
   if (!client_.is_authenticated()) {
@@ -99,11 +99,11 @@ KeyValue::put(std::string path,
     .post(getUrl(path), client_.getToken(), client_.getNamespace(), j.dump());
 
   return response ?
-    std::experimental::optional<std::string>(response.value().body) :
+    optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
 
-std::experimental::optional<std::string>
+optional<std::string>
 KeyValue::del(std::string path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
@@ -113,11 +113,11 @@ KeyValue::del(std::string path) {
     .del(getUrl(path), client_.getToken(), client_.getNamespace());
 
   return HttpClient::is_success(response) ?
-    std::experimental::optional<std::string>(response.value().body) :
+    optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
 
-std::experimental::optional<std::string>
+optional<std::string>
 KeyValue::del(std::string path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
@@ -135,11 +135,11 @@ KeyValue::del(std::string path, std::vector<long> versions) {
     );
 
   return HttpClient::is_success(response) ?
-    std::experimental::optional<std::string>(response.value().body) :
+    optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }
 
-std::experimental::optional<std::string>
+optional<std::string>
 KeyValue::destroy(std::string path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
@@ -156,6 +156,6 @@ KeyValue::destroy(std::string path, std::vector<long> versions) {
   );
 
   return HttpClient::is_success(response) ?
-    std::experimental::optional<std::string>(response.value().body) :
+    optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }

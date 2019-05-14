@@ -1,7 +1,7 @@
 #include <nlohmann/json.hpp>
 #include "VaultClient.h"
 
-std::experimental::optional<std::string>
+optional<std::string>
 VaultHttpConsumer::post(const VaultClient& client,
                         const std::string& uri,
                         Parameters parameters) {
@@ -23,6 +23,6 @@ VaultHttpConsumer::post(const VaultClient& client,
           j.dump());
 
   return HttpClient::is_success(response) ?
-    std::experimental::optional<std::string>(response.value().body) :
+    optional<std::string>(response.value().body) :
     std::experimental::nullopt;
 }

@@ -8,7 +8,7 @@ std::string AppRole::getUrl(const VaultClient& client, std::string path) {
   return client.getUrl("/v1/auth/approle", path);
 }
 
-std::experimental::optional<std::string> AppRole::authenticate(const VaultClient& client) {
+optional<std::string> AppRole::authenticate(const VaultClient& client) {
   nlohmann::json j;
   j = nlohmann::json::object();
   j["role_id"] = role_id_;
