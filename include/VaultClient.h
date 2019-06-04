@@ -204,6 +204,7 @@ public:
 
   VaultConfigBuilder& connectTimeout(long timeout) {
       config_.connectTimeout_ = timeout;
+      return *this;
   }
 
   VaultConfig& getConfig() {
