@@ -131,20 +131,21 @@ public:
 
 class HttpClient {
 public:
-  HttpClient(VaultConfig& config);
+  explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  optional<HttpResponse> get(std::string url, std::string string, std::string ns) const;
-  optional<HttpResponse> post(std::string url, std::string token, std::string ns, std::string value) const;
-  optional<HttpResponse> del(std::string url, std::string token, std::string ns) const;
-  optional<HttpResponse> list(std::string url, std::string token, std::string ns) const;
+  optional<HttpResponse> get(const std::string& url, const std::string& string, const std::string& ns) const;
+  optional<HttpResponse> post(const std::string& url, const std::string& token, const std::string& ns, std::string value) const;
+  optional<HttpResponse> del(const std::string& url, const std::string& token, const std::string& ns) const;
+  optional<HttpResponse> list(const std::string& url, const std::string& token, const std::string& ns) const;
 
   static bool is_success(optional<HttpResponse> response);
 private:
   bool debug_;
   bool verify_;
+  long connectTimeout_;
   HttpErrorCallback errorCallback_;
-  optional<HttpResponse> executeRequest(std::string url, std::string token, std::string ns, CurlSetupCallback callback) const;
+  optional<HttpResponse> executeRequest(const std::string& url, const std::string& token, const std::string& ns, const CurlSetupCallback& callback) const;
 };
 
 class VaultConfig {
@@ -154,14 +155,16 @@ public:
   bool getTls() { return tls_; }
   bool getDebug() { return debug_; }
   bool getVerify() { return verify_; }
+  long getConnectTimeout() { return connectTimeout_; }
   std::string getHost() { return host_; }
   std::string getPort() { return port_; }
   std::string getNamespace() { return ns_; }
 private:
-  VaultConfig() : tls_(true), debug_(false), host_("localhost"), port_("8200"), ns_("") {}
+  VaultConfig() : tls_(true), debug_(false), verify_(true), connectTimeout_(10), host_("localhost"), port_("8200"), ns_("") {}
   bool tls_;
   bool debug_;
   bool verify_;
+  long connectTimeout_;
   std::string host_;
   std::string port_;
   std::string ns_;
@@ -199,11 +202,15 @@ public:
     return *this;
   }
 
+  VaultConfigBuilder& connectTimeout(long timeout) {
+      config_.connectTimeout_ = timeout;
+  }
+
   VaultConfig& getConfig() {
     return config_;
   }
 
-  operator VaultConfig&&() {
+  explicit operator VaultConfig&&() {
     return std::move(config_);
   }
 private:
