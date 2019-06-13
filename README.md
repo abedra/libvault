@@ -51,7 +51,7 @@ This project uses [nlohmann/json](https://github.com/nlohmann/json) internally b
 using json = nlohmann::json;
 
 // additional code removed for brevity, see example above
-auto data = json::parse(vaultClient.get("my_application");
+auto data = json::parse(vaultClient.get("my_application"));
 std::cout << data["data"] << std::endl;
 ```
 
