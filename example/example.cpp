@@ -1,23 +1,159 @@
 #include <iostream>
 #include "VaultClient.h"
 
+void print_response(std::experimental::optional<std::string> response) {
+  if (response) {
+    std::cout << response.value() << std::endl;
+  } else {
+    std::cout << "Error" << std::endl;
+  }
+}
+
+void kv1(VaultClient vaultClient) {
+  auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
+
+  std::unordered_map<std::string, std::string> data(
+  {
+    {"foo","bar"},
+    {"baz","foo"},
+    {"something", "quux"},
+  });
+
+  kv.put("hello", data);
+
+  print_response(kv.get("hello"));
+  print_response(kv.list("hello"));
+
+  kv.del("hello");
+  print_response(kv.get("hello"));
+}
+
+void kv2(VaultClient vaultClient) {
+  auto kv = KeyValue(vaultClient, "test");
+
+  std::unordered_map<std::string, std::string> data(
+  {
+    {"foo","world"},
+    {"baz","quux"},
+    {"something", "something else"},
+  });
+
+  kv.put("hello", data);
+
+  print_response(kv.get("hello"));
+  print_response(kv.list("hello"));
+
+  kv.destroy("hello", std::vector<long>({40,41,42,43}));
+
+  print_response(kv.get("hello"));
+}
+
+void transit_encrypt_decrypt(VaultClient vaultClient) {
+  auto transit = Transit(vaultClient);
+
+  auto input = Base64::encode("Attack at dawn");
+  Parameters parameters({ {"plaintext", input} });
+  print_response(transit.encrypt("mykey", parameters));
+
+  parameters = Parameters({ {"ciphertext", "vault:v1:wOWt0eYKlzLwVKitJchP9F456jMtiFZUc/tC8+0l5BE2SJLVw548yy6W"} });
+  print_response(transit.decrypt("mykey", parameters));
+}
+
+void transit_keys(VaultClient vaultClient) {
+  auto transit = Transit(vaultClient);
+
+  print_response(transit.generate_data_key("mykey", {{}}));
+  print_response(transit.generate_wrapped_data_key("mykey", {{}}));
+}
+
+void transit_random(VaultClient vaultClient) {
+  Transit transit(vaultClient);
+
+  Parameters parameters({ {"format","base64"} });
+  print_response(transit.generate_random_bytes(32, parameters));
+
+  parameters = Parameters({ {"format","hex"} });
+  print_response(transit.generate_random_bytes(32, parameters));
+}
+
+void transit_hash(VaultClient vaultClient) {
+  auto sha_224 = "sha2-224";
+  auto sha_256 = "sha2-256";
+  auto sha_384 = "sha2-384";
+  auto sha_512 = "sha2-512";
+
+  Transit transit(vaultClient);
+
+  auto input = Base64::encode("Attack at dawn");
+
+  Parameters parameters({ {"format","base64"}, {"input", input} });
+
+  print_response(transit.hash(sha_224, parameters));
+  print_response(transit.hash(sha_256, parameters));
+  print_response(transit.hash(sha_384, parameters));
+  print_response(transit.hash(sha_512, parameters));
+
+  parameters = Parameters({ {"format","hex"}, {"input", input} });
+
+  print_response(transit.hash(sha_224, parameters));
+  print_response(transit.hash(sha_256, parameters));
+  print_response(transit.hash(sha_384, parameters));
+  print_response(transit.hash(sha_512, parameters));
+}
+
+void transit_hmac(VaultClient vaultClient) {
+  auto sha_224 = "sha2-224";
+  auto sha_256 = "sha2-256";
+  auto sha_384 = "sha2-384";
+  auto sha_512 = "sha2-512";
+
+  Transit transit(vaultClient);
+
+  auto input = Base64::encode("Attack at dawn");
+
+  Parameters parameters({ {"input", input} });
+
+  print_response(transit.hmac("mykey", sha_224, parameters));
+  print_response(transit.hmac("mykey", sha_256, parameters));
+  print_response(transit.hmac("mykey", sha_384, parameters));
+  print_response(transit.hmac("mykey", sha_512, parameters));
+}
+
+void transit_sign(VaultClient vaultClient) {
+  auto sha_1   = "sha1";
+  auto sha_224 = "sha2-224";
+  auto sha_256 = "sha2-256";
+  auto sha_384 = "sha2-384";
+  auto sha_512 = "sha2-512";
+
+  Transit transit(vaultClient);
+
+  auto input = Base64::encode("Attack at dawn");
+
+  Parameters parameters({ {"input", input} });
+
+  print_response(transit.sign("mykey", sha_1, parameters));
+  print_response(transit.sign("mykey", sha_224, parameters));
+  print_response(transit.sign("mykey", sha_256, parameters));
+  print_response(transit.sign("mykey", sha_384, parameters));
+  print_response(transit.sign("mykey", sha_512, parameters));
+}
+
 auto main() -> int
 {
-    auto authStrategy = AppRole("9ce0eddc-0cd5-dd87-4c08-eb5ee9b3eca6", "043f002e-de24-6cd0-a37c-d44601400fb1");
-    auto vaultClient = VaultClient("127.0.0.1", "8200", authStrategy);
-    auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
-    auto kv2 = KeyValue(vaultClient, "/test");
+  HttpErrorCallback httpErrorCallback = [&](std::string err) {
+    std::cout << err << std::endl;
+  };
 
-    std::unordered_map<std::string, std::string> data(
-    {
-        {"foo","world"},
-        {"baz","quux"},
-        {"something", "something else"},
-    });
+  auto config = VaultConfig::make().host("192.168.1.20").tls(false).getConfig();
+  auto authStrategy = AppRole("9ce0eddc-0cd5-dd87-4c08-eb5ee9b3eca6", "043f002e-de24-6cd0-a37c-d44601400fb1");
+  auto vaultClient = VaultClient(config, authStrategy, httpErrorCallback);
 
-    kv.put("hello", data);
-    kv2.put("hello", data);
-
-    std::cout << kv.get("hello") << std::endl;
-    std::cout << kv2.get("hello") << std::endl;
+  // kv1(vaultClient);
+  // kv2(vaultClient);
+  // transit_encrypt_decrypt(vaultClient);
+  // transit_keys(vaultClient);
+  // transit_random(vaultClient);
+  // transit_hash(vaultClient);
+  // transit_hmac(vaultClient);
 }
