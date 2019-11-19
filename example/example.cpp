@@ -139,21 +139,29 @@ void transit_sign(VaultClient vaultClient) {
   print_response(transit.sign("mykey", sha_512, parameters));
 }
 
-auto main() -> int
-{
-  HttpErrorCallback httpErrorCallback = [&](std::string err) {
-    std::cout << err << std::endl;
-  };
+static std::string getOrDefault(const char *name, std::string defaultValue) {
+    auto value = std::getenv(name);
 
-  auto config = VaultConfig::make().host("192.168.1.20").tls(false).getConfig();
-  auto authStrategy = AppRole("9ce0eddc-0cd5-dd87-4c08-eb5ee9b3eca6", "043f002e-de24-6cd0-a37c-d44601400fb1");
-  auto vaultClient = VaultClient(config, authStrategy, httpErrorCallback);
+    return value ? value : defaultValue;
+}
 
-  // kv1(vaultClient);
-  // kv2(vaultClient);
-  // transit_encrypt_decrypt(vaultClient);
-  // transit_keys(vaultClient);
-  // transit_random(vaultClient);
-  // transit_hash(vaultClient);
-  // transit_hmac(vaultClient);
+auto main() -> int {
+    HttpErrorCallback httpErrorCallback = [&](std::string err) {
+        std::cout << err << std::endl;
+    };
+
+    auto roleId = getOrDefault("APPROLE_ROLE_ID", "");
+    auto secretId = getOrDefault("APPROLE_SECRET_ID", "");
+
+    auto config = VaultConfig::make().host("192.168.1.20").tls(false).getConfig();
+    auto authStrategy = AppRole(roleId, secretId);
+    auto vaultClient = VaultClient(config, authStrategy, httpErrorCallback);
+
+    kv1(vaultClient);
+    kv2(vaultClient);
+    transit_encrypt_decrypt(vaultClient);
+    transit_keys(vaultClient);
+    transit_random(vaultClient);
+    transit_hash(vaultClient);
+    transit_hmac(vaultClient);
 }
