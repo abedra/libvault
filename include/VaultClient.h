@@ -4,6 +4,7 @@
 #include <curl/curl.h>
 #include <functional>
 #include <experimental/optional>
+#include <utility>
 #include <vector>
 
 class VaultConfigBuilder;
@@ -151,7 +152,6 @@ private:
 class VaultConfig {
 public:
   friend class VaultConfigBuilder;
-  static VaultConfigBuilder make();
   bool getTls() { return tls_; }
   bool getDebug() { return debug_; }
   bool getVerify() { return verify_; }
@@ -172,42 +172,42 @@ private:
 
 class VaultConfigBuilder {
 public:
-  VaultConfigBuilder& tls(bool flag) {
+  VaultConfigBuilder& withTlsEnabled(bool flag) {
     config_.tls_ = flag;
     return *this;
   }
 
-  VaultConfigBuilder& debug(bool flag) {
+  VaultConfigBuilder& withDebug(bool flag) {
     config_.debug_ = flag;
     return *this;
   }
 
-  VaultConfigBuilder& verify(bool flag) {
+  VaultConfigBuilder& withTlsVerification(bool flag) {
     config_.verify_ = flag;
     return *this;
   }
 
-  VaultConfigBuilder& host(std::string host) {
-    config_.host_ = host;
+  VaultConfigBuilder& withHost(std::string host) {
+    config_.host_ = std::move(host);
     return *this;
   }
 
-  VaultConfigBuilder& port(std::string port) {
-    config_.port_ = port;
+  VaultConfigBuilder& withPort(std::string port) {
+    config_.port_ = std::move(port);
     return *this;
   }
 
-  VaultConfigBuilder& ns(std::string ns) {
-    config_.ns_ = ns;
+  VaultConfigBuilder& withNamespace(std::string ns) {
+    config_.ns_ = std::move(ns);
     return *this;
   }
 
-  VaultConfigBuilder& connectTimeout(long timeout) {
+  VaultConfigBuilder& withConnectTimeout(long timeout) {
       config_.connectTimeout_ = timeout;
       return *this;
   }
 
-  VaultConfig& getConfig() {
+  VaultConfig& build() {
     return config_;
   }
 

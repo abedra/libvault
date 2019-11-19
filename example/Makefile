@@ -8,4 +8,4 @@ example: example.o
 
 .PHONY: clean
 clean:
-	rm example.o example
+	rm -f example.o example

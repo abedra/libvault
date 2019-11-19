@@ -20,7 +20,7 @@ public:
 private:
 };
 
-auto config = VaultConfig::make().getConfig();
+auto config = VaultConfigBuilder().build();
 
 TEST_CASE("VaultClient#is_authenticated failure")
 {
@@ -46,7 +46,7 @@ TEST_CASE("VaultClient#getUrl")
 TEST_CASE("VaultClient#getUrl tls false")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(VaultConfig::make().tls(false).getConfig(), strategy);
+  auto vaultClient = VaultClient(VaultConfigBuilder().withTlsEnabled(false).build(), strategy);
   REQUIRE(vaultClient.getUrl("/base", "/path") == "http://localhost:8200/base/path");
 }
 
@@ -60,7 +60,7 @@ TEST_CASE("VaultClient#getToken")
 TEST_CASE("VaultClient#getNamespace")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(VaultConfig::make().ns("ns").getConfig(), strategy);
+  auto vaultClient = VaultClient(VaultConfigBuilder().withNamespace("ns").build(), strategy);
   REQUIRE(vaultClient.getNamespace() == "ns");
 }
 
@@ -84,7 +84,7 @@ TEST_CASE("HttpClient#is_success when status 200")
 
 TEST_CASE("VaultConfig#make default")
 {
-  auto config = VaultConfig::make().getConfig();
+  auto config = VaultConfigBuilder().build();
 
   REQUIRE(config.getHost() == "localhost");
   REQUIRE(config.getPort() == "8200");
@@ -95,14 +95,14 @@ TEST_CASE("VaultConfig#make default")
 
 TEST_CASE("VaultConfig#make options set")
 {
-  auto config = VaultConfig::make()
-    .host("example.com")
-    .port("8100")
-    .verify(false)
-    .tls(false)
-    .debug(true)
-    .connectTimeout(5)
-    .getConfig();
+  auto config = VaultConfigBuilder()
+    .withHost("example.com")
+    .withPort("8100")
+    .withTlsVerification(false)
+    .withTlsEnabled(false)
+    .withDebug(true)
+    .withConnectTimeout(5)
+    .build();
 
   REQUIRE(config.getHost() == "example.com");
   REQUIRE(config.getPort() == "8100");
