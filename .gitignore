@@ -2,7 +2,7 @@
 cmake-build-debug
 CMakeCache.txt
 CMakeFiles
-Makefile
+./Makefile
 cmake_install.cmake
 example/example
 build
