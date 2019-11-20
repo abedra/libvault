@@ -66,3 +66,11 @@ cd build
 cmake ../
 make
 ```
+
+### windows VC14 (Visual Studio 2015) or greater
+```
+mkdir build && cd build
+cmake -G "Visual Studio 14 2015 Win64" .. -DCURL_INCLUDE_DIR="C:\path\to\curl\include" -DCURL_LIBRARY="C:\path\to\curl\binary\libcurl.lib"
+open vault.sln and build
+
+```
