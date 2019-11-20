@@ -1,9 +1,36 @@
 #pragma once
 
+//#if defined __has_include
+// classic __has_include example from open-std.org
+#if __has_include(<optional>) 
+	#include <optional>
+	#define have_optional 1
+	template <typename T> using optional = std::optional<T>;
+	
+#elif __has_include(<experimental/optional>) 
+	#include <experimental/optional>
+	#define have_optional 1
+	#define experimental_optional 1
+	template <typename T> using optional = std::experimental::optional<T>;
+	
+#else
+	//force use Andrzej Krzemienski optional
+	#include <optional.hpp>
+	#define have_optional 1
+	#define experimental_optional 1
+	#define boostlike_optional 1
+	template <typename T> using optional = std::experimental::optional<T>;
+#endif	
+//#else
+//	#include <optional.hpp>
+//	#define have_optional 1
+//	#define boostlike_optional 1
+//	template <typename T> using optional = std::experimental::optional<T>;
+//#endif
+
 #include <unordered_map>
 #include <curl/curl.h>
 #include <functional>
-#include <experimental/optional>
 #include <utility>
 #include <vector>
 
@@ -16,7 +43,7 @@ class AuthenticationStrategy;
 using HttpErrorCallback = std::function<void(std::string)>;
 using CurlSetupCallback = std::function<void(CURL *curl)>;
 using Parameters = std::unordered_map<std::string, std::string>;
-template <typename T> using optional = std::experimental::optional<T>;
+
 
 struct HttpResponse {
   long statusCode;
@@ -31,10 +58,10 @@ public:
   }
 
   static std::string encode(std::string value) {
-    return encode(reinterpret_cast<const unsigned char*>(value.c_str()), value.length());
+    return encode(value.c_str() , value.length() );
   }
 
-  static std::string encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
+  static std::string encode(const char* bytes_to_encode, std::size_t in_len) {
     std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     std::string ret;
     int i = 0;
@@ -82,18 +109,18 @@ public:
 
   static std::string decode(std::string const& encoded_string) {
     std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    int in_len = encoded_string.size();
+    size_t in_len = encoded_string.size();
     int i = 0;
     int j = 0;
     int in_ = 0;
-    unsigned char char_array_4[4], char_array_3[3];
+    char char_array_4[4], char_array_3[3];
     std::string ret;
 
     while (in_len-- && ( encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
       char_array_4[i++] = encoded_string[in_]; in_++;
       if (i ==4) {
         for (i = 0; i <4; i++) {
-          char_array_4[i] = base64_chars.find(char_array_4[i]);
+          char_array_4[i] = static_cast<char>( base64_chars.find(char_array_4[i]) );
         }
 
         char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
@@ -114,7 +141,7 @@ public:
       }
 
       for (j = 0; j <4; j++) {
-        char_array_4[j] = base64_chars.find(char_array_4[j]);
+        char_array_4[j] = static_cast<char>( base64_chars.find(char_array_4[j]) );
       }
 
       char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);

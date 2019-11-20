@@ -23,6 +23,10 @@ optional<std::string> AppRole::authenticate(const VaultClient& client) {
   if (HttpClient::is_success(response)) {
     return nlohmann::json::parse(response.value().body)["auth"]["client_token"];
   } else {
+#ifdef experimental_optional
     return std::experimental::nullopt;
+#else
+	  return std::nullopt;
+#endif
   }
 }
