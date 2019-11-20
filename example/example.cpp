@@ -10,9 +10,9 @@ void print_response(std::experimental::optional<std::string> response) {
 }
 
 void kv1(VaultClient vaultClient) {
-  auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
+  auto kv = KeyValue(vaultClient, "xx-secret", KeyValue::Version::v2);
 
-  std::unordered_map<std::string, std::string> data(
+ /* std::unordered_map<std::string, std::string> data(
   {
     {"foo","bar"},
     {"baz","foo"},
@@ -20,12 +20,12 @@ void kv1(VaultClient vaultClient) {
   });
 
   kv.put("hello", data);
+*/
+  print_response(kv.get("master-key"));
+  print_response(kv.list("xx-secret"));
 
-  print_response(kv.get("hello"));
-  print_response(kv.list("hello"));
-
-  kv.del("hello");
-  print_response(kv.get("hello"));
+ /* kv.del("hello");
+  print_response(kv.get("hello"));*/
 }
 
 void kv2(VaultClient vaultClient) {
@@ -146,26 +146,30 @@ static std::string getOrDefault(const char *name, std::string defaultValue) {
 }
 
 auto main() -> int {
+	std::cout << "hello\nhello\nhello\nhello\nhello\nhello\nhello\nhello\n" << std::endl;
     HttpErrorCallback httpErrorCallback = [&](std::string err) {
-        std::cout << err << std::endl;
+        std::cout << "ERROR:" << err << std::endl;
     };
 
     auto roleId = getOrDefault("APPROLE_ROLE_ID", "");
-    auto secretId = getOrDefault("APPROLE_SECRET_ID", "");
+    auto secretId = getOrDefault("APPROLE_SECRET_ID", "myroot");
 
     auto config = VaultConfigBuilder()
-            .withHost("192.168.1.20")
-            .withTlsEnabled(false)
+            .withHost("pki.rndsec.bp.intranet.exfo.com")
+			.withPort("443")
+            .withTlsEnabled(true)
+			.withTlsVerification(false)
+			.withDebug(true)			
             .build();
 
-    auto authStrategy = AppRole{roleId, secretId};
+    auto authStrategy = Ldap{"aaaaaa", "xxxxxxx"};
     auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
 
     kv1(vaultClient);
-    kv2(vaultClient);
+   /* kv2(vaultClient);
     transit_encrypt_decrypt(vaultClient);
     transit_keys(vaultClient);
     transit_random(vaultClient);
     transit_hash(vaultClient);
-    transit_hmac(vaultClient);
+    transit_hmac(vaultClient);*/
 }

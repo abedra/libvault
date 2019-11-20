@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 option(ENABLE_TEST "Enable tests?" OFF)
-
+option(SHARED_LIB "Shared library" ON)
 
 
 
@@ -36,7 +36,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
 
-
+IF(SHARED_LIB)
+add_compile_definitions(_LIBVAULT_EXPORTING)
+ENDIF(SHARED_LIB)
 message(${CURL_LIBRARIES})
 message(${CURL_INCLUDE_DIRS})
 
@@ -52,7 +54,8 @@ add_library(vault SHARED
   src/HttpClient.cpp
   src/KeyValue.cpp
   src/Transit.cpp
-  src/AppRole.cpp)
+  src/AppRole.cpp
+  src/Ldap.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
@@ -64,12 +67,12 @@ target_include_directories(vault PRIVATE src)
 
 target_link_libraries(vault ${CURL_LIBRARIES})
 
+add_subdirectory(example)
+
 if (UNIX)
-  set(CMAKE_INSTALL_DIR )
   install(TARGETS vault
     LIBRARY DESTINATION ${CMAKE_INSTALL_BINDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
 
   configure_file(vault.pc.in vault.pc @ONLY)
 endif(UNIX)
