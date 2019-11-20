@@ -18,6 +18,14 @@ template <typename T> using optional = std::experimental::optional<T>;
 #include <utility>
 #include <vector>
 
+
+#ifdef _LIBVAULT_EXPORTING
+#define LIBVAULT_DECLSPEC __declspec(dllexport)
+#else
+#define LIBVAULT_DECLSPEC __declspec(dllimport)
+#endif 
+
+
 class VaultConfigBuilder;
 class AppRole;
 class VaultClient;
@@ -141,7 +149,7 @@ public:
   }
 };
 
-class HttpClient {
+class LIBVAULT_DECLSPEC  HttpClient {
 public:
   explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
@@ -160,7 +168,7 @@ private:
   optional<HttpResponse> executeRequest(const std::string& url, const std::string& token, const std::string& ns, const CurlSetupCallback& callback) const;
 };
 
-class VaultConfig {
+class LIBVAULT_DECLSPEC  VaultConfig {
 public:
   friend class VaultConfigBuilder;
   bool getTls() { return tls_; }
@@ -181,7 +189,7 @@ private:
   std::string ns_;
 };
 
-class VaultConfigBuilder {
+class LIBVAULT_DECLSPEC  VaultConfigBuilder {
 public:
   VaultConfigBuilder& withTlsEnabled(bool flag) {
     config_.tls_ = flag;
@@ -229,7 +237,7 @@ private:
   VaultConfig config_;
 };
 
-class VaultClient {
+class LIBVAULT_DECLSPEC  VaultClient {
 public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
@@ -254,17 +262,17 @@ private:
   AuthenticationStrategy& authStrategy_;
 };
 
-class AuthenticationStrategy {
+class LIBVAULT_DECLSPEC  AuthenticationStrategy {
 public:
   virtual optional<std::string> authenticate(const VaultClient& client) = 0;
 };
 
-class VaultHttpConsumer {
+class LIBVAULT_DECLSPEC  VaultHttpConsumer {
 public:
   static optional<std::string> post(const VaultClient& client, const std::string& uri, Parameters parameters);
 };
 
-class Token : public AuthenticationStrategy {
+class LIBVAULT_DECLSPEC  Token : public AuthenticationStrategy {
 public:
   Token(std::string token) : token_(token) {}
   optional<std::string> authenticate(const VaultClient& vaultClient) {
@@ -274,7 +282,7 @@ private:
   std::string token_;
 };
 
-class AppRole : public AuthenticationStrategy {
+class LIBVAULT_DECLSPEC  AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
 
@@ -286,7 +294,21 @@ private:
   std::string getUrl(const VaultClient& vaultClient, std::string path);
 };
 
-class KeyValue {
+class LIBVAULT_DECLSPEC  Ldap : public AuthenticationStrategy {
+public:
+	Ldap(std::string username, std::string password);
+
+	optional<std::string> authenticate(const VaultClient& vaultClient);
+private:
+	
+	std::string username;
+	std::string password;
+
+	std::string getUrl(const VaultClient& vaultClient, std::string path);
+};
+
+
+class LIBVAULT_DECLSPEC  KeyValue {
 public:
   enum Version { v1, v2 };
 
@@ -310,7 +332,7 @@ private:
   std::string getMetadataUrl(std::string path);
 };
 
-class Transit {
+class LIBVAULT_DECLSPEC  Transit {
 public:
   Transit(const VaultClient& client);
 
