@@ -1,32 +1,16 @@
 #pragma once
 
-//#if defined __has_include
-// classic __has_include example from open-std.org
-#if __has_include(<optional>) 
-	#include <optional>
-	#define have_optional 1
-	template <typename T> using optional = std::optional<T>;
-	
-#elif __has_include(<experimental/optional>) 
+#if __has_include(<experimental/optional>) 
 	#include <experimental/optional>
 	#define have_optional 1
-	#define experimental_optional 1
-	template <typename T> using optional = std::experimental::optional<T>;
 	
 #else
 	//force use Andrzej Krzemienski optional
 	#include <optional.hpp>
 	#define have_optional 1
-	#define experimental_optional 1
-	#define boostlike_optional 1
-	template <typename T> using optional = std::experimental::optional<T>;
 #endif	
-//#else
-//	#include <optional.hpp>
-//	#define have_optional 1
-//	#define boostlike_optional 1
-//	template <typename T> using optional = std::experimental::optional<T>;
-//#endif
+
+template <typename T> using optional = std::experimental::optional<T>;
 
 #include <unordered_map>
 #include <curl/curl.h>
