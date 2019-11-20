@@ -267,12 +267,12 @@ class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
 
-  optional<std::string> authenticate(const VaultClient& vaultClient);
+  optional<std::string> authenticate(const VaultClient& vaultClient) override;
 private:
   std::string role_id_;
   std::string secret_id_;
 
-  std::string getUrl(const VaultClient& vaultClient, std::string path);
+  static std::string getUrl(const VaultClient& vaultClient, std::string path);
 };
 
 class KeyValue {

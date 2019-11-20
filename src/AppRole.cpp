@@ -1,11 +1,14 @@
 #include <nlohmann/json.hpp>
+#include <utility>
 #include "VaultClient.h"
 
-AppRole::AppRole(std::string role_id, std::string secret_id) :
-  role_id_(role_id), secret_id_(secret_id) {}
+AppRole::AppRole(std::string role_id, std::string secret_id)
+  : role_id_(std::move(role_id))
+  , secret_id_(std::move(secret_id))
+  {}
 
 std::string AppRole::getUrl(const VaultClient& client, std::string path) {
-  return client.getUrl("/v1/auth/approle", path);
+  return client.getUrl("/v1/auth/approle", std::move(path));
 }
 
 optional<std::string> AppRole::authenticate(const VaultClient& client) {
