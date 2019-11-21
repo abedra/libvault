@@ -6,7 +6,6 @@ Ldap::Ldap(std::string uname, std::string pwd) :
 
 std::string Ldap::getUrl(const VaultClient& client, std::string path) {
 	return client.getUrl("/v1/auth/ldap/login/", path);
-	//https://pki.rndsec.bp.intranet.exfo.com/v1/auth/ldap/login/anglis1
 }
 
 optional<std::string> Ldap::authenticate(const VaultClient& client) {
