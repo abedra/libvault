@@ -155,7 +155,7 @@ auto main() -> int {
     auto secretId = getOrDefault("APPROLE_SECRET_ID", "myroot");
 
     auto config = VaultConfigBuilder()
-            .withHost("pki.rndsec.bp.intranet.exfo.com")
+            .withHost("127.0.0.1")
 			.withPort("443")
             .withTlsEnabled(true)
 			.withTlsVerification(false)
