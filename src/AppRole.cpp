@@ -7,8 +7,8 @@ AppRole::AppRole(std::string role_id, std::string secret_id)
   , secret_id_(std::move(secret_id))
   {}
 
-std::string AppRole::getUrl(const VaultClient& client, std::string path) {
-  return client.getUrl("/v1/auth/approle", std::move(path));
+std::string AppRole::getUrl(const VaultClient& client, const std::string& path) {
+  return client.getUrl("/v1/auth/approle", path);
 }
 
 optional<std::string> AppRole::authenticate(const VaultClient& client) {

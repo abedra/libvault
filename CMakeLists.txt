@@ -22,7 +22,7 @@ add_library(vault SHARED
   src/HttpClient.cpp
   src/KeyValue.cpp
   src/Transit.cpp
-  src/AppRole.cpp)
+  src/AppRole.cpp src/Unwrap.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}

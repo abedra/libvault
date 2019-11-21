@@ -139,6 +139,10 @@ void transit_sign(VaultClient vaultClient) {
   print_response(transit.sign("mykey", sha_512, parameters));
 }
 
+void unwrap(VaultClient vaultClient, std::string token) {
+  print_response(Unwrap::unwrap(vaultClient, token));
+}
+
 static std::string getOrDefault(const char *name, std::string defaultValue) {
     auto value = std::getenv(name);
 
@@ -158,14 +162,17 @@ auto main() -> int {
             .withTlsEnabled(false)
             .build();
 
+    unwrap(vaultClient, "");
+
     auto authStrategy = AppRole{roleId, secretId};
     auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
 
-    kv1(vaultClient);
-    kv2(vaultClient);
-    transit_encrypt_decrypt(vaultClient);
-    transit_keys(vaultClient);
-    transit_random(vaultClient);
-    transit_hash(vaultClient);
-    transit_hmac(vaultClient);
+//    kv1(vaultClient);
+//    kv2(vaultClient);
+//    transit_encrypt_decrypt(vaultClient);
+//    transit_keys(vaultClient);
+//    transit_random(vaultClient);
+//    transit_hash(vaultClient);
+//    transit_hmac(vaultClient);
+
 }

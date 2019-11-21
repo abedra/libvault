@@ -1,13 +1,17 @@
 #include "VaultClient.h"
 
-VaultClient::VaultClient(VaultConfig& config,
-			 AuthenticationStrategy& authStrategy) :
-  host_(config.getHost()),
-  port_(config.getPort()),
-  namespace_(config.getNamespace()),
-  tls_(config.getTls()),
-  authStrategy_(authStrategy),
-  httpClient_(HttpClient(config))
+#include <utility>
+
+VaultClient::VaultClient(
+        VaultConfig& config,
+		AuthenticationStrategy& authStrategy)
+  : host_(config.getHost())
+  , port_(config.getPort())
+  , namespace_(config.getNamespace())
+  , tls_(config.getTls())
+  , authStrategy_(authStrategy)
+  , httpClient_(HttpClient(config))
+  , debug_(config.getDebug())
 {
   auto result = authStrategy_.authenticate(*this);
   if (result) {
@@ -15,15 +19,17 @@ VaultClient::VaultClient(VaultConfig& config,
   }
 }
 
-VaultClient::VaultClient(VaultConfig& config,
-			 AuthenticationStrategy& authStrategy,
-			 HttpErrorCallback httpErrorCallback) :
-  host_(config.getHost()),
-  port_(config.getPort()),
-  namespace_(config.getNamespace()),
-  tls_(config.getTls()),
-  authStrategy_(authStrategy),
-  httpClient_(HttpClient(config, httpErrorCallback))
+VaultClient::VaultClient(
+        VaultConfig& config,
+		AuthenticationStrategy& authStrategy,
+		HttpErrorCallback httpErrorCallback)
+  : host_(config.getHost())
+  , port_(config.getPort())
+  , namespace_(config.getNamespace())
+  , tls_(config.getTls())
+  , authStrategy_(authStrategy)
+  , httpClient_(HttpClient(config, std::move(httpErrorCallback)))
+  , debug_(config.getDebug())
 {
   auto result = authStrategy_.authenticate(*this);
   if (result) {
@@ -31,6 +37,6 @@ VaultClient::VaultClient(VaultConfig& config,
   }
 }
 
-std::string VaultClient::getUrl(std::string base, std::string path) const {
+std::string VaultClient::getUrl(const std::string& base, const std::string& path) const {
   return (tls_ ? "https://" : "http://") + host_ + ":" + port_ + base + path;
 }
