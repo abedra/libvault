@@ -18,12 +18,15 @@ template <typename T> using optional = std::experimental::optional<T>;
 #include <utility>
 #include <vector>
 
-
+#ifdef _WIN32 
 #ifdef _LIBVAULT_EXPORTING
 #define LIBVAULT_DECLSPEC __declspec(dllexport)
 #else
 #define LIBVAULT_DECLSPEC __declspec(dllimport)
 #endif 
+#else
+#define LIBVAULT_DECLSPEC
+#endif
 
 
 class VaultConfigBuilder;

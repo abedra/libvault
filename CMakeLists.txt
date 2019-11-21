@@ -4,8 +4,8 @@ project(vault VERSION 0.0.5 DESCRIPTION "Vault library for C++")
 set(CMAKE_CXX_STANDARD 14)
 
 
-option(ENABLE_TEST "Enable tests?" OFF)
-option(SHARED_LIB "Shared library" ON)
+option(ENABLE_TEST "Enable tests?" ON)
+option(SHARED_LIB "Shared library" OFF)
 
 
 
@@ -36,9 +36,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
 
-IF(SHARED_LIB)
-add_compile_definitions(_LIBVAULT_EXPORTING)
-ENDIF(SHARED_LIB)
 message(${CURL_LIBRARIES})
 message(${CURL_INCLUDE_DIRS})
 
@@ -67,6 +64,9 @@ target_include_directories(vault PRIVATE src)
 
 target_link_libraries(vault ${CURL_LIBRARIES})
 
+IF(SHARED_LIB)
+    add_definitions(-D_LIBVAULT_EXPORTING)
+ENDIF(SHARED_LIB)
 add_subdirectory(example)
 
 if (UNIX)
