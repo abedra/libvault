@@ -1,6 +1,5 @@
-#include "VaultClient.h"
-
 #include <utility>
+#include "VaultClient.h"
 
 VaultClient::VaultClient(
         VaultConfig& config,

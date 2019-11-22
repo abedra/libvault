@@ -156,16 +156,15 @@ auto main() -> int {
 
     auto roleId = getOrDefault("APPROLE_ROLE_ID", "");
     auto secretId = getOrDefault("APPROLE_SECRET_ID", "");
+    auto wrappedToken = getOrDefault("APPROLE_WRAPPED_TOKEN", "");
 
     auto config = VaultConfigBuilder()
             .withHost("192.168.1.20")
             .withTlsEnabled(false)
             .build();
 
-    unwrap(vaultClient, "");
-
-    auto authStrategy = AppRole{roleId, secretId};
-    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
+//    auto authStrategy = AppRole{roleId, secretId};
+//    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
 
 //    kv1(vaultClient);
 //    kv2(vaultClient);
@@ -175,4 +174,8 @@ auto main() -> int {
 //    transit_hash(vaultClient);
 //    transit_hmac(vaultClient);
 
+    auto wrappedAuthStrategy = WrappedSecretAppRole{roleId, wrappedToken};
+    auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+
+    kv2(wrappedVaultClient);
 }

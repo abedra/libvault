@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(vault VERSION 0.0.5 DESCRIPTION "Vault library for C++")
+project(vault VERSION 0.0.6 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -22,12 +22,16 @@ add_library(vault SHARED
   src/HttpClient.cpp
   src/KeyValue.cpp
   src/Transit.cpp
-  src/AppRole.cpp src/Unwrap.cpp)
+  src/AppRole.cpp
+  src/Unwrap.cpp
+  src/WrappedSecretAppRole.cpp
+)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION 0
-  PUBLIC_HEADER "include/VaultClient.h")
+  PUBLIC_HEADER "include/VaultClient.h"
+)
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
@@ -36,7 +40,8 @@ target_link_libraries(vault PRIVATE nlohmann_json::nlohmann_json)
 
 install(TARGETS vault
   LIBRARY DESTINATION ${CMAKE_INSTALL_DIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 configure_file(vault.pc.in vault.pc @ONLY)
 

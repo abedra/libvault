@@ -267,14 +267,12 @@ private:
 class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
-
   optional<std::string> authenticate(const VaultClient& vaultClient) override;
-  static optional<AppRole> authenticateWrapped(const VaultClient& client, std::string token, std::string role_id)
+
 private:
+  static std::string getUrl(const VaultClient& vaultClient, const std::string& path);
   std::string role_id_;
   std::string secret_id_;
-
-  static std::string getUrl(const VaultClient& vaultClient, const std::string& path);
 };
 
 class Unwrap {
@@ -283,6 +281,16 @@ public:
 
 private:
     static std::string getUrl(const VaultClient& client, std::string path);
+};
+
+class WrappedSecretAppRole : public AuthenticationStrategy {
+public:
+  WrappedSecretAppRole(std::string role_id, std::string token);
+  optional<std::string> authenticate(const VaultClient& vaultClient) override;
+
+private:
+  std::string role_id_;
+  std::string token_;
 };
 
 class KeyValue {
