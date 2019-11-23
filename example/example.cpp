@@ -139,6 +139,10 @@ void transit_sign(VaultClient vaultClient) {
   print_response(transit.sign("mykey", sha_512, parameters));
 }
 
+void unwrap(VaultClient vaultClient, std::string token) {
+  print_response(Unwrap::unwrap(vaultClient, token));
+}
+
 static std::string getOrDefault(const char *name, std::string defaultValue) {
     auto value = std::getenv(name);
 
@@ -152,20 +156,26 @@ auto main() -> int {
 
     auto roleId = getOrDefault("APPROLE_ROLE_ID", "");
     auto secretId = getOrDefault("APPROLE_SECRET_ID", "");
+    auto wrappedToken = getOrDefault("APPROLE_WRAPPED_TOKEN", "");
 
     auto config = VaultConfigBuilder()
             .withHost("192.168.1.20")
             .withTlsEnabled(false)
             .build();
 
-    auto authStrategy = AppRole{roleId, secretId};
-    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
+//    auto authStrategy = AppRole{roleId, secretId};
+//    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
 
-    kv1(vaultClient);
-    kv2(vaultClient);
-    transit_encrypt_decrypt(vaultClient);
-    transit_keys(vaultClient);
-    transit_random(vaultClient);
-    transit_hash(vaultClient);
-    transit_hmac(vaultClient);
+//    kv1(vaultClient);
+//    kv2(vaultClient);
+//    transit_encrypt_decrypt(vaultClient);
+//    transit_keys(vaultClient);
+//    transit_random(vaultClient);
+//    transit_hash(vaultClient);
+//    transit_hmac(vaultClient);
+
+    auto wrappedAuthStrategy = WrappedSecretAppRole{roleId, wrappedToken};
+    auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+
+    kv2(wrappedVaultClient);
 }

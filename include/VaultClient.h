@@ -223,13 +223,14 @@ public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
+  const HttpClient& getHttpClient() const { return httpClient_; }
+
   bool is_authenticated() const { return !token_.empty(); }
 
   std::string getToken() const { return token_; }
   std::string getNamespace() const { return namespace_; }
-  std::string getUrl(std::string base, std::string path) const;
+  std::string getUrl(const std::string& base, const std::string& path) const;
 
-  const HttpClient& getHttpClient() const { return httpClient_; }
 private:
   bool debug_;
   bool tls_;
@@ -266,13 +267,30 @@ private:
 class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
-
   optional<std::string> authenticate(const VaultClient& vaultClient) override;
+
 private:
+  static std::string getUrl(const VaultClient& vaultClient, const std::string& path);
   std::string role_id_;
   std::string secret_id_;
+};
 
-  static std::string getUrl(const VaultClient& vaultClient, std::string path);
+class Unwrap {
+public:
+  static optional<std::string> unwrap(const VaultClient &client, std::string token);
+
+private:
+  static std::string getUrl(const VaultClient& client, const std::string& path);
+};
+
+class WrappedSecretAppRole : public AuthenticationStrategy {
+public:
+  WrappedSecretAppRole(std::string role_id, std::string token);
+  optional<std::string> authenticate(const VaultClient& vaultClient) override;
+
+private:
+  std::string role_id_;
+  std::string token_;
 };
 
 class KeyValue {
