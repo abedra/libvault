@@ -3,7 +3,7 @@
 
 VaultClient::VaultClient(
         VaultConfig& config,
-		AuthenticationStrategy& authStrategy)
+        AuthenticationStrategy& authStrategy)
   : host_(config.getHost())
   , port_(config.getPort())
   , namespace_(config.getNamespace())
@@ -20,8 +20,8 @@ VaultClient::VaultClient(
 
 VaultClient::VaultClient(
         VaultConfig& config,
-		AuthenticationStrategy& authStrategy,
-		HttpErrorCallback httpErrorCallback)
+        AuthenticationStrategy& authStrategy,
+        HttpErrorCallback httpErrorCallback)
   : host_(config.getHost())
   , port_(config.getPort())
   , namespace_(config.getNamespace())

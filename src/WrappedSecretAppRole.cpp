@@ -1,5 +1,4 @@
 #include <utility>
-
 #include "VaultClient.h"
 
 WrappedSecretAppRole::WrappedSecretAppRole(std::string role_id, std::string token)
@@ -8,9 +7,9 @@ WrappedSecretAppRole::WrappedSecretAppRole(std::string role_id, std::string toke
   {}
 
 optional<std::string> WrappedSecretAppRole::authenticate(const VaultClient &vaultClient) {
-    auto secret_id = Unwrap::unwrap(vaultClient, token_);
+  auto secret_id = Unwrap::unwrap(vaultClient, token_);
 
-    return secret_id
-           ? AppRole(role_id_, secret_id.value()).authenticate(vaultClient)
-           : std::experimental::nullopt;
+  return secret_id
+    ? AppRole(role_id_, secret_id.value()).authenticate(vaultClient)
+    : std::experimental::nullopt;
 }

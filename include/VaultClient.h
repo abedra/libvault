@@ -280,7 +280,7 @@ public:
   static optional<std::string> unwrap(const VaultClient &client, std::string token);
 
 private:
-  static std::string getUrl(const VaultClient& client, std::string path);
+  static std::string getUrl(const VaultClient& client, const std::string& path);
 };
 
 class WrappedSecretAppRole : public AuthenticationStrategy {
