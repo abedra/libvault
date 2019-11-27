@@ -8,6 +8,11 @@
 #include <vector>
 
 /* Start Tiny Types */
+/* TODO
+ *
+ * Create String type and long type base that has typical operators
+ *
+*/
 
 struct HttpResponseBodyString {
   std::string value;
@@ -18,6 +23,10 @@ struct HttpResponseStatusCode {
 };
 
 struct Url {
+  std::string value;
+};
+
+struct Path {
   std::string value;
 };
 
@@ -270,7 +279,7 @@ public:
 
   Token getToken() const { return token_; }
   std::string getNamespace() const { return namespace_; }
-  Url getUrl(const std::string& base, const std::string& path) const;
+  Url getUrl(const std::string& base, const Path& path) const;
 
 private:
   bool debug_;
@@ -311,7 +320,7 @@ public:
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
-  static Url getUrl(const VaultClient& vaultClient, const std::string& path);
+  static Url getUrl(const VaultClient& vaultClient, const Path& path);
   std::string role_id_;
   std::string secret_id_;
 };
@@ -321,7 +330,7 @@ public:
   static optional<std::string> unwrap(const VaultClient &client, const Token& token);
 
 private:
-  static Url getUrl(const VaultClient& client, const std::string& path);
+  static Url getUrl(const VaultClient& client, const Path& path);
 };
 
 class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
@@ -343,35 +352,35 @@ public:
   KeyValue(const VaultClient& client, KeyValue::Version version);
   KeyValue(const VaultClient& client, std::string mount, KeyValue::Version version);
 
-  optional<std::string> list(const std::string& path);
-  optional<std::string> get(const std::string& path);
-  optional<std::string> put(const std::string& path, std::unordered_map<std::string, std::string> map);
-  optional<std::string> del(const std::string& path);
-  optional<std::string> del(const std::string& path, std::vector<long> versions);
-  optional<std::string> destroy(const std::string& path, std::vector<long> versions);
+  optional<std::string> list(const Path& path);
+  optional<std::string> get(const Path& path);
+  optional<std::string> put(const Path& path, std::unordered_map<std::string, std::string> map);
+  optional<std::string> del(const Path& path);
+  optional<std::string> del(const Path& path, std::vector<long> versions);
+  optional<std::string> destroy(const Path& path, std::vector<long> versions);
 private:
   const VaultClient& client_;
   KeyValue::Version version_;
   std::string mount_;
 
-  Url getUrl(const std::string& path);
-  Url getMetadataUrl(const std::string& path);
+  Url getUrl(const Path& path);
+  Url getMetadataUrl(const Path& path);
 };
 
 class Transit {
 public:
   explicit Transit(const VaultClient& client);
 
-  optional<std::string> encrypt(std::string path, Parameters parameters);
-  optional<std::string> decrypt(std::string path, Parameters parameters);
-  optional<std::string> generate_data_key(std::string path, Parameters parameters);
-  optional<std::string> generate_wrapped_data_key(std::string path, Parameters parameters);
-  optional<std::string> generate_random_bytes(int num_bytes, Parameters parameters);
-  optional<std::string> hash(std::string algorithm, Parameters parameters);
-  optional<std::string> hmac(std::string key, std::string algorithm, Parameters Parameters);
-  optional<std::string> sign(std::string key, std::string algorithm, Parameters Parameters);
-  optional<std::string> verify(std::string key, std::string algorithm, Parameters Parameters);
+  optional<std::string> encrypt(const Path& path, const Parameters& parameters);
+  optional<std::string> decrypt(const Path& path, const Parameters& parameters);
+  optional<std::string> generate_data_key(const Path& path, const Parameters& parameters);
+  optional<std::string> generate_wrapped_data_key(const Path& path, const Parameters& parameters);
+  optional<std::string> generate_random_bytes(int num_bytes, const Parameters& parameters);
+  optional<std::string> hash(const std::string& algorithm, const Parameters& parameters);
+  optional<std::string> hmac(const std::string& key, const std::string& algorithm, const Parameters& Parameters);
+  optional<std::string> sign(const std::string& key, const std::string& algorithm, const Parameters& Parameters);
+  optional<std::string> verify(const std::string& key, const std::string& algorithm, const Parameters& Parameters);
 private:
   const VaultClient& client_;
-  Url getUrl(const std::string& path);
+  Url getUrl(const Path& path);
 };

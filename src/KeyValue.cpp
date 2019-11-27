@@ -26,7 +26,7 @@ KeyValue::KeyValue(const VaultClient &client,std::string mount, KeyValue::Versio
   , mount_(std::move(mount))
 {}
 
-Url KeyValue::getUrl(const std::string& path) {
+Url KeyValue::getUrl(const Path& path) {
   switch (version_) {
   case KeyValue::Version::v1:
     return client_.getUrl("/v1/" + mount_ + "/", path);
@@ -37,11 +37,11 @@ Url KeyValue::getUrl(const std::string& path) {
   }
 }
 
-Url KeyValue::getMetadataUrl(const std::string& path) {
+Url KeyValue::getMetadataUrl(const Path& path) {
   return Url{client_.getUrl("/v1/" + mount_ + "/metadata/", path)};
 }
 
-optional<std::string> KeyValue::list(const std::string& path) {
+optional<std::string> KeyValue::list(const Path& path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -67,7 +67,7 @@ optional<std::string> KeyValue::list(const std::string& path) {
     : std::experimental::nullopt;
 }
 
-optional<std::string> KeyValue::get(const std::string& path) {
+optional<std::string> KeyValue::get(const Path& path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -83,7 +83,7 @@ optional<std::string> KeyValue::get(const std::string& path) {
     : std::experimental::nullopt;
 }
 
-optional<std::string> KeyValue::put(const std::string& path, std::unordered_map<std::string, std::string> map) {
+optional<std::string> KeyValue::put(const Path& path, std::unordered_map<std::string, std::string> map) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -110,7 +110,7 @@ optional<std::string> KeyValue::put(const std::string& path, std::unordered_map<
     : std::experimental::nullopt;
 }
 
-optional<std::string> KeyValue::del(const std::string& path) {
+optional<std::string> KeyValue::del(const Path& path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -126,7 +126,7 @@ optional<std::string> KeyValue::del(const std::string& path) {
     : std::experimental::nullopt;
 }
 
-optional<std::string> KeyValue::del(const std::string& path, std::vector<long> versions) {
+optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
   }
@@ -147,7 +147,7 @@ optional<std::string> KeyValue::del(const std::string& path, std::vector<long> v
     : std::experimental::nullopt;
 }
 
-optional<std::string> KeyValue::destroy(const std::string& path, std::vector<long> versions) {
+optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
   }
