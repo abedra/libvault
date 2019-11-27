@@ -90,7 +90,7 @@ TEST_CASE("VaultConfig#make default")
   REQUIRE(config.getPort().value == "8200");
   REQUIRE(config.getTls() == true);
   REQUIRE(config.getDebug() == false);
-  REQUIRE(config.getConnectTimeout() == 10);
+  REQUIRE(config.getConnectTimeout().value == 10);
 }
 
 TEST_CASE("VaultConfig#make options set")
@@ -101,7 +101,7 @@ TEST_CASE("VaultConfig#make options set")
     .withTlsVerification(false)
     .withTlsEnabled(false)
     .withDebug(true)
-    .withConnectTimeout(5)
+    .withConnectTimeout(VaultConnectTimeout{5})
     .build();
 
   REQUIRE(config.getHost().value == "example.com");
@@ -109,5 +109,5 @@ TEST_CASE("VaultConfig#make options set")
   REQUIRE(config.getTls() == false);
   REQUIRE(config.getDebug() == true);
   REQUIRE(config.getVerify() == false);
-  REQUIRE(config.getConnectTimeout() == 5);
+  REQUIRE(config.getConnectTimeout().value == 5);
 }

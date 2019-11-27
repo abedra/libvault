@@ -10,14 +10,14 @@ writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
 HttpClient::HttpClient(VaultConfig& config)
   : debug_(config.getDebug())
   , verify_(config.getVerify())
-  , connectTimeout_(config.getConnectTimeout())
+  , connectTimeout_(config.getConnectTimeout().value)
   , errorCallback_([&](const std::string& err){})
 {}
 
 HttpClient::HttpClient(VaultConfig& config, HttpErrorCallback errorCallback) :
   debug_(config.getDebug()),
   verify_(config.getVerify()),
-  connectTimeout_(config.getConnectTimeout()),
+  connectTimeout_(config.getConnectTimeout().value),
   errorCallback_(std::move(errorCallback))
 {}
 

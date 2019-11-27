@@ -14,12 +14,16 @@
  *
 */
 
-struct HttpResponseBodyString {
-  std::string value;
-};
-
 struct HttpResponseStatusCode {
   long value;
+};
+
+struct VaultConnectTimeout {
+  long value;
+};
+
+struct HttpResponseBodyString {
+  std::string value;
 };
 
 struct Url {
@@ -225,7 +229,7 @@ public:
   bool getTls() { return tls_; }
   bool getDebug() { return debug_; }
   bool getVerify() { return verify_; }
-  long getConnectTimeout() { return connectTimeout_; }
+  VaultConnectTimeout getConnectTimeout() { return connectTimeout_; }
   VaultHost getHost() { return host_; }
   VaultPort getPort() { return port_; }
   Namespace getNamespace() { return ns_; }
@@ -234,7 +238,7 @@ private:
   : tls_(true)
   , debug_(false)
   , verify_(true)
-  , connectTimeout_(10)
+  , connectTimeout_(VaultConnectTimeout{10})
   , host_(VaultHost{"localhost"})
   , port_(VaultPort{"8200"})
   , ns_({""})
@@ -243,7 +247,7 @@ private:
   bool tls_;
   bool debug_;
   bool verify_;
-  long connectTimeout_;
+  VaultConnectTimeout connectTimeout_;
   VaultHost host_;
   VaultPort port_;
   Namespace ns_;
@@ -281,7 +285,7 @@ public:
     return *this;
   }
 
-  VaultConfigBuilder& withConnectTimeout(long timeout) {
+  VaultConfigBuilder& withConnectTimeout(VaultConnectTimeout timeout) {
       config_.connectTimeout_ = timeout;
       return *this;
   }
