@@ -6,7 +6,7 @@
 
 class FailedAuth : public AuthenticationStrategy {
 public:
-  std::experimental::optional<std::string> authenticate(const VaultClient& client) override {
+  std::experimental::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
     return std::experimental::nullopt;
   }
 private:
@@ -14,8 +14,8 @@ private:
 
 class SuccessfulAuth : public AuthenticationStrategy {
 public:
-  std::experimental::optional<std::string> authenticate(const VaultClient& client) override {
-    return std::experimental::optional<std::string>("success");
+  std::experimental::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
+    return std::experimental::optional<AuthenticationResponse>({"", "success"});
   }
 private:
 };
@@ -84,7 +84,7 @@ TEST_CASE("HttpClient#is_success when status 200")
 
 TEST_CASE("VaultConfig#make default")
 {
-  auto config = VaultConfigBuilder().build();
+  config= VaultConfigBuilder().build();
 
   REQUIRE(config.getHost() == "localhost");
   REQUIRE(config.getPort() == "8200");
@@ -95,7 +95,7 @@ TEST_CASE("VaultConfig#make default")
 
 TEST_CASE("VaultConfig#make options set")
 {
-  auto config = VaultConfigBuilder()
+  config= VaultConfigBuilder()
     .withHost("example.com")
     .withPort("8100")
     .withTlsVerification(false)

@@ -6,7 +6,7 @@ WrappedSecretAppRole::WrappedSecretAppRole(std::string role_id, std::string toke
   , token_(std::move(token))
   {}
 
-optional<std::string> WrappedSecretAppRole::authenticate(const VaultClient &vaultClient) {
+optional<AuthenticationResponse> WrappedSecretAppRole::authenticate(const VaultClient &vaultClient) {
   auto secret_id = Unwrap::unwrap(vaultClient, token_);
 
   return secret_id

@@ -7,7 +7,7 @@ AppRole::AppRole(std::string role_id, std::string secret_id)
   , secret_id_(std::move(secret_id))
   {}
 
-optional<std::string> AppRole::authenticate(const VaultClient& client) {
+optional<AuthenticationResponse> AppRole::authenticate(const VaultClient& client) {
   nlohmann::json j;
   j = nlohmann::json::object();
   j["role_id"] = role_id_;
@@ -20,7 +20,8 @@ optional<std::string> AppRole::authenticate(const VaultClient& client) {
 	  j.dump());
 
   if (HttpClient::is_success(response)) {
-    return nlohmann::json::parse(response.value().body)["auth"]["client_token"];
+    std::string &body = response.value().body;
+    return AuthenticationResponse{body, nlohmann::json::parse(body)["auth"]["client_token"]};
   } else {
     return std::experimental::nullopt;
   }

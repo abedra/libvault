@@ -7,21 +7,43 @@
 #include <utility>
 #include <vector>
 
+/* Start Response Types */
+
+struct HttpResponse {
+  long statusCode;
+  std::string body;
+};
+
+struct AuthenticationResponse {
+  std::string rawResponse;
+  std::string token;
+};
+
+/* End Response Types */
+
+/* Start Forward Declarations */
+
 class VaultConfigBuilder;
 class AppRole;
 class VaultClient;
 class VaultConfig;
 class AuthenticationStrategy;
 
+/* End Forward Declarations */
+
+/* Start Callbacks */
+
 using HttpErrorCallback = std::function<void(std::string)>;
 using CurlSetupCallback = std::function<void(CURL *curl)>;
+
+/* End Callbacks */
+
+/* Start Aliases */
+
 using Parameters = std::unordered_map<std::string, std::string>;
 template <typename T> using optional = std::experimental::optional<T>;
 
-struct HttpResponse {
-  long statusCode;
-  std::string body;
-};
+/* End Aliases */
 
 //TODO: kind of gross, do something else?
 class Base64 {
@@ -246,7 +268,7 @@ private:
 
 class AuthenticationStrategy {
 public:
-  virtual optional<std::string> authenticate(const VaultClient& client) = 0;
+  virtual optional<AuthenticationResponse> authenticate(const VaultClient& client) = 0;
 };
 
 class VaultHttpConsumer {
@@ -256,9 +278,9 @@ public:
 
 class Token : public AuthenticationStrategy {
 public:
-  Token(std::string token) : token_(token) {}
-  optional<std::string> authenticate(const VaultClient& vaultClient) {
-    return token_;
+  explicit Token(std::string token) : token_(std::move(token)) {}
+  optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override {
+    return AuthenticationResponse{"", token_};
   }
 private:
   std::string token_;
@@ -267,7 +289,7 @@ private:
 class AppRole : public AuthenticationStrategy {
 public:
   AppRole(std::string role_id, std::string secret_id);
-  optional<std::string> authenticate(const VaultClient& vaultClient) override;
+  optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
   static std::string getUrl(const VaultClient& vaultClient, const std::string& path);
@@ -286,7 +308,7 @@ private:
 class WrappedSecretAppRole : public AuthenticationStrategy {
 public:
   WrappedSecretAppRole(std::string role_id, std::string token);
-  optional<std::string> authenticate(const VaultClient& vaultClient) override;
+  optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
   std::string role_id_;
@@ -297,7 +319,7 @@ class KeyValue {
 public:
   enum Version { v1, v2 };
 
-  KeyValue(const VaultClient& client);
+  explicit KeyValue(const VaultClient& client);
   KeyValue(const VaultClient& client, std::string mount);
   KeyValue(const VaultClient& client, KeyValue::Version version);
   KeyValue(const VaultClient& client, std::string mount, KeyValue::Version version);
@@ -319,7 +341,7 @@ private:
 
 class Transit {
 public:
-  Transit(const VaultClient& client);
+  explicit Transit(const VaultClient& client);
 
   optional<std::string> encrypt(std::string path, Parameters parameters);
   optional<std::string> decrypt(std::string path, Parameters parameters);
