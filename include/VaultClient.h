@@ -46,6 +46,14 @@ struct SecretId {
   std::string value;
 };
 
+struct VaultHost {
+  std::string value;
+};
+
+struct VaultPort {
+  std::string value;
+};
+
 /* End Tiny Types */
 
 /* Start Response Types */
@@ -218,8 +226,8 @@ public:
   bool getDebug() { return debug_; }
   bool getVerify() { return verify_; }
   long getConnectTimeout() { return connectTimeout_; }
-  std::string getHost() { return host_; }
-  std::string getPort() { return port_; }
+  VaultHost getHost() { return host_; }
+  VaultPort getPort() { return port_; }
   Namespace getNamespace() { return ns_; }
 private:
   VaultConfig()
@@ -227,17 +235,17 @@ private:
   , debug_(false)
   , verify_(true)
   , connectTimeout_(10)
-  , host_("localhost")
-  , port_("8200")
-  , ns_({})
+  , host_(VaultHost{"localhost"})
+  , port_(VaultPort{"8200"})
+  , ns_({""})
   {}
 
   bool tls_;
   bool debug_;
   bool verify_;
   long connectTimeout_;
-  std::string host_;
-  std::string port_;
+  VaultHost host_;
+  VaultPort port_;
   Namespace ns_;
 };
 
@@ -258,12 +266,12 @@ public:
     return *this;
   }
 
-  VaultConfigBuilder& withHost(std::string host) {
+  VaultConfigBuilder& withHost(VaultHost host) {
     config_.host_ = std::move(host);
     return *this;
   }
 
-  VaultConfigBuilder& withPort(std::string port) {
+  VaultConfigBuilder& withPort(VaultPort port) {
     config_.port_ = std::move(port);
     return *this;
   }
@@ -305,12 +313,10 @@ public:
 private:
   bool debug_;
   bool tls_;
-
-  std::string host_;
-  std::string port_;
+  VaultHost host_;
+  VaultPort port_;
   Token token_;
   Namespace namespace_;
-
   HttpClient httpClient_;
   AuthenticationStrategy& authStrategy_;
 };

@@ -86,8 +86,8 @@ TEST_CASE("VaultConfig#make default")
 {
   config= VaultConfigBuilder().build();
 
-  REQUIRE(config.getHost() == "localhost");
-  REQUIRE(config.getPort() == "8200");
+  REQUIRE(config.getHost().value == "localhost");
+  REQUIRE(config.getPort().value == "8200");
   REQUIRE(config.getTls() == true);
   REQUIRE(config.getDebug() == false);
   REQUIRE(config.getConnectTimeout() == 10);
@@ -96,16 +96,16 @@ TEST_CASE("VaultConfig#make default")
 TEST_CASE("VaultConfig#make options set")
 {
   config= VaultConfigBuilder()
-    .withHost("example.com")
-    .withPort("8100")
+    .withHost(VaultHost{"example.com"})
+    .withPort(VaultPort{"8100"})
     .withTlsVerification(false)
     .withTlsEnabled(false)
     .withDebug(true)
     .withConnectTimeout(5)
     .build();
 
-  REQUIRE(config.getHost() == "example.com");
-  REQUIRE(config.getPort() == "8100");
+  REQUIRE(config.getHost().value == "example.com");
+  REQUIRE(config.getPort().value == "8100");
   REQUIRE(config.getTls() == false);
   REQUIRE(config.getDebug() == true);
   REQUIRE(config.getVerify() == false);

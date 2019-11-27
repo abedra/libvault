@@ -1,9 +1,8 @@
 #include <utility>
 #include "VaultClient.h"
 
-VaultClient::VaultClient(
-        VaultConfig& config,
-        AuthenticationStrategy& authStrategy)
+VaultClient::VaultClient(VaultConfig& config,
+                         AuthenticationStrategy& authStrategy)
   : host_(config.getHost())
   , port_(config.getPort())
   , namespace_(config.getNamespace())
@@ -18,10 +17,9 @@ VaultClient::VaultClient(
   }
 }
 
-VaultClient::VaultClient(
-        VaultConfig& config,
-        AuthenticationStrategy& authStrategy,
-        HttpErrorCallback httpErrorCallback)
+VaultClient::VaultClient(VaultConfig& config,
+                         AuthenticationStrategy& authStrategy,
+                         HttpErrorCallback httpErrorCallback)
   : host_(config.getHost())
   , port_(config.getPort())
   , namespace_(config.getNamespace())
@@ -37,5 +35,5 @@ VaultClient::VaultClient(
 }
 
 Url VaultClient::getUrl(const std::string& base, const Path& path) const {
-  return Url{(tls_ ? "https://" : "http://") + host_ + ":" + port_ + base + path.value};
+  return Url{(tls_ ? "https://" : "http://") + host_.value + ":" + port_.value + base + path.value};
 }
