@@ -9,6 +9,14 @@
 
 /* Start Tiny Types */
 
+struct HttpResponseBodyString {
+  std::string value;
+};
+
+struct Token {
+  std::string value;
+};
+
 /* End Tiny Types */
 
 /* Start Response Types */
@@ -19,8 +27,8 @@ struct HttpResponse {
 };
 
 struct AuthenticationResponse {
-  std::string rawResponse;
-  std::string token;
+  HttpResponseBodyString rawResponse;
+  Token token;
 };
 
 /* End Response Types */
@@ -303,7 +311,7 @@ private:
 
 class Unwrap {
 public:
-  static optional<std::string> unwrap(const VaultClient &client, std::string token);
+  static optional<std::string> unwrap(const VaultClient &client, const Token& token);
 
 private:
   static std::string getUrl(const VaultClient& client, const std::string& path);
@@ -311,12 +319,12 @@ private:
 
 class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
 public:
-  WrappedSecretAppRoleStrategy(std::string role_id, std::string token);
+  WrappedSecretAppRoleStrategy(std::string role_id, const Token& token);
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
   std::string role_id_;
-  std::string token_;
+  const Token& token_;
 };
 
 class KeyValue {

@@ -14,7 +14,7 @@ VaultClient::VaultClient(
 {
   auto result = authStrategy_.authenticate(*this);
   if (result) {
-    token_ = result.value().token;
+    token_ = result.value().token.value;
   }
 }
 
@@ -32,7 +32,7 @@ VaultClient::VaultClient(
 {
   auto result = authStrategy_.authenticate(*this);
   if (result) {
-    token_ = result.value().token;
+    token_ = result.value().token.value;
   }
 }
 

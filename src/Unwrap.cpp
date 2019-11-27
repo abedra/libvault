@@ -6,10 +6,10 @@ std::string Unwrap::getUrl(const VaultClient& client, const std::string& path) {
 }
 
 optional<std::string>
-Unwrap::unwrap(const VaultClient& client, std::string token) {
+Unwrap::unwrap(const VaultClient& client, const Token& token) {
   nlohmann::json j;
   j = nlohmann::json::object();
-  j["token"] = token;
+  j["token"] = token.value;
 
   auto response = client
           .getHttpClient()

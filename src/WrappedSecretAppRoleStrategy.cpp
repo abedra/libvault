@@ -1,9 +1,9 @@
 #include <utility>
 #include "VaultClient.h"
 
-WrappedSecretAppRoleStrategy::WrappedSecretAppRoleStrategy(std::string role_id, std::string token)
+WrappedSecretAppRoleStrategy::WrappedSecretAppRoleStrategy(std::string role_id, const Token& token)
   : role_id_(std::move(role_id))
-  , token_(std::move(token))
+  , token_(token)
   {}
 
 optional<AuthenticationResponse> WrappedSecretAppRoleStrategy::authenticate(const VaultClient &vaultClient) {

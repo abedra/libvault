@@ -20,8 +20,10 @@ optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient
 	  j.dump());
 
   if (HttpClient::is_success(response)) {
-    std::string &body = response.value().body;
-    return AuthenticationResponse{body, nlohmann::json::parse(body)["auth"]["client_token"]};
+    auto body = HttpResponseBodyString{response.value().body};
+    auto token = Token{nlohmann::json::parse(body.value)["auth"]["client_token"]};
+
+    return AuthenticationResponse{body, token};
   } else {
     return std::experimental::nullopt;
   }
