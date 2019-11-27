@@ -13,6 +13,10 @@ struct HttpResponseBodyString {
   std::string value;
 };
 
+struct HttpResponseStatusCode {
+  long value;
+};
+
 struct Token {
   std::string value;
 };
@@ -22,8 +26,8 @@ struct Token {
 /* Start Response Types */
 
 struct HttpResponse {
-  long statusCode;
-  std::string body;
+  HttpResponseStatusCode statusCode{};
+  HttpResponseBodyString body;
 };
 
 struct AuthenticationResponse {
@@ -336,19 +340,19 @@ public:
   KeyValue(const VaultClient& client, KeyValue::Version version);
   KeyValue(const VaultClient& client, std::string mount, KeyValue::Version version);
 
-  optional<std::string> list(std::string path);
-  optional<std::string> get(std::string path);
-  optional<std::string> put(std::string path, std::unordered_map<std::string, std::string> map);
-  optional<std::string> del(std::string path);
-  optional<std::string> del(std::string path, std::vector<long> versions);
-  optional<std::string> destroy(std::string path, std::vector<long> versions);
+  optional<std::string> list(const std::string& path);
+  optional<std::string> get(const std::string& path);
+  optional<std::string> put(const std::string& path, std::unordered_map<std::string, std::string> map);
+  optional<std::string> del(const std::string& path);
+  optional<std::string> del(const std::string& path, std::vector<long> versions);
+  optional<std::string> destroy(const std::string& path, std::vector<long> versions);
 private:
   const VaultClient& client_;
   KeyValue::Version version_;
   std::string mount_;
 
-  std::string getUrl(std::string path);
-  std::string getMetadataUrl(std::string path);
+  std::string getUrl(const std::string& path);
+  std::string getMetadataUrl(const std::string& path);
 };
 
 class Transit {

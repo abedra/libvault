@@ -1,36 +1,32 @@
 #include <nlohmann/json.hpp>
+#include <utility>
 #include "VaultClient.h"
 
-KeyValue::KeyValue(const VaultClient& client) :
-  version_(KeyValue::Version::v2),
-  client_(client),
-  mount_("secret")
+KeyValue::KeyValue(const VaultClient& client)
+  : version_(KeyValue::Version::v2)
+  , client_(client)
+  , mount_("secret")
 {}
 
-KeyValue::KeyValue(const VaultClient& client,
-		   std::string mount) :
-  version_(KeyValue::Version::v2),
-  client_(client),
-  mount_(mount)
+KeyValue::KeyValue(const VaultClient& client, std::string mount)
+  : version_(KeyValue::Version::v2)
+  , client_(client)
+  , mount_(std::move(mount))
 {}
 
-KeyValue::KeyValue(const VaultClient& client,
-		   KeyValue::Version version) :
-  version_(version),
-  client_(client),
-  mount_("secret")
+KeyValue::KeyValue(const VaultClient& client, KeyValue::Version version)
+  : version_(version)
+  , client_(client)
+  , mount_("secret")
 {}
 
-KeyValue::KeyValue(const VaultClient &client,
-		   std::string mount,
-		   KeyValue::Version version) :
-  version_(version),
-  client_(client),
-  mount_(mount)
+KeyValue::KeyValue(const VaultClient &client,std::string mount, KeyValue::Version version)
+  : version_(version)
+  , client_(client)
+  , mount_(std::move(mount))
 {}
 
-std::string
-KeyValue::getUrl(std::string path) {
+std::string KeyValue::getUrl(const std::string& path) {
   switch (version_) {
   case KeyValue::Version::v1:
     return client_.getUrl("/v1/" + mount_ + "/", path);
@@ -41,13 +37,11 @@ KeyValue::getUrl(std::string path) {
   }
 }
 
-std::string
-KeyValue::getMetadataUrl(std::string path) {
+std::string KeyValue::getMetadataUrl(const std::string& path) {
   return client_.getUrl("/v1/" + mount_ + "/metadata/", path);
 }
 
-optional<std::string>
-KeyValue::list(std::string path) {
+optional<std::string> KeyValue::list(const std::string& path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -55,70 +49,84 @@ KeyValue::list(std::string path) {
   optional<HttpResponse> response;
 
   if (version_ == KeyValue::Version::v1) {
-    response = client_.getHttpClient()
-      .list(getUrl(path), client_.getToken(), client_.getNamespace());
+    response = client_.getHttpClient().list(
+      getUrl(path),
+      client_.getToken(),
+      client_.getNamespace()
+    );
   } else {
-    response = client_.getHttpClient()
-      .list(getMetadataUrl(path), client_.getToken(), client_.getNamespace());
+    response = client_.getHttpClient().list(
+      getMetadataUrl(path),
+      client_.getToken(),
+      client_.getNamespace()
+    );
   }
 
-  return HttpClient::is_success(response) ?
-    optional<std::string>(response.value().body) :
-    std::experimental::nullopt;
+  return HttpClient::is_success(response)
+    ? optional<std::string>(response.value().body.value)
+    : std::experimental::nullopt;
 }
 
-optional<std::string>
-KeyValue::get(std::string path) {
+optional<std::string> KeyValue::get(const std::string& path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
-  auto response = client_.getHttpClient()
-    .get(getUrl(path), client_.getToken(), client_.getNamespace());
+  auto response = client_.getHttpClient().get(
+    getUrl(path),
+    client_.getToken(),
+    client_.getNamespace()
+  );
 
-  return HttpClient::is_success(response) ?
-    optional<std::string>(response.value().body) :
-    std::experimental::nullopt;
+  return HttpClient::is_success(response)
+    ? optional<std::string>(response.value().body.value)
+    : std::experimental::nullopt;
 }
 
-optional<std::string>
-KeyValue::put(std::string path,
-	      std::unordered_map<std::string, std::string> map) {
+optional<std::string> KeyValue::put(const std::string& path, std::unordered_map<std::string, std::string> map) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
   nlohmann::json j;
   j["data"] = nlohmann::json::object();
-  std::for_each(map.begin(), map.end(),
-		[&](std::pair<std::string, std::string> pair) {
-    j["data"][pair.first] = pair.second;
-  });
+  std::for_each(
+    map.begin(),
+    map.end(),
+    [&](std::pair<std::string, std::string> pair) {
+      j["data"][pair.first] = pair.second;
+    }
+  );
 
-  auto response = client_.getHttpClient()
-    .post(getUrl(path), client_.getToken(), client_.getNamespace(), j.dump());
+  auto response = client_.getHttpClient().post(
+    getUrl(path),
+    client_.getToken(),
+    client_.getNamespace(),
+    j.dump()
+  );
 
-  return response ?
-    optional<std::string>(response.value().body) :
-    std::experimental::nullopt;
+  return response
+    ? optional<std::string>(response.value().body.value)
+    : std::experimental::nullopt;
 }
 
-optional<std::string>
-KeyValue::del(std::string path) {
+optional<std::string> KeyValue::del(const std::string& path) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
 
-  auto response = client_.getHttpClient()
-    .del(getUrl(path), client_.getToken(), client_.getNamespace());
+  auto response = client_.getHttpClient().del(
+    getUrl(path),
+    client_.getToken(),
+    client_.getNamespace()
+  );
 
-  return HttpClient::is_success(response) ?
-    optional<std::string>(response.value().body) :
-    std::experimental::nullopt;
+  return HttpClient::is_success(response)
+    ? optional<std::string>(response.value().body.value)
+    : std::experimental::nullopt;
 }
 
-optional<std::string>
-KeyValue::del(std::string path, std::vector<long> versions) {
+optional<std::string> KeyValue::del(const std::string& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
   }
@@ -134,13 +142,12 @@ KeyValue::del(std::string path, std::vector<long> versions) {
       j.dump()
     );
 
-  return HttpClient::is_success(response) ?
-    optional<std::string>(response.value().body) :
-    std::experimental::nullopt;
+  return HttpClient::is_success(response)
+    ? optional<std::string>(response.value().body.value)
+    : std::experimental::nullopt;
 }
 
-optional<std::string>
-KeyValue::destroy(std::string path, std::vector<long> versions) {
+optional<std::string> KeyValue::destroy(const std::string& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::experimental::nullopt;
   }
@@ -155,7 +162,7 @@ KeyValue::destroy(std::string path, std::vector<long> versions) {
     j.dump()
   );
 
-  return HttpClient::is_success(response) ?
-    optional<std::string>(response.value().body) :
-    std::experimental::nullopt;
+  return HttpClient::is_success(response)
+    ? optional<std::string>(response.value().body.value)
+    : std::experimental::nullopt;
 }

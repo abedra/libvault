@@ -20,7 +20,7 @@ Unwrap::unwrap(const VaultClient& client, const Token& token) {
           );
 
     if (HttpClient::is_success(response)) {
-        return nlohmann::json::parse(response.value().body)["data"]["secret_id"];
+        return nlohmann::json::parse(response.value().body.value)["data"]["secret_id"];
     } else {
         return std::experimental::nullopt;
     }

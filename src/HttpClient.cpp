@@ -23,7 +23,7 @@ HttpClient::HttpClient(VaultConfig& config, HttpErrorCallback errorCallback) :
 {}
 
 bool HttpClient::is_success(optional<HttpResponse> response) {
-    return response && response.value().statusCode == 200;
+  return response && response.value().statusCode.value == 200;
 }
 
 optional<HttpResponse>
