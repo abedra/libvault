@@ -54,7 +54,7 @@ TEST_CASE("VaultClient#getToken")
 {
   auto strategy = SuccessfulAuth();
   auto vaultClient = VaultClient(config, strategy);
-  REQUIRE(vaultClient.getToken() == "success");
+  REQUIRE(vaultClient.getToken().value == "success");
 }
 
 TEST_CASE("VaultClient#getNamespace")

@@ -40,7 +40,6 @@ struct AuthenticationResponse {
 /* Start Forward Declarations */
 
 class VaultConfigBuilder;
-class AppRole;
 class VaultClient;
 class VaultConfig;
 class AuthenticationStrategy;
@@ -173,10 +172,10 @@ public:
   explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  optional<HttpResponse> get(const std::string& url, const std::string& string, const std::string& ns) const;
-  optional<HttpResponse> post(const std::string& url, const std::string& token, const std::string& ns, std::string value) const;
-  optional<HttpResponse> del(const std::string& url, const std::string& token, const std::string& ns) const;
-  optional<HttpResponse> list(const std::string& url, const std::string& token, const std::string& ns) const;
+  optional<HttpResponse> get(const std::string& url, const Token& token, const std::string& ns) const;
+  optional<HttpResponse> post(const std::string& url, const Token& token, const std::string& ns, std::string value) const;
+  optional<HttpResponse> del(const std::string& url, const Token& token, const std::string& ns) const;
+  optional<HttpResponse> list(const std::string& url, const Token& token, const std::string& ns) const;
 
   static bool is_success(optional<HttpResponse> response);
 private:
@@ -184,7 +183,7 @@ private:
   bool verify_;
   long connectTimeout_;
   HttpErrorCallback errorCallback_;
-  optional<HttpResponse> executeRequest(const std::string& url, const std::string& token, const std::string& ns, const CurlSetupCallback& callback) const;
+  optional<HttpResponse> executeRequest(const std::string& url, const Token& token, const std::string& ns, const CurlSetupCallback& callback) const;
 };
 
 class VaultConfig {
@@ -263,9 +262,9 @@ public:
 
   const HttpClient& getHttpClient() const { return httpClient_; }
 
-  bool is_authenticated() const { return !token_.empty(); }
+  bool is_authenticated() const { return !token_.value.empty(); }
 
-  std::string getToken() const { return token_; }
+  Token getToken() const { return token_; }
   std::string getNamespace() const { return namespace_; }
   std::string getUrl(const std::string& base, const std::string& path) const;
 
@@ -275,7 +274,7 @@ private:
 
   std::string host_;
   std::string port_;
-  std::string token_;
+  Token token_;
   std::string namespace_;
 
   HttpClient httpClient_;
@@ -294,12 +293,12 @@ public:
 
 class TokenStrategy : public AuthenticationStrategy {
 public:
-  explicit TokenStrategy(std::string token) : token_(std::move(token)) {}
+  explicit TokenStrategy(Token token) : token_(std::move(token)) {}
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override {
     return AuthenticationResponse{"", token_};
   }
 private:
-  std::string token_;
+  Token token_;
 };
 
 class AppRoleStrategy : public AuthenticationStrategy {

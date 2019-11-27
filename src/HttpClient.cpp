@@ -1,5 +1,4 @@
 #include <utility>
-
 #include "VaultClient.h"
 
 static size_t
@@ -8,11 +7,11 @@ writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
   return size * nmemb;
 }
 
-HttpClient::HttpClient(VaultConfig& config) :
-  debug_(config.getDebug()),
-  verify_(config.getVerify()),
-  connectTimeout_(config.getConnectTimeout()),
-  errorCallback_([&](std::string err){})
+HttpClient::HttpClient(VaultConfig& config)
+  : debug_(config.getDebug())
+  , verify_(config.getVerify())
+  , connectTimeout_(config.getConnectTimeout())
+  , errorCallback_([&](const std::string& err){})
 {}
 
 HttpClient::HttpClient(VaultConfig& config, HttpErrorCallback errorCallback) :
@@ -27,26 +26,26 @@ bool HttpClient::is_success(optional<HttpResponse> response) {
 }
 
 optional<HttpResponse>
-HttpClient::get(const std::string& url, const std::string& token, const std::string& ns) const {
+HttpClient::get(const std::string& url, const Token& token, const std::string& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
 optional<HttpResponse>
-HttpClient::post(const std::string& url, const std::string& token, const std::string& ns, std::string value) const {
+HttpClient::post(const std::string& url, const Token& token, const std::string& ns, std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }
 
 optional<HttpResponse>
-HttpClient::del(const std::string& url, const std::string& token, const std::string& ns) const {
+HttpClient::del(const std::string& url, const Token& token, const std::string& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 }
 
 optional<HttpResponse>
-HttpClient::list(const std::string& url, const std::string& token, const std::string& ns) const {
+HttpClient::list(const std::string& url, const Token& token, const std::string& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
@@ -54,7 +53,7 @@ HttpClient::list(const std::string& url, const std::string& token, const std::st
 
 optional<HttpResponse>
 HttpClient::executeRequest(const std::string& url,
-                           const std::string& token,
+                           const Token& token,
                            const std::string& ns,
                            const CurlSetupCallback& setupCallback) const {
   CURL *curl;
@@ -66,8 +65,8 @@ HttpClient::executeRequest(const std::string& url,
   if (curl) {
     struct curl_slist *chunk = nullptr;
 
-    if (!token.empty()) {
-      chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token).c_str());
+    if (!token.value.empty()) {
+      chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token.value).c_str());
     }
 
     if (!ns.empty()) {
