@@ -36,6 +36,6 @@ VaultClient::VaultClient(
   }
 }
 
-std::string VaultClient::getUrl(const std::string& base, const std::string& path) const {
-  return (tls_ ? "https://" : "http://") + host_ + ":" + port_ + base + path;
+Url VaultClient::getUrl(const std::string& base, const std::string& path) const {
+  return Url{(tls_ ? "https://" : "http://") + host_ + ":" + port_ + base + path};
 }

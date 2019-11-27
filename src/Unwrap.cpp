@@ -1,7 +1,7 @@
 #include <VaultClient.h>
 #include <nlohmann/json.hpp>
 
-std::string Unwrap::getUrl(const VaultClient& client, const std::string& path) {
+Url Unwrap::getUrl(const VaultClient& client, const std::string& path) {
   return client.getUrl("/v1/sys/wrapping", path);
 }
 

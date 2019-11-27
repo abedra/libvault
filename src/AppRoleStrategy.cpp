@@ -13,11 +13,12 @@ optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient
   j["role_id"] = role_id_;
   j["secret_id"] = secret_id_;
 
-  auto response = client.getHttpClient()
-    .post(getUrl(client, "/login"),
-	  client.getToken(),
+  auto response = client.getHttpClient().post(
+    getUrl(client, "/login"),
+    client.getToken(),
 	  client.getNamespace(),
-	  j.dump());
+	  j.dump()
+  );
 
   if (HttpClient::is_success(response)) {
     auto body = HttpResponseBodyString{response.value().body};
@@ -29,6 +30,6 @@ optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient
   }
 }
 
-std::string AppRoleStrategy::getUrl(const VaultClient& client, const std::string& path) {
+Url AppRoleStrategy::getUrl(const VaultClient& client, const std::string& path) {
   return client.getUrl("/v1/auth/approle", path);
 }

@@ -3,7 +3,7 @@
 
 optional<std::string>
 VaultHttpConsumer::post(const VaultClient& client,
-                        const std::string& uri,
+                        const Url& url,
                         Parameters parameters) {
   if (!client.is_authenticated()) {
     return std::experimental::nullopt;
@@ -20,7 +20,7 @@ VaultHttpConsumer::post(const VaultClient& client,
 
   auto response =
     client.getHttpClient().post(
-      uri,
+      url,
       client.getToken(),
       client.getNamespace(),
       j.dump()

@@ -40,14 +40,14 @@ TEST_CASE("VaultClient#getUrl")
 {
   auto strategy = SuccessfulAuth();
   auto vaultClient = VaultClient(config, strategy);
-  REQUIRE(vaultClient.getUrl("/base", "/path") == "https://localhost:8200/base/path");
+  REQUIRE(vaultClient.getUrl("/base", "/path").value == "https://localhost:8200/base/path");
 }
 
 TEST_CASE("VaultClient#getUrl tls false")
 {
   auto strategy = SuccessfulAuth();
   auto vaultClient = VaultClient(VaultConfigBuilder().withTlsEnabled(false).build(), strategy);
-  REQUIRE(vaultClient.getUrl("/base", "/path") == "http://localhost:8200/base/path");
+  REQUIRE(vaultClient.getUrl("/base", "/path").value == "http://localhost:8200/base/path");
 }
 
 TEST_CASE("VaultClient#getToken")

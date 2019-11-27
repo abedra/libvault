@@ -17,6 +17,10 @@ struct HttpResponseStatusCode {
   long value;
 };
 
+struct Url {
+  std::string value;
+};
+
 struct Token {
   std::string value;
 };
@@ -172,10 +176,10 @@ public:
   explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  optional<HttpResponse> get(const std::string& url, const Token& token, const std::string& ns) const;
-  optional<HttpResponse> post(const std::string& url, const Token& token, const std::string& ns, std::string value) const;
-  optional<HttpResponse> del(const std::string& url, const Token& token, const std::string& ns) const;
-  optional<HttpResponse> list(const std::string& url, const Token& token, const std::string& ns) const;
+  optional<HttpResponse> get(const Url& url, const Token& token, const std::string& ns) const;
+  optional<HttpResponse> post(const Url& url, const Token& token, const std::string& ns, std::string value) const;
+  optional<HttpResponse> del(const Url& url, const Token& token, const std::string& ns) const;
+  optional<HttpResponse> list(const Url& url, const Token& token, const std::string& ns) const;
 
   static bool is_success(optional<HttpResponse> response);
 private:
@@ -183,7 +187,7 @@ private:
   bool verify_;
   long connectTimeout_;
   HttpErrorCallback errorCallback_;
-  optional<HttpResponse> executeRequest(const std::string& url, const Token& token, const std::string& ns, const CurlSetupCallback& callback) const;
+  optional<HttpResponse> executeRequest(const Url& url, const Token& token, const std::string& ns, const CurlSetupCallback& callback) const;
 };
 
 class VaultConfig {
@@ -266,7 +270,7 @@ public:
 
   Token getToken() const { return token_; }
   std::string getNamespace() const { return namespace_; }
-  std::string getUrl(const std::string& base, const std::string& path) const;
+  Url getUrl(const std::string& base, const std::string& path) const;
 
 private:
   bool debug_;
@@ -288,7 +292,7 @@ public:
 
 class VaultHttpConsumer {
 public:
-  static optional<std::string> post(const VaultClient& client, const std::string& uri, Parameters parameters);
+  static optional<std::string> post(const VaultClient& client, const Url& url, Parameters parameters);
 };
 
 class TokenStrategy : public AuthenticationStrategy {
@@ -307,7 +311,7 @@ public:
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
-  static std::string getUrl(const VaultClient& vaultClient, const std::string& path);
+  static Url getUrl(const VaultClient& vaultClient, const std::string& path);
   std::string role_id_;
   std::string secret_id_;
 };
@@ -317,7 +321,7 @@ public:
   static optional<std::string> unwrap(const VaultClient &client, const Token& token);
 
 private:
-  static std::string getUrl(const VaultClient& client, const std::string& path);
+  static Url getUrl(const VaultClient& client, const std::string& path);
 };
 
 class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
@@ -350,8 +354,8 @@ private:
   KeyValue::Version version_;
   std::string mount_;
 
-  std::string getUrl(const std::string& path);
-  std::string getMetadataUrl(const std::string& path);
+  Url getUrl(const std::string& path);
+  Url getMetadataUrl(const std::string& path);
 };
 
 class Transit {
@@ -369,5 +373,5 @@ public:
   optional<std::string> verify(std::string key, std::string algorithm, Parameters Parameters);
 private:
   const VaultClient& client_;
-  std::string getUrl(std::string path);
+  Url getUrl(const std::string& path);
 };

@@ -26,33 +26,33 @@ bool HttpClient::is_success(optional<HttpResponse> response) {
 }
 
 optional<HttpResponse>
-HttpClient::get(const std::string& url, const Token& token, const std::string& ns) const {
+HttpClient::get(const Url& url, const Token& token, const std::string& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
 optional<HttpResponse>
-HttpClient::post(const std::string& url, const Token& token, const std::string& ns, std::string value) const {
+HttpClient::post(const Url& url, const Token& token, const std::string& ns, std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }
 
 optional<HttpResponse>
-HttpClient::del(const std::string& url, const Token& token, const std::string& ns) const {
+HttpClient::del(const Url& url, const Token& token, const std::string& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 }
 
 optional<HttpResponse>
-HttpClient::list(const std::string& url, const Token& token, const std::string& ns) const {
+HttpClient::list(const Url& url, const Token& token, const std::string& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
 }
 
 optional<HttpResponse>
-HttpClient::executeRequest(const std::string& url,
+HttpClient::executeRequest(const Url& url,
                            const Token& token,
                            const std::string& ns,
                            const CurlSetupCallback& setupCallback) const {
@@ -83,7 +83,7 @@ HttpClient::executeRequest(const std::string& url,
 
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout_);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_URL, url.value.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
 

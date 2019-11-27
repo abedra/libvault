@@ -3,8 +3,7 @@
 
 Transit::Transit(const VaultClient& client) : client_(client) {}
 
-std::string
-Transit::getUrl(std::string path) {
+Url Transit::getUrl(const std::string& path) {
   return client_.getUrl("/v1/transit/", path);
 }
 
