@@ -22,7 +22,7 @@ add_library(vault SHARED
   src/HttpClient.cpp
   src/KeyValue.cpp
   src/Transit.cpp
-  src/AppRole.cpp
+        src/AppRoleStrategy.cpp
   src/Unwrap.cpp
   src/WrappedSecretAppRole.cpp
 )

@@ -7,6 +7,10 @@
 #include <utility>
 #include <vector>
 
+/* Start Tiny Types */
+
+/* End Tiny Types */
+
 /* Start Response Types */
 
 struct HttpResponse {
@@ -276,9 +280,9 @@ public:
   static optional<std::string> post(const VaultClient& client, const std::string& uri, Parameters parameters);
 };
 
-class Token : public AuthenticationStrategy {
+class TokenStrategy : public AuthenticationStrategy {
 public:
-  explicit Token(std::string token) : token_(std::move(token)) {}
+  explicit TokenStrategy(std::string token) : token_(std::move(token)) {}
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override {
     return AuthenticationResponse{"", token_};
   }
@@ -286,9 +290,9 @@ private:
   std::string token_;
 };
 
-class AppRole : public AuthenticationStrategy {
+class AppRoleStrategy : public AuthenticationStrategy {
 public:
-  AppRole(std::string role_id, std::string secret_id);
+  AppRoleStrategy(std::string role_id, std::string secret_id);
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
@@ -305,9 +309,9 @@ private:
   static std::string getUrl(const VaultClient& client, const std::string& path);
 };
 
-class WrappedSecretAppRole : public AuthenticationStrategy {
+class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
 public:
-  WrappedSecretAppRole(std::string role_id, std::string token);
+  WrappedSecretAppRoleStrategy(std::string role_id, std::string token);
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:

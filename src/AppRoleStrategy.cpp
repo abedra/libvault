@@ -2,12 +2,12 @@
 #include <nlohmann/json.hpp>
 #include "VaultClient.h"
 
-AppRole::AppRole(std::string role_id, std::string secret_id)
+AppRoleStrategy::AppRoleStrategy(std::string role_id, std::string secret_id)
   : role_id_(std::move(role_id))
   , secret_id_(std::move(secret_id))
   {}
 
-optional<AuthenticationResponse> AppRole::authenticate(const VaultClient& client) {
+optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient& client) {
   nlohmann::json j;
   j = nlohmann::json::object();
   j["role_id"] = role_id_;
@@ -27,6 +27,6 @@ optional<AuthenticationResponse> AppRole::authenticate(const VaultClient& client
   }
 }
 
-std::string AppRole::getUrl(const VaultClient& client, const std::string& path) {
+std::string AppRoleStrategy::getUrl(const VaultClient& client, const std::string& path) {
   return client.getUrl("/v1/auth/approle", path);
 }
