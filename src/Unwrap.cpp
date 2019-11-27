@@ -5,7 +5,7 @@ Url Unwrap::getUrl(const VaultClient& client, const Path& path) {
   return client.getUrl("/v1/sys/wrapping", path);
 }
 
-optional<std::string>
+optional<SecretId>
 Unwrap::unwrap(const VaultClient& client, const Token& token) {
   nlohmann::json j;
   j = nlohmann::json::object();
@@ -19,7 +19,7 @@ Unwrap::unwrap(const VaultClient& client, const Token& token) {
   );
 
     if (HttpClient::is_success(response)) {
-        return nlohmann::json::parse(response.value().body.value)["data"]["secret_id"];
+        return SecretId{nlohmann::json::parse(response.value().body.value)["data"]["secret_id"]};
     } else {
         return std::experimental::nullopt;
     }

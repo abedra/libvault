@@ -38,6 +38,14 @@ struct Namespace {
   std::string value;
 };
 
+struct RoleId {
+  std::string value;
+};
+
+struct SecretId {
+  std::string value;
+};
+
 /* End Tiny Types */
 
 /* Start Response Types */
@@ -329,18 +337,18 @@ private:
 
 class AppRoleStrategy : public AuthenticationStrategy {
 public:
-  AppRoleStrategy(std::string role_id, std::string secret_id);
+  AppRoleStrategy(RoleId roleId, SecretId secretId);
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
   static Url getUrl(const VaultClient& vaultClient, const Path& path);
-  std::string role_id_;
-  std::string secret_id_;
+  RoleId roleId_;
+  SecretId secretId_;
 };
 
 class Unwrap {
 public:
-  static optional<std::string> unwrap(const VaultClient &client, const Token& token);
+  static optional<SecretId> unwrap(const VaultClient &client, const Token& token);
 
 private:
   static Url getUrl(const VaultClient& client, const Path& path);
@@ -348,11 +356,11 @@ private:
 
 class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
 public:
-  WrappedSecretAppRoleStrategy(std::string role_id, const Token& token);
+  WrappedSecretAppRoleStrategy(RoleId role_id, const Token& token);
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
-  std::string role_id_;
+  RoleId roleId_;
   const Token& token_;
 };
 

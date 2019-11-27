@@ -2,16 +2,16 @@
 #include <nlohmann/json.hpp>
 #include "VaultClient.h"
 
-AppRoleStrategy::AppRoleStrategy(std::string role_id, std::string secret_id)
-  : role_id_(std::move(role_id))
-  , secret_id_(std::move(secret_id))
+AppRoleStrategy::AppRoleStrategy(RoleId roleId, SecretId secretId)
+  : roleId_(std::move(roleId))
+  , secretId_(std::move(secretId))
   {}
 
 optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient& client) {
   nlohmann::json j;
   j = nlohmann::json::object();
-  j["role_id"] = role_id_;
-  j["secret_id"] = secret_id_;
+  j["role_id"] = roleId_.value;
+  j["secret_id"] = secretId_.value;
 
   auto response = client.getHttpClient().post(
     getUrl(client, Path{"/login"}),
