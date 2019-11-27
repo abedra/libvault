@@ -24,7 +24,7 @@ add_library(vault SHARED
   src/Transit.cpp
         src/AppRoleStrategy.cpp
   src/Unwrap.cpp
-  src/WrappedSecretAppRole.cpp
+        src/WrappedSecretAppRoleStrategy.cpp
 )
 
 set_target_properties(vault PROPERTIES
