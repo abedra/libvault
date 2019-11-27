@@ -1,7 +1,8 @@
 #include <iostream>
 #include "VaultClient.h"
 
-void print_response(std::experimental::optional<std::string> response) {
+template<typename T>
+void print_response(std::experimental::optional<T> response) {
   if (response) {
     std::cout << response.value() << std::endl;
   } else {
@@ -11,6 +12,7 @@ void print_response(std::experimental::optional<std::string> response) {
 
 void kv1(VaultClient vaultClient) {
   auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
+  auto path = Path{"hello"};
 
   std::unordered_map<std::string, std::string> data(
   {
@@ -19,17 +21,18 @@ void kv1(VaultClient vaultClient) {
     {"something", "quux"},
   });
 
-  kv.put("hello", data);
+  kv.put(path, data);
 
-  print_response(kv.get("hello"));
-  print_response(kv.list("hello"));
+  print_response(kv.get(path));
+  print_response(kv.list(path));
 
-  kv.del("hello");
-  print_response(kv.get("hello"));
+  kv.del(path);
+  print_response(kv.get(path));
 }
 
 void kv2(VaultClient vaultClient) {
   auto kv = KeyValue(vaultClient, "test");
+  auto path = Path{"hello"};
 
   std::unordered_map<std::string, std::string> data(
   {
@@ -38,32 +41,34 @@ void kv2(VaultClient vaultClient) {
     {"something", "something else"},
   });
 
-  kv.put("hello", data);
+  kv.put(path, data);
 
-  print_response(kv.get("hello"));
-  print_response(kv.list("hello"));
+  print_response(kv.get(path));
+  print_response(kv.list(path));
 
-  kv.destroy("hello", std::vector<long>({40,41,42,43}));
+  kv.destroy(path, std::vector<long>({40,41,42,43}));
 
-  print_response(kv.get("hello"));
+  print_response(kv.get(path));
 }
 
 void transit_encrypt_decrypt(VaultClient vaultClient) {
   auto transit = Transit(vaultClient);
+  auto path = Path{"mykey"};
 
   auto input = Base64::encode("Attack at dawn");
   Parameters parameters({ {"plaintext", input} });
-  print_response(transit.encrypt("mykey", parameters));
+  print_response(transit.encrypt(path, parameters));
 
   parameters = Parameters({ {"ciphertext", "vault:v1:wOWt0eYKlzLwVKitJchP9F456jMtiFZUc/tC8+0l5BE2SJLVw548yy6W"} });
-  print_response(transit.decrypt("mykey", parameters));
+  print_response(transit.decrypt(path, parameters));
 }
 
 void transit_keys(VaultClient vaultClient) {
   auto transit = Transit(vaultClient);
+  auto path = Path{"mykey"};
 
-  print_response(transit.generate_data_key("mykey", {{}}));
-  print_response(transit.generate_wrapped_data_key("mykey", {{}}));
+  print_response(transit.generate_data_key(path, {{}}));
+  print_response(transit.generate_wrapped_data_key(path, {{}}));
 }
 
 void transit_random(VaultClient vaultClient) {
@@ -139,10 +144,6 @@ void transit_sign(VaultClient vaultClient) {
   print_response(transit.sign("mykey", sha_512, parameters));
 }
 
-void unwrap(VaultClient vaultClient, std::string token) {
-  print_response(Unwrap::unwrap(vaultClient, token));
-}
-
 static std::string getOrDefault(const char *name, std::string defaultValue) {
     auto value = std::getenv(name);
 
@@ -159,7 +160,7 @@ auto main() -> int {
     auto wrappedToken = getOrDefault("APPROLE_WRAPPED_TOKEN", "");
 
     auto config = VaultConfigBuilder()
-            .withHost("192.168.1.20")
+            .withHost(VaultHost{"192.168.1.20"})
             .withTlsEnabled(false)
             .build();
 
@@ -174,8 +175,8 @@ auto main() -> int {
 //    transit_hash(vaultClient);
 //    transit_hmac(vaultClient);
 
-    auto wrappedAuthStrategy = WrappedSecretAppRole{roleId, wrappedToken};
-    auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
-
-    kv2(wrappedVaultClient);
+//    auto wrappedAuthStrategy = WrappedSecretAppRoleStrategy{roleId, wrappedToken};
+//    auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+//
+//    kv2(wrappedVaultClient);
 }
