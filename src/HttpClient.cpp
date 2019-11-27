@@ -26,26 +26,26 @@ bool HttpClient::is_success(optional<HttpResponse> response) {
 }
 
 optional<HttpResponse>
-HttpClient::get(const Url& url, const Token& token, const std::string& ns) const {
+HttpClient::get(const Url& url, const Token& token, const Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
 optional<HttpResponse>
-HttpClient::post(const Url& url, const Token& token, const std::string& ns, std::string value) const {
+HttpClient::post(const Url& url, const Token& token, const Namespace& ns, std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }
 
 optional<HttpResponse>
-HttpClient::del(const Url& url, const Token& token, const std::string& ns) const {
+HttpClient::del(const Url& url, const Token& token, const Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 }
 
 optional<HttpResponse>
-HttpClient::list(const Url& url, const Token& token, const std::string& ns) const {
+HttpClient::list(const Url& url, const Token& token, const Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
@@ -54,7 +54,7 @@ HttpClient::list(const Url& url, const Token& token, const std::string& ns) cons
 optional<HttpResponse>
 HttpClient::executeRequest(const Url& url,
                            const Token& token,
-                           const std::string& ns,
+                           const Namespace& ns,
                            const CurlSetupCallback& setupCallback) const {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
@@ -69,8 +69,8 @@ HttpClient::executeRequest(const Url& url,
       chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token.value).c_str());
     }
 
-    if (!ns.empty()) {
-      chunk = curl_slist_append(chunk, ("X-Vault-Namespace: " + ns).c_str());
+    if (!ns.value.empty()) {
+      chunk = curl_slist_append(chunk, ("X-Vault-Namespace: " + ns.value).c_str());
     }
 
     chunk = curl_slist_append(chunk, "Content-Type: application/json");

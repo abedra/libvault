@@ -60,8 +60,8 @@ TEST_CASE("VaultClient#getToken")
 TEST_CASE("VaultClient#getNamespace")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(VaultConfigBuilder().withNamespace("ns").build(), strategy);
-  REQUIRE(vaultClient.getNamespace() == "ns");
+  auto vaultClient = VaultClient(VaultConfigBuilder().withNamespace(Namespace{"ns"}).build(), strategy);
+  REQUIRE(vaultClient.getNamespace().value == "ns");
 }
 
 TEST_CASE("HttpClient#is_success when response is empty")

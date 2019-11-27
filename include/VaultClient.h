@@ -34,6 +34,10 @@ struct Token {
   std::string value;
 };
 
+struct Namespace {
+  std::string value;
+};
+
 /* End Tiny Types */
 
 /* Start Response Types */
@@ -185,10 +189,10 @@ public:
   explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  optional<HttpResponse> get(const Url& url, const Token& token, const std::string& ns) const;
-  optional<HttpResponse> post(const Url& url, const Token& token, const std::string& ns, std::string value) const;
-  optional<HttpResponse> del(const Url& url, const Token& token, const std::string& ns) const;
-  optional<HttpResponse> list(const Url& url, const Token& token, const std::string& ns) const;
+  optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const;
+  optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const;
+  optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const;
+  optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const;
 
   static bool is_success(optional<HttpResponse> response);
 private:
@@ -196,7 +200,7 @@ private:
   bool verify_;
   long connectTimeout_;
   HttpErrorCallback errorCallback_;
-  optional<HttpResponse> executeRequest(const Url& url, const Token& token, const std::string& ns, const CurlSetupCallback& callback) const;
+  optional<HttpResponse> executeRequest(const Url& url, const Token& token, const Namespace& ns, const CurlSetupCallback& callback) const;
 };
 
 class VaultConfig {
@@ -208,16 +212,25 @@ public:
   long getConnectTimeout() { return connectTimeout_; }
   std::string getHost() { return host_; }
   std::string getPort() { return port_; }
-  std::string getNamespace() { return ns_; }
+  Namespace getNamespace() { return ns_; }
 private:
-  VaultConfig() : tls_(true), debug_(false), verify_(true), connectTimeout_(10), host_("localhost"), port_("8200"), ns_("") {}
+  VaultConfig()
+  : tls_(true)
+  , debug_(false)
+  , verify_(true)
+  , connectTimeout_(10)
+  , host_("localhost")
+  , port_("8200")
+  , ns_({})
+  {}
+
   bool tls_;
   bool debug_;
   bool verify_;
   long connectTimeout_;
   std::string host_;
   std::string port_;
-  std::string ns_;
+  Namespace ns_;
 };
 
 class VaultConfigBuilder {
@@ -247,7 +260,7 @@ public:
     return *this;
   }
 
-  VaultConfigBuilder& withNamespace(std::string ns) {
+  VaultConfigBuilder& withNamespace(Namespace ns) {
     config_.ns_ = std::move(ns);
     return *this;
   }
@@ -278,7 +291,7 @@ public:
   bool is_authenticated() const { return !token_.value.empty(); }
 
   Token getToken() const { return token_; }
-  std::string getNamespace() const { return namespace_; }
+  Namespace getNamespace() const { return namespace_; }
   Url getUrl(const std::string& base, const Path& path) const;
 
 private:
@@ -288,7 +301,7 @@ private:
   std::string host_;
   std::string port_;
   Token token_;
-  std::string namespace_;
+  Namespace namespace_;
 
   HttpClient httpClient_;
   AuthenticationStrategy& authStrategy_;
