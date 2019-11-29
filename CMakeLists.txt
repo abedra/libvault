@@ -25,7 +25,7 @@ add_library(vault SHARED
         src/AppRoleStrategy.cpp
   src/Unwrap.cpp
         src/WrappedSecretAppRoleStrategy.cpp
-)
+        src/Base64.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
