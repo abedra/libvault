@@ -65,12 +65,12 @@ HttpClient::executeRequest(const Url& url,
   if (curl) {
     struct curl_slist *chunk = nullptr;
 
-    if (!token.value.empty()) {
-      chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token.value).c_str());
+    if (!token.empty()) {
+      chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token).c_str());
     }
 
-    if (!ns.value.empty()) {
-      chunk = curl_slist_append(chunk, ("X-Vault-Namespace: " + ns.value).c_str());
+    if (!ns.empty()) {
+      chunk = curl_slist_append(chunk, ("X-Vault-Namespace: " + ns).c_str());
     }
 
     chunk = curl_slist_append(chunk, "Content-Type: application/json");

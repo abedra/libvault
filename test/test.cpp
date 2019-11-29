@@ -54,14 +54,14 @@ TEST_CASE("VaultClient#getToken")
 {
   auto strategy = SuccessfulAuth();
   auto vaultClient = VaultClient(config, strategy);
-  REQUIRE(vaultClient.getToken().value == "success");
+  REQUIRE(vaultClient.getToken().value() == "success");
 }
 
 TEST_CASE("VaultClient#getNamespace")
 {
   auto strategy = SuccessfulAuth();
   auto vaultClient = VaultClient(VaultConfigBuilder().withNamespace(Namespace{"ns"}).build(), strategy);
-  REQUIRE(vaultClient.getNamespace().value == "ns");
+  REQUIRE(vaultClient.getNamespace().value() == "ns");
 }
 
 TEST_CASE("HttpClient#is_success when response is empty")
@@ -86,8 +86,8 @@ TEST_CASE("VaultConfig#make default")
 {
   config= VaultConfigBuilder().build();
 
-  REQUIRE(config.getHost().value == "localhost");
-  REQUIRE(config.getPort().value == "8200");
+  REQUIRE(config.getHost().value() == "localhost");
+  REQUIRE(config.getPort().value() == "8200");
   REQUIRE(config.getTls() == true);
   REQUIRE(config.getDebug() == false);
   REQUIRE(config.getConnectTimeout().value == 10);
@@ -104,8 +104,8 @@ TEST_CASE("VaultConfig#make options set")
     .withConnectTimeout(VaultConnectTimeout{5})
     .build();
 
-  REQUIRE(config.getHost().value == "example.com");
-  REQUIRE(config.getPort().value == "8100");
+  REQUIRE(config.getHost().value() == "example.com");
+  REQUIRE(config.getPort().value() == "8100");
   REQUIRE(config.getTls() == false);
   REQUIRE(config.getDebug() == true);
   REQUIRE(config.getVerify() == false);

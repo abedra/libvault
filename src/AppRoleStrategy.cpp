@@ -10,7 +10,7 @@ AppRoleStrategy::AppRoleStrategy(RoleId roleId, SecretId secretId)
 optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient& client) {
   nlohmann::json j;
   j = nlohmann::json::object();
-  j["role_id"] = roleId_.value;
+  j["role_id"] = roleId_.value();
   j["secret_id"] = secretId_.value();
 
   auto response = client.getHttpClient().post(

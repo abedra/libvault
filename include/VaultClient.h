@@ -8,13 +8,9 @@
 #include <vector>
 
 /* Start Tiny Types */
-/* TODO
- *
- * Create String type and long type base that has typical operators
- *
-*/
 
 struct TinyString {
+  TinyString() = default;
   explicit TinyString(std::string value) : value_(std::move(value)) { }
 
   friend std::ostream& operator<<(std::ostream& os, const TinyString& object) { return os << object.value(); }
@@ -27,7 +23,7 @@ struct TinyString {
     return value_.empty();
   }
 
-  const char * c_str() const {
+  const char* c_str() const {
     return value_.c_str();
   }
 
@@ -39,37 +35,23 @@ protected:
   std::string value_;
 };
 
+typedef TinyString SecretId;
+typedef TinyString HttpResponseBodyString;
+typedef TinyString Url;
+typedef TinyString Path;
+typedef TinyString Token;
+typedef TinyString Namespace;
+typedef TinyString RoleId;
+typedef TinyString VaultHost;
+typedef TinyString VaultPort;
+
+// TODO: Create tiny long type
 struct HttpResponseStatusCode {
   long value;
 };
 
 struct VaultConnectTimeout {
   long value;
-};
-
-typedef TinyString SecretId;
-typedef TinyString HttpResponseBodyString;
-typedef TinyString Url;
-typedef TinyString Path;
-
-struct Token {
-  std::string value;
-};
-
-struct Namespace {
-  std::string value;
-};
-
-struct RoleId {
-  std::string value;
-};
-
-struct VaultHost {
-  std::string value;
-};
-
-struct VaultPort {
-  std::string value;
 };
 
 /* End Tiny Types */
@@ -255,7 +237,7 @@ private:
   , connectTimeout_(VaultConnectTimeout{10})
   , host_(VaultHost{"localhost"})
   , port_(VaultPort{"8200"})
-  , ns_({""})
+  , ns_("")
   {}
 
   bool tls_;
@@ -322,7 +304,7 @@ public:
 
   const HttpClient& getHttpClient() const { return httpClient_; }
 
-  bool is_authenticated() const { return !token_.value.empty(); }
+  bool is_authenticated() const { return !token_.empty(); }
 
   Token getToken() const { return token_; }
   Namespace getNamespace() const { return namespace_; }
