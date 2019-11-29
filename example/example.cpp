@@ -155,9 +155,9 @@ auto main() -> int {
         std::cout << err << std::endl;
     };
 
-    auto roleId = getOrDefault("APPROLE_ROLE_ID", "");
-    auto secretId = getOrDefault("APPROLE_SECRET_ID", "");
-    auto wrappedToken = getOrDefault("APPROLE_WRAPPED_TOKEN", "");
+    auto roleId = RoleId{getOrDefault("APPROLE_ROLE_ID", "")};
+    auto secretId = SecretId{getOrDefault("APPROLE_SECRET_ID", "")};
+    auto wrappedToken = Token{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
 
     auto config = VaultConfigBuilder()
             .withHost(VaultHost{"192.168.1.20"})
@@ -175,8 +175,8 @@ auto main() -> int {
 //    transit_hash(vaultClient);
 //    transit_hmac(vaultClient);
 
-//    auto wrappedAuthStrategy = WrappedSecretAppRoleStrategy{roleId, wrappedToken};
-//    auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
-//
-//    kv2(wrappedVaultClient);
+    auto wrappedAuthStrategy = WrappedSecretAppRoleStrategy{roleId, wrappedToken};
+    auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+
+    kv2(wrappedVaultClient);
 }

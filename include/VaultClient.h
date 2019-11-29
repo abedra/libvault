@@ -14,6 +14,23 @@
  *
 */
 
+template<typename T>
+struct Tiny {
+  explicit Tiny(const T& value) : value_(value) { }
+  explicit Tiny(const T&& value) : value_(std::move(value)) { }
+
+  friend std::ostream& operator<<(std::ostream& os, const Tiny& object) { return os << object.value(); }
+
+  const T& value() const {
+    return value_;
+  }
+
+protected:
+  T value_;
+};
+
+typedef Tiny<std::string> SecretId;
+
 struct HttpResponseStatusCode {
   long value;
 };
@@ -43,10 +60,6 @@ struct Namespace {
 };
 
 struct RoleId {
-  std::string value;
-};
-
-struct SecretId {
   std::string value;
 };
 

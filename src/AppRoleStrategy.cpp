@@ -11,7 +11,7 @@ optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient
   nlohmann::json j;
   j = nlohmann::json::object();
   j["role_id"] = roleId_.value;
-  j["secret_id"] = secretId_.value;
+  j["secret_id"] = secretId_.value();
 
   auto response = client.getHttpClient().post(
     getUrl(client, Path{"/login"}),
