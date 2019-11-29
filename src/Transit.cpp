@@ -56,7 +56,7 @@ optional<std::string> Transit::generate_random_bytes(int num_bytes, const Parame
   );
 }
 
-optional<std::string> Transit::hash(const std::string& algorithm, const Parameters& parameters) {
+optional<std::string> Transit::hash(const Algorithm& algorithm, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
     getUrl(Path{"hash/" + algorithm}),
@@ -65,7 +65,7 @@ optional<std::string> Transit::hash(const std::string& algorithm, const Paramete
 }
 
 optional<std::string> Transit::hmac(const std::string& key,
-                                    const std::string& algorithm,
+                                    const Algorithm& algorithm,
                                     const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
@@ -75,7 +75,7 @@ optional<std::string> Transit::hmac(const std::string& key,
 }
 
 optional<std::string> Transit::sign(const std::string& key,
-                                    const std::string& algorithm,
+                                    const Algorithm& algorithm,
                                     const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
@@ -85,7 +85,7 @@ optional<std::string> Transit::sign(const std::string& key,
 }
 
 optional<std::string> Transit::verify(const std::string& key,
-                                      const std::string& algorithm,
+                                      const Algorithm& algorithm,
                                       const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,

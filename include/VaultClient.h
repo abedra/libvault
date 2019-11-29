@@ -44,6 +44,15 @@ typedef TinyString Namespace;
 typedef TinyString RoleId;
 typedef TinyString VaultHost;
 typedef TinyString VaultPort;
+typedef TinyString Algorithm;
+
+namespace Algorithms {
+  const static Algorithm SHA1 = Algorithm("sha1");
+  const static Algorithm SHA2_224 = Algorithm{"sha2-224"};
+  const static Algorithm SHA2_256 = Algorithm{"sha2-256"};
+  const static Algorithm SHA2_384 = Algorithm{"sha2-384"};
+  const static Algorithm SHA2_512 = Algorithm{"sha2-512"};
+};
 
 // TODO: Create tiny long type
 struct HttpResponseStatusCode {
@@ -297,10 +306,10 @@ public:
   optional<std::string> generate_data_key(const Path& path, const Parameters& parameters);
   optional<std::string> generate_wrapped_data_key(const Path& path, const Parameters& parameters);
   optional<std::string> generate_random_bytes(int num_bytes, const Parameters& parameters);
-  optional<std::string> hash(const std::string& algorithm, const Parameters& parameters);
-  optional<std::string> hmac(const std::string& key, const std::string& algorithm, const Parameters& Parameters);
-  optional<std::string> sign(const std::string& key, const std::string& algorithm, const Parameters& Parameters);
-  optional<std::string> verify(const std::string& key, const std::string& algorithm, const Parameters& Parameters);
+  optional<std::string> hash(const Algorithm& algorithm, const Parameters& parameters);
+  optional<std::string> hmac(const std::string& key, const Algorithm& algorithm, const Parameters& Parameters);
+  optional<std::string> sign(const std::string& key, const Algorithm& algorithm, const Parameters& Parameters);
+  optional<std::string> verify(const std::string& key, const Algorithm& algorithm, const Parameters& Parameters);
 private:
   const VaultClient& client_;
   Url getUrl(const Path& path);

@@ -82,66 +82,44 @@ void transit_random(VaultClient vaultClient) {
 }
 
 void transit_hash(VaultClient vaultClient) {
-  auto sha_224 = "sha2-224";
-  auto sha_256 = "sha2-256";
-  auto sha_384 = "sha2-384";
-  auto sha_512 = "sha2-512";
-
   Transit transit(vaultClient);
-
   auto input = Base64::encode("Attack at dawn");
-
   Parameters parameters({ {"format","base64"}, {"input", input} });
 
-  print_response(transit.hash(sha_224, parameters));
-  print_response(transit.hash(sha_256, parameters));
-  print_response(transit.hash(sha_384, parameters));
-  print_response(transit.hash(sha_512, parameters));
+  print_response(transit.hash(Algorithms::SHA2_224, parameters));
+  print_response(transit.hash(Algorithms::SHA2_256, parameters));
+  print_response(transit.hash(Algorithms::SHA2_384, parameters));
+  print_response(transit.hash(Algorithms::SHA2_512, parameters));
 
   parameters = Parameters({ {"format","hex"}, {"input", input} });
 
-  print_response(transit.hash(sha_224, parameters));
-  print_response(transit.hash(sha_256, parameters));
-  print_response(transit.hash(sha_384, parameters));
-  print_response(transit.hash(sha_512, parameters));
+  print_response(transit.hash(Algorithms::SHA2_224, parameters));
+  print_response(transit.hash(Algorithms::SHA2_256, parameters));
+  print_response(transit.hash(Algorithms::SHA2_384, parameters));
+  print_response(transit.hash(Algorithms::SHA2_512, parameters));
 }
 
 void transit_hmac(VaultClient vaultClient) {
-  auto sha_224 = "sha2-224";
-  auto sha_256 = "sha2-256";
-  auto sha_384 = "sha2-384";
-  auto sha_512 = "sha2-512";
-
   Transit transit(vaultClient);
-
   auto input = Base64::encode("Attack at dawn");
-
   Parameters parameters({ {"input", input} });
 
-  print_response(transit.hmac("mykey", sha_224, parameters));
-  print_response(transit.hmac("mykey", sha_256, parameters));
-  print_response(transit.hmac("mykey", sha_384, parameters));
-  print_response(transit.hmac("mykey", sha_512, parameters));
+  print_response(transit.hmac("mykey", Algorithms::SHA2_224, parameters));
+  print_response(transit.hmac("mykey", Algorithms::SHA2_256, parameters));
+  print_response(transit.hmac("mykey", Algorithms::SHA2_384, parameters));
+  print_response(transit.hmac("mykey", Algorithms::SHA2_512, parameters));
 }
 
 void transit_sign(VaultClient vaultClient) {
-  auto sha_1   = "sha1";
-  auto sha_224 = "sha2-224";
-  auto sha_256 = "sha2-256";
-  auto sha_384 = "sha2-384";
-  auto sha_512 = "sha2-512";
-
   Transit transit(vaultClient);
-
   auto input = Base64::encode("Attack at dawn");
-
   Parameters parameters({ {"input", input} });
 
-  print_response(transit.sign("mykey", sha_1, parameters));
-  print_response(transit.sign("mykey", sha_224, parameters));
-  print_response(transit.sign("mykey", sha_256, parameters));
-  print_response(transit.sign("mykey", sha_384, parameters));
-  print_response(transit.sign("mykey", sha_512, parameters));
+  print_response(transit.sign("mykey", Algorithms::SHA1, parameters));
+  print_response(transit.sign("mykey", Algorithms::SHA2_224, parameters));
+  print_response(transit.sign("mykey", Algorithms::SHA2_256, parameters));
+  print_response(transit.sign("mykey", Algorithms::SHA2_384, parameters));
+  print_response(transit.sign("mykey", Algorithms::SHA2_512, parameters));
 }
 
 static std::string getOrDefault(const char *name, std::string defaultValue) {
