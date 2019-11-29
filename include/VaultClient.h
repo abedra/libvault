@@ -45,6 +45,7 @@ typedef TinyString RoleId;
 typedef TinyString VaultHost;
 typedef TinyString VaultPort;
 typedef TinyString Algorithm;
+typedef TinyString SecretMount;
 
 namespace Algorithms {
   const static Algorithm SHA1 = Algorithm("sha1");
@@ -91,7 +92,6 @@ using CurlSetupCallback = std::function<void(CURL *curl)>;
 
 using Parameters = std::unordered_map<std::string, std::string>;
 template <typename T> using optional = std::experimental::optional<T>;
-
 
 /* Classes */
 
@@ -206,9 +206,7 @@ public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
   const HttpClient& getHttpClient() const { return httpClient_; }
-
   bool is_authenticated() const { return !token_.empty(); }
-
   Token getToken() const { return token_; }
   Namespace getNamespace() const { return namespace_; }
   Url getUrl(const std::string& base, const Path& path) const;
@@ -237,9 +235,11 @@ public:
 class TokenStrategy : public AuthenticationStrategy {
 public:
   explicit TokenStrategy(Token token) : token_(std::move(token)) {}
+
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override {
     return AuthenticationResponse{HttpResponseBodyString{""}, token_};
   }
+
 private:
   Token token_;
 };
@@ -247,6 +247,7 @@ private:
 class AppRoleStrategy : public AuthenticationStrategy {
 public:
   AppRoleStrategy(RoleId roleId, SecretId secretId);
+
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
@@ -266,6 +267,7 @@ private:
 class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
 public:
   WrappedSecretAppRoleStrategy(RoleId role_id, const Token& token);
+
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
@@ -278,23 +280,24 @@ public:
   enum Version { v1, v2 };
 
   explicit KeyValue(const VaultClient& client);
-  KeyValue(const VaultClient& client, std::string mount);
+  KeyValue(const VaultClient& client, SecretMount  mount);
   KeyValue(const VaultClient& client, KeyValue::Version version);
-  KeyValue(const VaultClient& client, std::string mount, KeyValue::Version version);
+  KeyValue(const VaultClient& client, SecretMount mount, KeyValue::Version version);
 
   optional<std::string> list(const Path& path);
   optional<std::string> get(const Path& path);
-  optional<std::string> put(const Path& path, std::unordered_map<std::string, std::string> map);
+  optional<std::string> put(const Path& path, Parameters parameters);
   optional<std::string> del(const Path& path);
   optional<std::string> del(const Path& path, std::vector<long> versions);
   optional<std::string> destroy(const Path& path, std::vector<long> versions);
-private:
-  const VaultClient& client_;
-  KeyValue::Version version_;
-  std::string mount_;
 
+private:
   Url getUrl(const Path& path);
   Url getMetadataUrl(const Path& path);
+
+  const VaultClient& client_;
+  KeyValue::Version version_;
+  SecretMount mount_;
 };
 
 class Transit {
@@ -310,7 +313,9 @@ public:
   optional<std::string> hmac(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
   optional<std::string> sign(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
   optional<std::string> verify(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
+
 private:
-  const VaultClient& client_;
   Url getUrl(const Path& path);
+
+  const VaultClient& client_;
 };

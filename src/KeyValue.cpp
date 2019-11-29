@@ -6,25 +6,25 @@ KeyValue::KeyValue(const VaultClient& client)
   : version_(KeyValue::Version::v2)
   , client_(client)
   , mount_("secret")
-{}
+  {}
 
-KeyValue::KeyValue(const VaultClient& client, std::string mount)
+KeyValue::KeyValue(const VaultClient& client, SecretMount mount)
   : version_(KeyValue::Version::v2)
   , client_(client)
   , mount_(std::move(mount))
-{}
+  {}
 
 KeyValue::KeyValue(const VaultClient& client, KeyValue::Version version)
   : version_(version)
   , client_(client)
   , mount_("secret")
-{}
+  {}
 
-KeyValue::KeyValue(const VaultClient &client,std::string mount, KeyValue::Version version)
+KeyValue::KeyValue(const VaultClient &client, SecretMount mount, KeyValue::Version version)
   : version_(version)
   , client_(client)
   , mount_(std::move(mount))
-{}
+  {}
 
 Url KeyValue::getUrl(const Path& path) {
   switch (version_) {
@@ -83,7 +83,7 @@ optional<std::string> KeyValue::get(const Path& path) {
     : std::experimental::nullopt;
 }
 
-optional<std::string> KeyValue::put(const Path& path, std::unordered_map<std::string, std::string> map) {
+optional<std::string> KeyValue::put(const Path& path, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::experimental::nullopt;
   }
@@ -91,8 +91,8 @@ optional<std::string> KeyValue::put(const Path& path, std::unordered_map<std::st
   nlohmann::json j;
   j["data"] = nlohmann::json::object();
   std::for_each(
-    map.begin(),
-    map.end(),
+    parameters.begin(),
+    parameters.end(),
     [&](std::pair<std::string, std::string> pair) {
       j["data"][pair.first] = pair.second;
     }

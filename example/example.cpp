@@ -31,8 +31,9 @@ void kv1(VaultClient vaultClient) {
 }
 
 void kv2(VaultClient vaultClient) {
-  auto kv = KeyValue(vaultClient, "test");
-  auto path = Path{"hello"};
+  SecretMount mount("test");
+  KeyValue kv(vaultClient, mount);
+  Path path("hello");
 
   std::unordered_map<std::string, std::string> data(
   {
@@ -52,20 +53,20 @@ void kv2(VaultClient vaultClient) {
 }
 
 void transit_encrypt_decrypt(VaultClient vaultClient) {
-  auto transit = Transit(vaultClient);
-  auto path = Path{"mykey"};
+  Transit transit(vaultClient);
+  Path path("mykey");
+  Parameters parameters({ {"plaintext", Base64::encode("Attack at dawn")} });
 
-  auto input = Base64::encode("Attack at dawn");
-  Parameters parameters({ {"plaintext", input} });
   print_response(transit.encrypt(path, parameters));
 
   parameters = Parameters({ {"ciphertext", "vault:v1:wOWt0eYKlzLwVKitJchP9F456jMtiFZUc/tC8+0l5BE2SJLVw548yy6W"} });
+
   print_response(transit.decrypt(path, parameters));
 }
 
 void transit_keys(VaultClient vaultClient) {
-  auto transit = Transit(vaultClient);
-  auto path = Path{"mykey"};
+  Transit transit(vaultClient);
+  Path path("mykey");
 
   print_response(transit.generate_data_key(path, {{}}));
   print_response(transit.generate_wrapped_data_key(path, {{}}));
