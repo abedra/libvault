@@ -307,9 +307,9 @@ public:
   optional<std::string> generate_wrapped_data_key(const Path& path, const Parameters& parameters);
   optional<std::string> generate_random_bytes(int num_bytes, const Parameters& parameters);
   optional<std::string> hash(const Algorithm& algorithm, const Parameters& parameters);
-  optional<std::string> hmac(const std::string& key, const Algorithm& algorithm, const Parameters& Parameters);
-  optional<std::string> sign(const std::string& key, const Algorithm& algorithm, const Parameters& Parameters);
-  optional<std::string> verify(const std::string& key, const Algorithm& algorithm, const Parameters& Parameters);
+  optional<std::string> hmac(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
+  optional<std::string> sign(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
+  optional<std::string> verify(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
 private:
   const VaultClient& client_;
   Url getUrl(const Path& path);

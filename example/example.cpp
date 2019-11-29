@@ -101,25 +101,25 @@ void transit_hash(VaultClient vaultClient) {
 
 void transit_hmac(VaultClient vaultClient) {
   Transit transit(vaultClient);
-  auto input = Base64::encode("Attack at dawn");
-  Parameters parameters({ {"input", input} });
+  Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
+  Path key("mykey");
 
-  print_response(transit.hmac("mykey", Algorithms::SHA2_224, parameters));
-  print_response(transit.hmac("mykey", Algorithms::SHA2_256, parameters));
-  print_response(transit.hmac("mykey", Algorithms::SHA2_384, parameters));
-  print_response(transit.hmac("mykey", Algorithms::SHA2_512, parameters));
+  print_response(transit.hmac(key, Algorithms::SHA2_224, parameters));
+  print_response(transit.hmac(key, Algorithms::SHA2_256, parameters));
+  print_response(transit.hmac(key, Algorithms::SHA2_384, parameters));
+  print_response(transit.hmac(key, Algorithms::SHA2_512, parameters));
 }
 
 void transit_sign(VaultClient vaultClient) {
   Transit transit(vaultClient);
-  auto input = Base64::encode("Attack at dawn");
-  Parameters parameters({ {"input", input} });
+  Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
+  Path key("mykey");
 
-  print_response(transit.sign("mykey", Algorithms::SHA1, parameters));
-  print_response(transit.sign("mykey", Algorithms::SHA2_224, parameters));
-  print_response(transit.sign("mykey", Algorithms::SHA2_256, parameters));
-  print_response(transit.sign("mykey", Algorithms::SHA2_384, parameters));
-  print_response(transit.sign("mykey", Algorithms::SHA2_512, parameters));
+  print_response(transit.sign(key, Algorithms::SHA1, parameters));
+  print_response(transit.sign(key, Algorithms::SHA2_224, parameters));
+  print_response(transit.sign(key, Algorithms::SHA2_256, parameters));
+  print_response(transit.sign(key, Algorithms::SHA2_384, parameters));
+  print_response(transit.sign(key, Algorithms::SHA2_512, parameters));
 }
 
 static std::string getOrDefault(const char *name, std::string defaultValue) {

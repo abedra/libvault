@@ -64,7 +64,7 @@ optional<std::string> Transit::hash(const Algorithm& algorithm, const Parameters
   );
 }
 
-optional<std::string> Transit::hmac(const std::string& key,
+optional<std::string> Transit::hmac(const Path& key,
                                     const Algorithm& algorithm,
                                     const Parameters& parameters) {
   return VaultHttpConsumer::post(
@@ -74,7 +74,7 @@ optional<std::string> Transit::hmac(const std::string& key,
   );
 }
 
-optional<std::string> Transit::sign(const std::string& key,
+optional<std::string> Transit::sign(const Path& key,
                                     const Algorithm& algorithm,
                                     const Parameters& parameters) {
   return VaultHttpConsumer::post(
@@ -84,7 +84,7 @@ optional<std::string> Transit::sign(const std::string& key,
   );
 }
 
-optional<std::string> Transit::verify(const std::string& key,
+optional<std::string> Transit::verify(const Path& key,
                                       const Algorithm& algorithm,
                                       const Parameters& parameters) {
   return VaultHttpConsumer::post(
