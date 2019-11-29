@@ -14,19 +14,29 @@
  *
 */
 
-template<typename T>
-struct Tiny {
-  explicit Tiny(const T& value) : value_(value) { }
-  explicit Tiny(const T&& value) : value_(std::move(value)) { }
+struct TinyString {
+  explicit TinyString(std::string value) : value_(std::move(value)) { }
 
-  friend std::ostream& operator<<(std::ostream& os, const Tiny& object) { return os << object.value(); }
+  friend std::ostream& operator<<(std::ostream& os, const TinyString& object) { return os << object.value(); }
+  friend std::string operator+(const std::string& string, const TinyString& tiny) { return string + tiny.value(); }
+  friend std::string operator+(const TinyString& tiny, const std::string& string) { return tiny.value() + string; }
+  friend std::string operator+(const char* string, const TinyString& tiny) { return string + tiny.value(); }
+  friend std::string operator+(const TinyString& tiny, const char* string) { return tiny.value() + string; }
 
-  const T& value() const {
+  bool empty() const {
+    return value_.empty();
+  }
+
+  const char * c_str() const {
+    return value_.c_str();
+  }
+
+  const std::string& value() const {
     return value_;
   }
 
 protected:
-  T value_;
+  std::string value_;
 };
 
 struct HttpResponseStatusCode {
@@ -37,16 +47,10 @@ struct VaultConnectTimeout {
   long value;
 };
 
-typedef Tiny<std::string> SecretId;
-typedef Tiny<std::string> HttpResponseBodyString;
-
-struct Url {
-  std::string value;
-};
-
-struct Path {
-  std::string value;
-};
+typedef TinyString SecretId;
+typedef TinyString HttpResponseBodyString;
+typedef TinyString Url;
+typedef TinyString Path;
 
 struct Token {
   std::string value;

@@ -83,7 +83,7 @@ HttpClient::executeRequest(const Url& url,
 
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout_);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-    curl_easy_setopt(curl, CURLOPT_URL, url.value.c_str());
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
 

@@ -12,7 +12,7 @@ Url Transit::getUrl(const Path& path) {
 optional<std::string> Transit::encrypt(const Path& path, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"encrypt/" + path.value}),
+    getUrl(Path{"encrypt/" + path}),
     parameters
   );
 }
@@ -20,7 +20,7 @@ optional<std::string> Transit::encrypt(const Path& path, const Parameters& param
 optional<std::string> Transit::decrypt(const Path& path, const Parameters& parameters) {
   auto response = VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"decrypt/" + path.value}),
+    getUrl(Path{"decrypt/" + path}),
     parameters
   );
 
@@ -35,7 +35,7 @@ optional<std::string> Transit::decrypt(const Path& path, const Parameters& param
 optional<std::string> Transit::generate_data_key(const Path& path, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"datakey/plaintext/" + path.value}),
+    getUrl(Path{"datakey/plaintext/" + path}),
     parameters
   );
 }
@@ -43,7 +43,7 @@ optional<std::string> Transit::generate_data_key(const Path& path, const Paramet
 optional<std::string> Transit::generate_wrapped_data_key(const Path& path, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"datakey/wrapped/" + path.value}),
+    getUrl(Path{"datakey/wrapped/" + path}),
     parameters
   );
 }
