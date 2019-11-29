@@ -109,5 +109,5 @@ HttpClient::executeRequest(const Url& url,
     curl_slist_free_all(chunk);
   }
 
-  return optional<HttpResponse>({response_code, buffer});
+  return optional<HttpResponse>({response_code, HttpResponseBodyString{buffer}});
 }

@@ -27,6 +27,6 @@ VaultHttpConsumer::post(const VaultClient& client,
     );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value)
+    ? optional<std::string>(response.value().body.value())
     : std::experimental::nullopt;
 }

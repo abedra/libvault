@@ -22,7 +22,7 @@ optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient
 
   if (HttpClient::is_success(response)) {
     auto body = HttpResponseBodyString{response.value().body};
-    auto token = Token{nlohmann::json::parse(body.value)["auth"]["client_token"]};
+    auto token = Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
 
     return AuthenticationResponse{body, token};
   } else {

@@ -63,7 +63,7 @@ optional<std::string> KeyValue::list(const Path& path) {
   }
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value)
+    ? optional<std::string>(response.value().body.value())
     : std::experimental::nullopt;
 }
 
@@ -79,7 +79,7 @@ optional<std::string> KeyValue::get(const Path& path) {
   );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value)
+    ? optional<std::string>(response.value().body.value())
     : std::experimental::nullopt;
 }
 
@@ -106,7 +106,7 @@ optional<std::string> KeyValue::put(const Path& path, std::unordered_map<std::st
   );
 
   return response
-    ? optional<std::string>(response.value().body.value)
+    ? optional<std::string>(response.value().body.value())
     : std::experimental::nullopt;
 }
 
@@ -122,7 +122,7 @@ optional<std::string> KeyValue::del(const Path& path) {
   );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value)
+    ? optional<std::string>(response.value().body.value())
     : std::experimental::nullopt;
 }
 
@@ -143,7 +143,7 @@ optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions
     );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value)
+    ? optional<std::string>(response.value().body.value())
     : std::experimental::nullopt;
 }
 
@@ -163,6 +163,6 @@ optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> vers
   );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value)
+    ? optional<std::string>(response.value().body.value())
     : std::experimental::nullopt;
 }

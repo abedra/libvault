@@ -29,8 +29,6 @@ protected:
   T value_;
 };
 
-typedef Tiny<std::string> SecretId;
-
 struct HttpResponseStatusCode {
   long value;
 };
@@ -39,9 +37,8 @@ struct VaultConnectTimeout {
   long value;
 };
 
-struct HttpResponseBodyString {
-  std::string value;
-};
+typedef Tiny<std::string> SecretId;
+typedef Tiny<std::string> HttpResponseBodyString;
 
 struct Url {
   std::string value;
@@ -352,7 +349,7 @@ class TokenStrategy : public AuthenticationStrategy {
 public:
   explicit TokenStrategy(Token token) : token_(std::move(token)) {}
   optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override {
-    return AuthenticationResponse{"", token_};
+    return AuthenticationResponse{HttpResponseBodyString{""}, token_};
   }
 private:
   Token token_;

@@ -15,7 +15,7 @@ private:
 class SuccessfulAuth : public AuthenticationStrategy {
 public:
   std::experimental::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
-    return std::experimental::optional<AuthenticationResponse>({"", "success"});
+    return std::experimental::optional<AuthenticationResponse>({HttpResponseBodyString{""}, Token{"success"}});
   }
 private:
 };
@@ -72,13 +72,13 @@ TEST_CASE("HttpClient#is_success when response is empty")
 
 TEST_CASE("HttpClient#is_success when status code not 200")
 {
-  auto response = std::experimental::optional<HttpResponse>({403, "Permission Denied"});
+  auto response = std::experimental::optional<HttpResponse>({403, HttpResponseBodyString{"Permission Denied"}});
   REQUIRE(!HttpClient::is_success(response));
 }
 
 TEST_CASE("HttpClient#is_success when status 200")
 {
-  auto response = std::experimental::optional<HttpResponse>({200, "OK"});
+  auto response = std::experimental::optional<HttpResponse>({200, HttpResponseBodyString{"OK"}});
   REQUIRE(HttpClient::is_success(response));
 }
 
