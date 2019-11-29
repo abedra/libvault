@@ -164,16 +164,16 @@ auto main() -> int {
             .withTlsEnabled(false)
             .build();
 
-//    auto authStrategy = AppRole{roleId, secretId};
-//    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
+    auto authStrategy = AppRoleStrategy{roleId, secretId};
+    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
 
-//    kv1(vaultClient);
-//    kv2(vaultClient);
-//    transit_encrypt_decrypt(vaultClient);
-//    transit_keys(vaultClient);
-//    transit_random(vaultClient);
-//    transit_hash(vaultClient);
-//    transit_hmac(vaultClient);
+    kv1(vaultClient);
+    kv2(vaultClient);
+    transit_encrypt_decrypt(vaultClient);
+    transit_keys(vaultClient);
+    transit_random(vaultClient);
+    transit_hash(vaultClient);
+    transit_hmac(vaultClient);
 
     auto wrappedAuthStrategy = WrappedSecretAppRoleStrategy{roleId, wrappedToken};
     auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
