@@ -132,6 +132,7 @@ public:
   VaultHost getHost() { return host_; }
   VaultPort getPort() { return port_; }
   Namespace getNamespace() { return ns_; }
+
 private:
   VaultConfig()
   : tls_(true)
@@ -202,14 +203,21 @@ private:
 
 class VaultClient {
 public:
+  VaultClient(const VaultClient& other, const Token& token);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
-  const HttpClient& getHttpClient() const { return httpClient_; }
   bool is_authenticated() const { return !token_.empty(); }
+  Url getUrl(const std::string& base, const Path& path) const;
+
+  bool getDebug() const { return debug_; }
+  bool getTls() const { return tls_; }
+  VaultHost getHost() const { return host_; }
+  VaultPort getPort() const { return port_; }
   Token getToken() const { return token_; }
   Namespace getNamespace() const { return namespace_; }
-  Url getUrl(const std::string& base, const Path& path) const;
+  const HttpClient& getHttpClient() const { return httpClient_; }
+  AuthenticationStrategy& getAuthenticationStrategy() const { return authStrategy_; }
 
 private:
   bool debug_;
@@ -258,7 +266,7 @@ private:
 
 class Unwrap {
 public:
-  static optional<SecretId> unwrap(const VaultClient &client, const Token& token);
+  static optional<SecretId> unwrap(const VaultClient &client);
 
 private:
   static Url getUrl(const VaultClient& client, const Path& path);

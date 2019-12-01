@@ -6,16 +6,12 @@ Url Unwrap::getUrl(const VaultClient& client, const Path& path) {
 }
 
 optional<SecretId>
-Unwrap::unwrap(const VaultClient& client, const Token& token) {
-  nlohmann::json j;
-  j = nlohmann::json::object();
-  j["token"] = token.value();
-
+Unwrap::unwrap(const VaultClient& client) {
   auto response = client.getHttpClient().post(
     getUrl(client, Path{"/unwrap"}),
     client.getToken(),
     client.getNamespace(),
-    j.dump()
+    ""
   );
 
     if (HttpClient::is_success(response)) {
