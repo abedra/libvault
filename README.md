@@ -21,11 +21,12 @@ int main(void)
     };
 
     auto config = VaultConfigBuilder().build();
-    auto authStrategy = AppRole{"<role_id>", "<secret_id>"};
-    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
+    AppRoleStrategy authStrategy{RoleId{"<role_id>"}, SecretId{"<secret_id>"}};
+    VaultClient vaultClient{config, authStrategy, httpErrorCallback};
 
-    auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
-    auto kv2 = KeyValue(vaultClient, "/test");
+    KeyValue kv{vaultClient, KeyValue::Version::v1};
+    Path mount{"/test"};
+    KeyValue kv2{vaultClient, mount};
 
     Parameters parameters(
     {
@@ -34,11 +35,13 @@ int main(void)
         {"something", "something else"},
     });
 
-    kv.put("hello", parameters);
-    kv2.put("hello", parameters);
+    Path key{"hello"};
 
-    std::cout << kv.get("hello") << std::endl;
-    std::cout << kv2.get("hello") << std::endl;
+    kv.put(key, parameters);
+    kv2.put(key, parameters);
+
+    std::cout << kv.get(key) << std::endl;
+    std::cout << kv2.get(key) << std::endl;
 }
 ```
 
