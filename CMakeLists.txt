@@ -11,9 +11,7 @@ else(CURL_FOUND)
 endif(CURL_FOUND)
 
 include(GNUInstallDirs)
-set(JSON_BuildTests OFF CACHE INTERNAL "")
-set(JSON_Install OFF CACHE INTERNAL "")
-add_subdirectory(nlohmann_json)
+include_directories("${CMAKE_SOURCE_DIR}/lib")
 
 add_library(vault SHARED
     include/VaultClient.h
@@ -35,8 +33,6 @@ set_target_properties(vault PROPERTIES
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
-
-target_link_libraries(vault PRIVATE nlohmann_json::nlohmann_json)
 
 install(TARGETS vault
   LIBRARY DESTINATION ${CMAKE_INSTALL_DIR}

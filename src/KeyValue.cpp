@@ -1,5 +1,5 @@
-#include <nlohmann/json.hpp>
 #include <utility>
+#include "json.hpp"
 #include "VaultClient.h"
 
 KeyValue::KeyValue(const VaultClient& client)

@@ -1,4 +1,4 @@
-#include <nlohmann/json.hpp>
+#include "json.hpp"
 #include "VaultClient.h"
 
 Transit::Transit(const VaultClient& client)
