@@ -36,12 +36,14 @@ set_target_properties(vault PROPERTIES
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
 
+if(UNIX)
 install(TARGETS vault
   LIBRARY DESTINATION ${CMAKE_INSTALL_DIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 configure_file(vault.pc.in vault.pc @ONLY)
+endif(UNIX)
 
 if(ENABLE_TEST)
     find_package(Catch2 REQUIRED)
