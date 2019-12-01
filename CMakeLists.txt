@@ -3,6 +3,13 @@ project(vault VERSION 0.1.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 14)
 
+if(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHc /std:c++latest")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+endif()
+
+
 option(ENABLE_TEST "Enable tests?" ON)
 
 find_package(CURL)
