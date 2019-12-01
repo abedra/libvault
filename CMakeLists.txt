@@ -16,16 +16,16 @@ set(JSON_Install OFF CACHE INTERNAL "")
 add_subdirectory(nlohmann_json)
 
 add_library(vault SHARED
-  include/VaultClient.h
-  src/VaultHttpConsumer.cpp
-  src/VaultClient.cpp
-  src/HttpClient.cpp
-  src/KeyValue.cpp
-  src/Transit.cpp
-        src/AppRoleStrategy.cpp
-  src/Unwrap.cpp
-        src/WrappedSecretAppRoleStrategy.cpp
-        src/Base64.cpp)
+    include/VaultClient.h
+    src/VaultHttpConsumer.cpp
+    src/VaultClient.cpp
+    src/HttpClient.cpp
+    src/KeyValue.cpp
+    src/Transit.cpp
+    src/AppRoleStrategy.cpp
+    src/Unwrap.cpp
+    src/WrappedSecretAppRoleStrategy.cpp
+    src/Base64.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
