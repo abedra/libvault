@@ -3,6 +3,8 @@ project(vault VERSION 0.1.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 14)
 
+option(ENABLE_TEST "Enable tests?" ON)
+
 find_package(CURL)
 if(CURL_FOUND)
     include_directories(${CURL_INCLUDE_DIR})
@@ -41,15 +43,17 @@ install(TARGETS vault
 
 configure_file(vault.pc.in vault.pc @ONLY)
 
-find_package(Catch2 REQUIRED)
-enable_testing()
+if(ENABLE_TEST)
+    find_package(Catch2 REQUIRED)
+    enable_testing()
 
-add_executable(libvault_test test/test.cpp)
-target_include_directories(libvault_test PRIVATE include)
-target_link_libraries(libvault_test vault)
-target_link_libraries(libvault_test curl)
-target_link_libraries(libvault_test Catch2::Catch2)
+    add_executable(libvault_test test/test.cpp)
+    target_include_directories(libvault_test PRIVATE include)
+    target_link_libraries(libvault_test vault)
+    target_link_libraries(libvault_test curl)
+    target_link_libraries(libvault_test Catch2::Catch2)
 
-include(CTest)
-include(Catch)
-catch_discover_tests(libvault_test)
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(libvault_test)
+endif(ENABLE_TEST)
