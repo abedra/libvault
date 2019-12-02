@@ -28,7 +28,7 @@ optional<std::string> Transit::decrypt(const Path& path, const Parameters& param
     auto encoded_text = nlohmann::json::parse(response.value())["data"]["plaintext"];
     return optional<std::string>(Base64::decode(encoded_text));
   } else {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 }
 

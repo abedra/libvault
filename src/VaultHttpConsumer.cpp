@@ -6,7 +6,7 @@ VaultHttpConsumer::post(const VaultClient& client,
                         const Url& url,
                         Parameters parameters) {
   if (!client.is_authenticated()) {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   nlohmann::json j = nlohmann::json::object();
@@ -28,5 +28,5 @@ VaultHttpConsumer::post(const VaultClient& client,
 
   return HttpClient::is_success(response)
     ? optional<std::string>(response.value().body.value())
-    : std::experimental::nullopt;
+    : std::nullopt;
 }

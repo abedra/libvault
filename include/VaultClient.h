@@ -3,7 +3,8 @@
 #include <unordered_map>
 #include <curl/curl.h>
 #include <functional>
-#include <experimental/optional>
+#include <optional>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -91,7 +92,7 @@ using CurlSetupCallback = std::function<void(CURL *curl)>;
 /* Aliases */
 
 using Parameters = std::unordered_map<std::string, std::string>;
-template <typename T> using optional = std::experimental::optional<T>;
+template <typename T> using optional = std::optional<T>;
 
 /* Classes */
 
