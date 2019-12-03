@@ -283,6 +283,19 @@ private:
   const Token& token_;
 };
 
+class LdapStrategy : public AuthenticationStrategy {
+public:
+  LdapStrategy(std::string  username, std::string  password);
+
+  std::optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
+
+private:
+  static Url getUrl(const VaultClient& client, const Path& username);
+
+  std::string username_;
+  std::string password_;
+};
+
 class KeyValue {
 public:
   enum Version { v1, v2 };
