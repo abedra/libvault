@@ -129,33 +129,49 @@ static std::string getOrDefault(const char *name, std::string defaultValue) {
     return value ? value : defaultValue;
 }
 
-auto main() -> int {
-    HttpErrorCallback httpErrorCallback = [&](std::string err) {
-        std::cout << err << std::endl;
-    };
+VaultClient loginWithAppRole(VaultConfig& config, HttpErrorCallback httpErrorCallback) {
+  auto roleId = RoleId{getOrDefault("APPROLE_ROLE_ID", "")};
+  auto secretId = SecretId{getOrDefault("APPROLE_SECRET_ID", "")};
+  auto authStrategy = AppRoleStrategy{roleId, secretId};
 
-    auto roleId = RoleId{getOrDefault("APPROLE_ROLE_ID", "")};
-    auto secretId = SecretId{getOrDefault("APPROLE_SECRET_ID", "")};
-    auto wrappedToken = Token{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
+  return VaultClient{config, authStrategy, httpErrorCallback};
+}
 
-    auto config = VaultConfigBuilder()
-            .withHost(VaultHost{"192.168.1.20"})
-            .withTlsEnabled(false)
-            .build();
+VaultClient loginWithWrappedAppRole(VaultConfig& config, HttpErrorCallback httpErrorCallback) {
+  auto roleId = RoleId{getOrDefault("APPROLE_ROLE_ID", "")};
+  auto wrappedToken = Token{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
+  auto wrappedAuthStrategy = WrappedSecretAppRoleStrategy{roleId, wrappedToken};
 
-    auto authStrategy = AppRoleStrategy{roleId, secretId};
-    auto vaultClient = VaultClient{config, authStrategy, httpErrorCallback};
+  return VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+}
 
-    kv1(vaultClient);
-    kv2(vaultClient);
-    transit_encrypt_decrypt(vaultClient);
-    transit_keys(vaultClient);
-    transit_random(vaultClient);
-    transit_hash(vaultClient);
-    transit_hmac(vaultClient);
+VaultClient loginWithLdap(VaultConfig& config, HttpErrorCallback httpErrorCallback) {
+  auto username = getOrDefault("LDAP_USERNAME", "");
+  auto password = getOrDefault("LDAP_PASSWORD", "");
+  auto ldapStrategy = LdapStrategy{username, password};
 
-    auto wrappedAuthStrategy = WrappedSecretAppRoleStrategy{roleId, wrappedToken};
-    auto wrappedVaultClient = VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+  return VaultClient{config, ldapStrategy, httpErrorCallback};
+}
 
-    kv2(wrappedVaultClient);
+int main() {
+  HttpErrorCallback httpErrorCallback = [&](std::string err) {
+    std::cout << err << std::endl;
+  };
+
+  auto config = VaultConfigBuilder()
+    .withHost(VaultHost{"192.168.1.20"})
+    .withTlsEnabled(false)
+    .build();
+
+  auto vaultClient = loginWithAppRole(config, httpErrorCallback);
+  // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
+  // auto vaultClient = loginWithLdap(config, httpErrorCallback)
+
+  kv1(vaultClient);
+  kv2(vaultClient);
+  transit_encrypt_decrypt(vaultClient);
+  transit_keys(vaultClient);
+  transit_random(vaultClient);
+  transit_hash(vaultClient);
+  transit_hmac(vaultClient);
 }
