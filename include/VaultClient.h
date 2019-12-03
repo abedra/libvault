@@ -20,15 +20,15 @@ struct TinyString {
   friend std::string operator+(const char* string, const TinyString& tiny) { return string + tiny.value(); }
   friend std::string operator+(const TinyString& tiny, const char* string) { return tiny.value() + string; }
 
-  bool empty() const {
+  [[nodiscard]] bool empty() const {
     return value_.empty();
   }
 
-  const char* c_str() const {
+  [[nodiscard]] const char* c_str() const {
     return value_.c_str();
   }
 
-  const std::string& value() const {
+  [[nodiscard]] const std::string& value() const {
     return value_;
   }
 
@@ -108,10 +108,10 @@ public:
   explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  std::optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const;
-  std::optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const;
-  std::optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const;
-  std::optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const;
+  [[nodiscard]] std::optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const;
+  [[nodiscard]] std::optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const;
+  [[nodiscard]] std::optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const;
+  [[nodiscard]] std::optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const;
 
   static bool is_success(std::optional<HttpResponse> response);
 private:
@@ -119,7 +119,7 @@ private:
   bool verify_;
   long connectTimeout_;
   HttpErrorCallback errorCallback_;
-  std::optional<HttpResponse> executeRequest(const Url& url, const Token& token, const Namespace& ns, const CurlSetupCallback& callback) const;
+  [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url& url, const Token& token, const Namespace& ns, const CurlSetupCallback& callback) const;
 };
 
 class VaultConfig {
@@ -207,17 +207,17 @@ public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
-  bool is_authenticated() const { return !token_.empty(); }
-  Url getUrl(const std::string& base, const Path& path) const;
+  [[nodiscard]] bool is_authenticated() const { return !token_.empty(); }
+  [[nodiscard]] Url getUrl(const std::string& base, const Path& path) const;
 
-  bool getDebug() const { return debug_; }
-  bool getTls() const { return tls_; }
-  VaultHost getHost() const { return host_; }
-  VaultPort getPort() const { return port_; }
-  Token getToken() const { return token_; }
-  Namespace getNamespace() const { return namespace_; }
-  const HttpClient& getHttpClient() const { return httpClient_; }
-  AuthenticationStrategy& getAuthenticationStrategy() const { return authStrategy_; }
+  [[nodiscard]] bool getDebug() const { return debug_; }
+  [[nodiscard]] bool getTls() const { return tls_; }
+  [[nodiscard]] VaultHost getHost() const { return host_; }
+  [[nodiscard]] VaultPort getPort() const { return port_; }
+  [[nodiscard]] Token getToken() const { return token_; }
+  [[nodiscard]] Namespace getNamespace() const { return namespace_; }
+  [[nodiscard]] const HttpClient& getHttpClient() const { return httpClient_; }
+  [[nodiscard]] AuthenticationStrategy& getAuthenticationStrategy() const { return authStrategy_; }
 
 private:
   bool debug_;
