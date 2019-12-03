@@ -92,7 +92,6 @@ using CurlSetupCallback = std::function<void(CURL *curl)>;
 /* Aliases */
 
 using Parameters = std::unordered_map<std::string, std::string>;
-template <typename T> using optional = std::optional<T>;
 
 /* Classes */
 
@@ -109,18 +108,18 @@ public:
   explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const;
-  optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const;
-  optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const;
-  optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const;
+  std::optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const;
+  std::optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const;
+  std::optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const;
+  std::optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const;
 
-  static bool is_success(optional<HttpResponse> response);
+  static bool is_success(std::optional<HttpResponse> response);
 private:
   bool debug_;
   bool verify_;
   long connectTimeout_;
   HttpErrorCallback errorCallback_;
-  optional<HttpResponse> executeRequest(const Url& url, const Token& token, const Namespace& ns, const CurlSetupCallback& callback) const;
+  std::optional<HttpResponse> executeRequest(const Url& url, const Token& token, const Namespace& ns, const CurlSetupCallback& callback) const;
 };
 
 class VaultConfig {
@@ -233,19 +232,19 @@ private:
 
 class AuthenticationStrategy {
 public:
-  virtual optional<AuthenticationResponse> authenticate(const VaultClient& client) = 0;
+  virtual std::optional<AuthenticationResponse> authenticate(const VaultClient& client) = 0;
 };
 
 class VaultHttpConsumer {
 public:
-  static optional<std::string> post(const VaultClient& client, const Url& url, Parameters parameters);
+  static std::optional<std::string> post(const VaultClient& client, const Url& url, Parameters parameters);
 };
 
 class TokenStrategy : public AuthenticationStrategy {
 public:
   explicit TokenStrategy(Token token) : token_(std::move(token)) {}
 
-  optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override {
+  std::optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override {
     return AuthenticationResponse{HttpResponseBodyString{""}, token_};
   }
 
@@ -257,7 +256,7 @@ class AppRoleStrategy : public AuthenticationStrategy {
 public:
   AppRoleStrategy(RoleId roleId, SecretId secretId);
 
-  optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
+  std::optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
   static Url getUrl(const VaultClient& vaultClient, const Path& path);
@@ -267,7 +266,7 @@ private:
 
 class Unwrap {
 public:
-  static optional<SecretId> unwrap(const VaultClient &client);
+  static std::optional<SecretId> unwrap(const VaultClient &client);
 
 private:
   static Url getUrl(const VaultClient& client, const Path& path);
@@ -277,7 +276,7 @@ class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
 public:
   WrappedSecretAppRoleStrategy(RoleId role_id, const Token& token);
 
-  optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
+  std::optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
 
 private:
   RoleId roleId_;
@@ -293,12 +292,12 @@ public:
   KeyValue(const VaultClient& client, KeyValue::Version version);
   KeyValue(const VaultClient& client, SecretMount mount, KeyValue::Version version);
 
-  optional<std::string> list(const Path& path);
-  optional<std::string> get(const Path& path);
-  optional<std::string> put(const Path& path, Parameters parameters);
-  optional<std::string> del(const Path& path);
-  optional<std::string> del(const Path& path, std::vector<long> versions);
-  optional<std::string> destroy(const Path& path, std::vector<long> versions);
+  std::optional<std::string> list(const Path& path);
+  std::optional<std::string> get(const Path& path);
+  std::optional<std::string> put(const Path& path, Parameters parameters);
+  std::optional<std::string> del(const Path& path);
+  std::optional<std::string> del(const Path& path, std::vector<long> versions);
+  std::optional<std::string> destroy(const Path& path, std::vector<long> versions);
 
 private:
   Url getUrl(const Path& path);
@@ -313,15 +312,15 @@ class Transit {
 public:
   explicit Transit(const VaultClient& client);
 
-  optional<std::string> encrypt(const Path& path, const Parameters& parameters);
-  optional<std::string> decrypt(const Path& path, const Parameters& parameters);
-  optional<std::string> generate_data_key(const Path& path, const Parameters& parameters);
-  optional<std::string> generate_wrapped_data_key(const Path& path, const Parameters& parameters);
-  optional<std::string> generate_random_bytes(int num_bytes, const Parameters& parameters);
-  optional<std::string> hash(const Algorithm& algorithm, const Parameters& parameters);
-  optional<std::string> hmac(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
-  optional<std::string> sign(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
-  optional<std::string> verify(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
+  std::optional<std::string> encrypt(const Path& path, const Parameters& parameters);
+  std::optional<std::string> decrypt(const Path& path, const Parameters& parameters);
+  std::optional<std::string> generate_data_key(const Path& path, const Parameters& parameters);
+  std::optional<std::string> generate_wrapped_data_key(const Path& path, const Parameters& parameters);
+  std::optional<std::string> generate_random_bytes(int num_bytes, const Parameters& parameters);
+  std::optional<std::string> hash(const Algorithm& algorithm, const Parameters& parameters);
+  std::optional<std::string> hmac(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
+  std::optional<std::string> sign(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
+  std::optional<std::string> verify(const Path& key, const Algorithm& algorithm, const Parameters& Parameters);
 
 private:
   Url getUrl(const Path& path);

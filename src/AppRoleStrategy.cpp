@@ -7,7 +7,7 @@ AppRoleStrategy::AppRoleStrategy(RoleId roleId, SecretId secretId)
   , secretId_(std::move(secretId))
   {}
 
-optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient& client) {
+std::optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient& client) {
   nlohmann::json j;
   j = nlohmann::json::object();
   j["role_id"] = roleId_.value();

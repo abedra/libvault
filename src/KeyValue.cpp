@@ -41,12 +41,12 @@ Url KeyValue::getMetadataUrl(const Path& path) {
   return Url{client_.getUrl("/v1/" + mount_ + "/metadata/", path)};
 }
 
-optional<std::string> KeyValue::list(const Path& path) {
+std::optional<std::string> KeyValue::list(const Path& path) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
 
-  optional<HttpResponse> response;
+  std::optional<HttpResponse> response;
 
   if (version_ == KeyValue::Version::v1) {
     response = client_.getHttpClient().list(
@@ -63,11 +63,11 @@ optional<std::string> KeyValue::list(const Path& path) {
   }
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value())
+    ? std::optional<std::string>(response.value().body.value())
     : std::nullopt;
 }
 
-optional<std::string> KeyValue::get(const Path& path) {
+std::optional<std::string> KeyValue::get(const Path& path) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -79,11 +79,11 @@ optional<std::string> KeyValue::get(const Path& path) {
   );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value())
+    ? std::optional<std::string>(response.value().body.value())
     : std::nullopt;
 }
 
-optional<std::string> KeyValue::put(const Path& path, Parameters parameters) {
+std::optional<std::string> KeyValue::put(const Path& path, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -106,11 +106,11 @@ optional<std::string> KeyValue::put(const Path& path, Parameters parameters) {
   );
 
   return response
-    ? optional<std::string>(response.value().body.value())
+    ? std::optional<std::string>(response.value().body.value())
     : std::nullopt;
 }
 
-optional<std::string> KeyValue::del(const Path& path) {
+std::optional<std::string> KeyValue::del(const Path& path) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -122,11 +122,11 @@ optional<std::string> KeyValue::del(const Path& path) {
   );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value())
+    ? std::optional<std::string>(response.value().body.value())
     : std::nullopt;
 }
 
-optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions) {
+std::optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::nullopt;
   }
@@ -143,11 +143,11 @@ optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions
     );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value())
+    ? std::optional<std::string>(response.value().body.value())
     : std::nullopt;
 }
 
-optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> versions) {
+std::optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::nullopt;
   }
@@ -163,6 +163,6 @@ optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> vers
   );
 
   return HttpClient::is_success(response)
-    ? optional<std::string>(response.value().body.value())
+    ? std::optional<std::string>(response.value().body.value())
     : std::nullopt;
 }

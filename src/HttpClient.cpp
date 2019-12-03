@@ -21,37 +21,37 @@ HttpClient::HttpClient(VaultConfig& config, HttpErrorCallback errorCallback) :
   errorCallback_(std::move(errorCallback))
 {}
 
-bool HttpClient::is_success(optional<HttpResponse> response) {
+bool HttpClient::is_success(std::optional<HttpResponse> response) {
   return response && response.value().statusCode.value == 200;
 }
 
-optional<HttpResponse>
+std::optional<HttpResponse>
 HttpClient::get(const Url& url, const Token& token, const Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
-optional<HttpResponse>
+std::optional<HttpResponse>
 HttpClient::post(const Url& url, const Token& token, const Namespace& ns, std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }
 
-optional<HttpResponse>
+std::optional<HttpResponse>
 HttpClient::del(const Url& url, const Token& token, const Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 }
 
-optional<HttpResponse>
+std::optional<HttpResponse>
 HttpClient::list(const Url& url, const Token& token, const Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
 }
 
-optional<HttpResponse>
+std::optional<HttpResponse>
 HttpClient::executeRequest(const Url& url,
                            const Token& token,
                            const Namespace& ns,
@@ -109,5 +109,5 @@ HttpClient::executeRequest(const Url& url,
     curl_slist_free_all(chunk);
   }
 
-  return optional<HttpResponse>({response_code, HttpResponseBodyString{buffer}});
+  return std::optional<HttpResponse>({response_code, HttpResponseBodyString{buffer}});
 }
