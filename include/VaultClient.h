@@ -80,9 +80,8 @@ struct AuthenticationResponse {
 /* Forward Declarations */
 
 class VaultConfigBuilder;
-class VaultClient;
 class VaultConfig;
-class AuthenticationStrategy;
+class VaultClient;
 
 /* Callbacks */
 
@@ -155,50 +154,26 @@ private:
 
 class VaultConfigBuilder {
 public:
-  VaultConfigBuilder& withTlsEnabled(bool flag) {
-    config_.tls_ = flag;
-    return *this;
-  }
-
-  VaultConfigBuilder& withDebug(bool flag) {
-    config_.debug_ = flag;
-    return *this;
-  }
-
-  VaultConfigBuilder& withTlsVerification(bool flag) {
-    config_.verify_ = flag;
-    return *this;
-  }
-
-  VaultConfigBuilder& withHost(VaultHost host) {
-    config_.host_ = std::move(host);
-    return *this;
-  }
-
-  VaultConfigBuilder& withPort(VaultPort port) {
-    config_.port_ = std::move(port);
-    return *this;
-  }
-
-  VaultConfigBuilder& withNamespace(Namespace ns) {
-    config_.ns_ = std::move(ns);
-    return *this;
-  }
-
-  VaultConfigBuilder& withConnectTimeout(VaultConnectTimeout timeout) {
-      config_.connectTimeout_ = timeout;
-      return *this;
-  }
-
-  VaultConfig& build() {
-    return config_;
-  }
-
   explicit operator VaultConfig&&() {
     return std::move(config_);
   }
+
+  VaultConfigBuilder& withTlsEnabled(bool flag);
+  VaultConfigBuilder& withDebug(bool flag);
+  VaultConfigBuilder& withTlsVerification(bool flag);
+  VaultConfigBuilder& withHost(VaultHost host);
+  VaultConfigBuilder& withPort(VaultPort port);
+  VaultConfigBuilder& withNamespace(Namespace ns);
+  VaultConfigBuilder& withConnectTimeout(VaultConnectTimeout timeout);
+  VaultConfig& build();
+
 private:
   VaultConfig config_;
+};
+
+class AuthenticationStrategy {
+public:
+  virtual std::optional<AuthenticationResponse> authenticate(const VaultClient& client) = 0;
 };
 
 class VaultClient {
@@ -230,14 +205,17 @@ private:
   AuthenticationStrategy& authStrategy_;
 };
 
-class AuthenticationStrategy {
-public:
-  virtual std::optional<AuthenticationResponse> authenticate(const VaultClient& client) = 0;
-};
-
 class VaultHttpConsumer {
 public:
   static std::optional<std::string> post(const VaultClient& client, const Url& url, Parameters parameters);
+};
+
+class Unwrap {
+public:
+  static std::optional<SecretId> unwrap(const VaultClient &client);
+
+private:
+  static Url getUrl(const VaultClient& client, const Path& path);
 };
 
 class TokenStrategy : public AuthenticationStrategy {
@@ -262,14 +240,6 @@ private:
   static Url getUrl(const VaultClient& vaultClient, const Path& path);
   RoleId roleId_;
   SecretId secretId_;
-};
-
-class Unwrap {
-public:
-  static std::optional<SecretId> unwrap(const VaultClient &client);
-
-private:
-  static Url getUrl(const VaultClient& client, const Path& path);
 };
 
 class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {

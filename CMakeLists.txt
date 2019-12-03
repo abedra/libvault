@@ -28,7 +28,8 @@ add_library(vault SHARED
     src/Unwrap.cpp
     src/WrappedSecretAppRoleStrategy.cpp
     src/Base64.cpp
-    src/LdapStrategy.cpp)
+    src/LdapStrategy.cpp
+    src/VaultConfigBuilder.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
