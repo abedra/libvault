@@ -1,21 +1,21 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-#include <experimental/optional>
+#include <optional>
 
 #include "VaultClient.h"
 
 class FailedAuth : public AuthenticationStrategy {
 public:
-  std::experimental::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
-    return std::experimental::nullopt;
+  std::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
+    return std::nullopt;
   }
 private:
 };
 
 class SuccessfulAuth : public AuthenticationStrategy {
 public:
-  std::experimental::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
-    return std::experimental::optional<AuthenticationResponse>({HttpResponseBodyString{""}, Token{"success"}});
+  std::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
+    return std::optional<AuthenticationResponse>({HttpResponseBodyString{""}, Token{"success"}});
   }
 private:
 };
@@ -66,19 +66,19 @@ TEST_CASE("VaultClient#getNamespace")
 
 TEST_CASE("HttpClient#is_success when response is empty")
 {
-  auto response = std::experimental::nullopt;
+  auto response = std::nullopt;
   REQUIRE(!HttpClient::is_success(response));
 }
 
 TEST_CASE("HttpClient#is_success when status code not 200")
 {
-  auto response = std::experimental::optional<HttpResponse>({403, HttpResponseBodyString{"Permission Denied"}});
+  auto response = std::optional<HttpResponse>({403, HttpResponseBodyString{"Permission Denied"}});
   REQUIRE(!HttpClient::is_success(response));
 }
 
 TEST_CASE("HttpClient#is_success when status 200")
 {
-  auto response = std::experimental::optional<HttpResponse>({200, HttpResponseBodyString{"OK"}});
+  auto response = std::optional<HttpResponse>({200, HttpResponseBodyString{"OK"}});
   REQUIRE(HttpClient::is_success(response));
 }
 

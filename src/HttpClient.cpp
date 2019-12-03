@@ -101,7 +101,7 @@ HttpClient::executeRequest(const Url& url,
       curl_easy_cleanup(curl);
       curl_slist_free_all(chunk);
 
-      return std::experimental::nullopt;
+      return std::nullopt;
     }
 
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);

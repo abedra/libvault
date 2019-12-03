@@ -43,7 +43,7 @@ Url KeyValue::getMetadataUrl(const Path& path) {
 
 optional<std::string> KeyValue::list(const Path& path) {
   if (!client_.is_authenticated()) {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   optional<HttpResponse> response;
@@ -64,12 +64,12 @@ optional<std::string> KeyValue::list(const Path& path) {
 
   return HttpClient::is_success(response)
     ? optional<std::string>(response.value().body.value())
-    : std::experimental::nullopt;
+    : std::nullopt;
 }
 
 optional<std::string> KeyValue::get(const Path& path) {
   if (!client_.is_authenticated()) {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   auto response = client_.getHttpClient().get(
@@ -80,12 +80,12 @@ optional<std::string> KeyValue::get(const Path& path) {
 
   return HttpClient::is_success(response)
     ? optional<std::string>(response.value().body.value())
-    : std::experimental::nullopt;
+    : std::nullopt;
 }
 
 optional<std::string> KeyValue::put(const Path& path, Parameters parameters) {
   if (!client_.is_authenticated()) {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   nlohmann::json j;
@@ -107,12 +107,12 @@ optional<std::string> KeyValue::put(const Path& path, Parameters parameters) {
 
   return response
     ? optional<std::string>(response.value().body.value())
-    : std::experimental::nullopt;
+    : std::nullopt;
 }
 
 optional<std::string> KeyValue::del(const Path& path) {
   if (!client_.is_authenticated()) {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   auto response = client_.getHttpClient().del(
@@ -123,12 +123,12 @@ optional<std::string> KeyValue::del(const Path& path) {
 
   return HttpClient::is_success(response)
     ? optional<std::string>(response.value().body.value())
-    : std::experimental::nullopt;
+    : std::nullopt;
 }
 
 optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   nlohmann::json j;
@@ -144,12 +144,12 @@ optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions
 
   return HttpClient::is_success(response)
     ? optional<std::string>(response.value().body.value())
-    : std::experimental::nullopt;
+    : std::nullopt;
 }
 
 optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 
   nlohmann::json j;
@@ -164,5 +164,5 @@ optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> vers
 
   return HttpClient::is_success(response)
     ? optional<std::string>(response.value().body.value())
-    : std::experimental::nullopt;
+    : std::nullopt;
 }

@@ -13,5 +13,5 @@ optional<AuthenticationResponse> WrappedSecretAppRoleStrategy::authenticate(cons
 
   return secret_id
     ? AppRoleStrategy(roleId_, secret_id.value()).authenticate(vaultClient)
-    : std::experimental::nullopt;
+    : std::nullopt;
 }

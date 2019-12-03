@@ -26,7 +26,7 @@ optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient
 
     return AuthenticationResponse{body, token};
   } else {
-    return std::experimental::nullopt;
+    return std::nullopt;
   }
 }
 

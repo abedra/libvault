@@ -1,14 +1,9 @@
 cmake_minimum_required(VERSION 3.9)
 project(vault VERSION 0.1.0 DESCRIPTION "Vault library for C++")
 
-set(CMAKE_CXX_STANDARD 14)
-
-if(WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHc /std:c++latest")
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-endif()
-
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(ENABLE_TEST "Enable tests?" ON)
 
@@ -42,6 +37,7 @@ set_target_properties(vault PROPERTIES
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
+target_link_libraries(vault curl)
 
 if(UNIX)
 install(TARGETS vault

@@ -2,7 +2,7 @@
 #include "VaultClient.h"
 
 template<typename T>
-void print_response(std::experimental::optional<T> response) {
+void print_response(std::optional<T> response) {
   if (response) {
     std::cout << response.value() << std::endl;
   } else {
