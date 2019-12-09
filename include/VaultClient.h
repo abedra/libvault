@@ -107,10 +107,10 @@ public:
   explicit HttpClient(VaultConfig& config);
   HttpClient(VaultConfig& config, HttpErrorCallback errorCallback);
 
-  [[nodiscard]] std::optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const;
-  [[nodiscard]] std::optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const;
-  [[nodiscard]] std::optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const;
-  [[nodiscard]] std::optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const;
+  [[nodiscard]] virtual std::optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const;
+  [[nodiscard]] virtual std::optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const;
+  [[nodiscard]] virtual std::optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const;
+  [[nodiscard]] virtual std::optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const;
 
   static bool is_success(std::optional<HttpResponse> response);
 private:
@@ -182,17 +182,17 @@ public:
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 
-  [[nodiscard]] bool is_authenticated() const { return !token_.empty(); }
-  [[nodiscard]] Url getUrl(const std::string& base, const Path& path) const;
+  [[nodiscard]] virtual bool is_authenticated() const { return !token_.empty(); }
+  [[nodiscard]] virtual Url getUrl(const std::string& base, const Path& path) const;
 
-  [[nodiscard]] bool getDebug() const { return debug_; }
-  [[nodiscard]] bool getTls() const { return tls_; }
-  [[nodiscard]] VaultHost getHost() const { return host_; }
-  [[nodiscard]] VaultPort getPort() const { return port_; }
-  [[nodiscard]] Token getToken() const { return token_; }
-  [[nodiscard]] Namespace getNamespace() const { return namespace_; }
-  [[nodiscard]] const HttpClient& getHttpClient() const { return httpClient_; }
-  [[nodiscard]] AuthenticationStrategy& getAuthenticationStrategy() const { return authStrategy_; }
+  [[nodiscard]] virtual bool getDebug() const { return debug_; }
+  [[nodiscard]] virtual bool getTls() const { return tls_; }
+  [[nodiscard]] virtual VaultHost getHost() const { return host_; }
+  [[nodiscard]] virtual VaultPort getPort() const { return port_; }
+  [[nodiscard]] virtual Token getToken() const { return token_; }
+  [[nodiscard]] virtual Namespace getNamespace() const { return namespace_; }
+  [[nodiscard]] virtual const HttpClient& getHttpClient() const { return httpClient_; }
+  [[nodiscard]] virtual AuthenticationStrategy& getAuthenticationStrategy() const { return authStrategy_; }
 
 private:
   bool debug_;
