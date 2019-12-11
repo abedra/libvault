@@ -20,6 +20,40 @@ public:
 private:
 };
 
+class MockHttpClient : public HttpClient {
+public:
+  void SetResponse(std::optional<HttpResponse> response) {
+    response_ = response;
+  }
+
+  [[nodiscard]] std::optional<HttpResponse> get(const Url& url, const Token& token, const Namespace& ns) const override {
+    return response_;
+  }
+  [[nodiscard]] std::optional<HttpResponse> post(const Url& url, const Token& token, const Namespace& ns, std::string value) const override {
+    return response_;
+  }
+  [[nodiscard]] std::optional<HttpResponse> del(const Url& url, const Token& token, const Namespace& ns) const override {
+    return response_;
+  }
+  [[nodiscard]] std::optional<HttpResponse> list(const Url& url, const Token& token, const Namespace& ns) const override {
+    return response_;
+  }
+private:
+  std::optional<HttpResponse> response_;
+};
+
+class MockVaultClient : public VaultClient {
+public:
+  MockVaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, const MockHttpClient& mockHttpClient)
+    : VaultClient(config, authStrategy), mockHttpClient_(mockHttpClient) {}
+
+  [[nodiscard]] const HttpClient& getHttpClient() const override {
+    return mockHttpClient_;
+  }
+private:
+  const MockHttpClient& mockHttpClient_;
+};
+
 auto config = VaultConfigBuilder().build();
 
 TEST_CASE("VaultClient#is_authenticated failure")
