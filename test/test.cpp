@@ -22,6 +22,8 @@ private:
 
 class MockHttpClient : public HttpClient {
 public:
+  explicit MockHttpClient(VaultConfig& config) : HttpClient(config) {}
+
   void SetResponse(std::optional<HttpResponse> response) {
     response_ = response;
   }
@@ -144,4 +146,44 @@ TEST_CASE("VaultConfig#make options set")
   REQUIRE(config.getDebug() == true);
   REQUIRE(config.getVerify() == false);
   REQUIRE(config.getConnectTimeout().value == 5);
+}
+
+TEST_CASE("MockHttpClient#return mocked response")
+{
+  auto httpClient = MockHttpClient(VaultConfigBuilder().build());
+
+  httpClient.SetResponse(std::nullopt);
+  REQUIRE(httpClient.get(Url("/test"), Token("foo"), Namespace("bar")) == std::nullopt);
+  REQUIRE(httpClient.post(Url("/test"), Token("foo"), Namespace("bar"), "baz") == std::nullopt);
+  REQUIRE(httpClient.del(Url("/test"), Token("foo"), Namespace("bar")) == std::nullopt);
+  REQUIRE(httpClient.list(Url("/test"), Token("foo"), Namespace("bar")) == std::nullopt);
+
+  auto resp = HttpResponse{200, HttpResponseBodyString("success")};
+  httpClient.SetResponse(resp);
+  auto getResp = httpClient.get(Url("/test"), Token("foo"), Namespace("bar"));
+  REQUIRE(getResp.has_value());
+  REQUIRE(getResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(getResp->body.value() == resp.body.value());
+  auto postResp = httpClient.post(Url("/test"), Token("foo"), Namespace("bar"), "baz");
+  REQUIRE(postResp.has_value());
+  REQUIRE(postResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(postResp->body.value() == resp.body.value());
+  auto delResp = httpClient.del(Url("/test"), Token("foo"), Namespace("bar"));
+  REQUIRE(delResp.has_value());
+  REQUIRE(delResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(delResp->body.value() == resp.body.value());
+  auto listResp = httpClient.list(Url("/test"), Token("foo"), Namespace("bar"));
+  REQUIRE(listResp.has_value());
+  REQUIRE(listResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(listResp->body.value() == resp.body.value());
+}
+
+TEST_CASE("MockVaultClient#mock getHttpClient")
+{
+  auto config = VaultConfigBuilder().build();
+  auto strategy = SuccessfulAuth();
+  auto httpClient = MockHttpClient(config);
+  auto vaultClient = MockVaultClient(config, strategy, httpClient);
+
+  REQUIRE(&(vaultClient.getHttpClient()) == &httpClient);
 }
