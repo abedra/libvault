@@ -13,3 +13,7 @@ path "sys/wrapping/unwrap" {
 path "auth/approle/login" {
   capabilities = ["create", "read"]
 }
+
+path "auth/approle/role/*" {
+  capabilities =  ["create", "read", "update", "delete", "list"]
+}

@@ -19,6 +19,7 @@ struct TinyString {
   friend std::string operator+(const TinyString& tiny, const std::string& string) { return tiny.value() + string; }
   friend std::string operator+(const char* string, const TinyString& tiny) { return string + tiny.value(); }
   friend std::string operator+(const TinyString& tiny, const char* string) { return tiny.value() + string; }
+  friend std::string operator+(const TinyString& tiny, const TinyString& other) { return tiny.value() + tiny.value(); }
 
   [[nodiscard]] bool empty() const {
     return value_.empty();
@@ -235,7 +236,6 @@ public:
   AppRoleStrategy(RoleId roleId, SecretId secretId);
 
   std::optional<AuthenticationResponse> authenticate(const VaultClient& vaultClient) override;
-
 private:
   static Url getUrl(const VaultClient& vaultClient, const Path& path);
   RoleId roleId_;
@@ -307,6 +307,19 @@ public:
 
 private:
   Url getUrl(const Path& path);
+  const VaultClient& client_;
+};
 
+class AppRole {
+public:
+  explicit AppRole(const VaultClient& client);
+
+  std::optional<std::string> list();
+  std::optional<std::string> create(const Path& roleName, const Parameters& parameters);
+  std::optional<std::string> update(const Path& roleName, const Parameters& parameters);
+  std::optional<std::string> read(const Path& roleName);
+
+private:
+  Url getUrl(const Path& path);
   const VaultClient& client_;
 };

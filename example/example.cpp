@@ -123,6 +123,12 @@ void transit_sign(VaultClient vaultClient) {
   print_response(transit.sign(key, Algorithms::SHA2_512, parameters));
 }
 
+static void app_role(VaultClient vaultClient) {
+  AppRole appRole(vaultClient);
+
+  print_response(appRole.list());
+}
+
 static std::string getOrDefault(const char *name, std::string defaultValue) {
     auto value = std::getenv(name);
 
@@ -159,7 +165,7 @@ int main() {
   };
 
   auto config = VaultConfigBuilder()
-    .withHost(VaultHost{"192.168.1.20"})
+    .withHost(VaultHost{"localhost"})
     .withTlsEnabled(false)
     .build();
 
@@ -167,11 +173,12 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-  kv1(vaultClient);
-  kv2(vaultClient);
-  transit_encrypt_decrypt(vaultClient);
-  transit_keys(vaultClient);
-  transit_random(vaultClient);
-  transit_hash(vaultClient);
-  transit_hmac(vaultClient);
+//  kv1(vaultClient);
+//  kv2(vaultClient);
+//  transit_encrypt_decrypt(vaultClient);
+//  transit_keys(vaultClient);
+//  transit_random(vaultClient);
+//  transit_hash(vaultClient);
+//  transit_hmac(vaultClient);
+  app_role(vaultClient);
 }
