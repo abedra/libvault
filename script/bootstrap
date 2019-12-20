@@ -1,0 +1,9 @@
+#!/bin/sh
+
+script/initialize
+script/unseal
+script/install_policy
+script/install_approle
+script/install_key_value
+script/setup_approle
+

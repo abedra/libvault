@@ -7,3 +7,6 @@ cmake_install.cmake
 example/example
 build
 *.o
+data
+bin
+operator.txt
