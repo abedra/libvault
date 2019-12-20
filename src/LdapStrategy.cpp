@@ -14,15 +14,15 @@ std::optional<AuthenticationResponse> LdapStrategy::authenticate(const VaultClie
   j["password"] = password_;
 
   auto response = vaultClient.getHttpClient().post(
-    getUrl(vaultClient, Path{username_}),
+    getUrl(vaultClient, Vault::Path{username_}),
     vaultClient.getToken(),
     vaultClient.getNamespace(),
     j.dump()
   );
 
   if (HttpClient::is_success(response)) {
-    auto body = HttpResponseBodyString{response.value().body};
-    auto token = Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
+    auto body = Vault::HttpResponseBodyString{response.value().body};
+    auto token = Vault::Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
 
     return AuthenticationResponse{body, token};
   } else {
@@ -30,6 +30,6 @@ std::optional<AuthenticationResponse> LdapStrategy::authenticate(const VaultClie
   }
 }
 
-Url LdapStrategy::getUrl(const VaultClient& client, const Path& username) {
+Vault::Url LdapStrategy::getUrl(const VaultClient& client, const Vault::Path& username) {
   return client.getUrl("/v1/auth/ldap/login/", username);
 }

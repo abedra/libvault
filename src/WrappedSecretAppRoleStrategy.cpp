@@ -1,7 +1,7 @@
 #include <utility>
 #include "VaultClient.h"
 
-WrappedSecretAppRoleStrategy::WrappedSecretAppRoleStrategy(RoleId roleId, const Token& token)
+WrappedSecretAppRoleStrategy::WrappedSecretAppRoleStrategy(Vault::RoleId roleId, const Vault::Token& token)
   : roleId_(std::move(roleId))
   , token_(token)
   {}

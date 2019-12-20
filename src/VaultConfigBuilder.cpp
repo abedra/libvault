@@ -15,22 +15,22 @@ VaultConfigBuilder& VaultConfigBuilder::withTlsVerification(bool flag) {
   return *this;
 }
 
-VaultConfigBuilder& VaultConfigBuilder::withHost(VaultHost host) {
+VaultConfigBuilder& VaultConfigBuilder::withHost(Vault::Host host) {
   config_.host_ = std::move(host);
   return *this;
 }
 
-VaultConfigBuilder& VaultConfigBuilder::withPort(VaultPort port) {
+VaultConfigBuilder& VaultConfigBuilder::withPort(Vault::Port port) {
   config_.port_ = std::move(port);
   return *this;
 }
 
-VaultConfigBuilder& VaultConfigBuilder::withNamespace(Namespace ns) {
+VaultConfigBuilder& VaultConfigBuilder::withNamespace(Vault::Namespace ns) {
   config_.ns_ = std::move(ns);
   return *this;
 }
 
-VaultConfigBuilder& VaultConfigBuilder::withConnectTimeout(VaultConnectTimeout timeout) {
+VaultConfigBuilder& VaultConfigBuilder::withConnectTimeout(Vault::ConnectTimeout timeout) {
   config_.connectTimeout_ = timeout;
   return *this;
 }

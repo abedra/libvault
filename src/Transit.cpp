@@ -5,22 +5,22 @@ Transit::Transit(const VaultClient& client)
   : client_(client)
   {}
 
-Url Transit::getUrl(const Path& path) {
+Vault::Url Transit::getUrl(const Vault::Path& path) {
   return client_.getUrl("/v1/transit/", path);
 }
 
-std::optional<std::string> Transit::encrypt(const Path& path, const Parameters& parameters) {
+std::optional<std::string> Transit::encrypt(const Vault::Path& path, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"encrypt/" + path}),
+    getUrl(Vault::Path{"encrypt/" + path}),
     parameters
   );
 }
 
-std::optional<std::string> Transit::decrypt(const Path& path, const Parameters& parameters) {
+std::optional<std::string> Transit::decrypt(const Vault::Path& path, const Parameters& parameters) {
   auto response = VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"decrypt/" + path}),
+    getUrl(Vault::Path{"decrypt/" + path}),
     parameters
   );
 
@@ -32,18 +32,18 @@ std::optional<std::string> Transit::decrypt(const Path& path, const Parameters& 
   }
 }
 
-std::optional<std::string> Transit::generate_data_key(const Path& path, const Parameters& parameters) {
+std::optional<std::string> Transit::generate_data_key(const Vault::Path& path, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"datakey/plaintext/" + path}),
+    getUrl(Vault::Path{"datakey/plaintext/" + path}),
     parameters
   );
 }
 
-std::optional<std::string> Transit::generate_wrapped_data_key(const Path& path, const Parameters& parameters) {
+std::optional<std::string> Transit::generate_wrapped_data_key(const Vault::Path& path, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"datakey/wrapped/" + path}),
+    getUrl(Vault::Path{"datakey/wrapped/" + path}),
     parameters
   );
 }
@@ -51,45 +51,45 @@ std::optional<std::string> Transit::generate_wrapped_data_key(const Path& path, 
 std::optional<std::string> Transit::generate_random_bytes(int num_bytes, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"random/" + std::to_string(num_bytes)}),
+    getUrl(Vault::Path{"random/" + std::to_string(num_bytes)}),
     parameters
   );
 }
 
-std::optional<std::string> Transit::hash(const Algorithm& algorithm, const Parameters& parameters) {
+std::optional<std::string> Transit::hash(const Vault::Algorithm& algorithm, const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"hash/" + algorithm}),
+    getUrl(Vault::Path{"hash/" + algorithm}),
     parameters
   );
 }
 
-std::optional<std::string> Transit::hmac(const Path& key,
-                                    const Algorithm& algorithm,
+std::optional<std::string> Transit::hmac(const Vault::Path& key,
+                                    const Vault::Algorithm& algorithm,
                                     const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"hmac/" + key + "/" + algorithm}),
+    getUrl(Vault::Path{"hmac/" + key + "/" + algorithm}),
     parameters
   );
 }
 
-std::optional<std::string> Transit::sign(const Path& key,
-                                    const Algorithm& algorithm,
+std::optional<std::string> Transit::sign(const Vault::Path& key,
+                                    const Vault::Algorithm& algorithm,
                                     const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"sign/" + key + "/" + algorithm}),
+    getUrl(Vault::Path{"sign/" + key + "/" + algorithm}),
     parameters
   );
 }
 
-std::optional<std::string> Transit::verify(const Path& key,
-                                      const Algorithm& algorithm,
+std::optional<std::string> Transit::verify(const Vault::Path& key,
+                                      const Vault::Algorithm& algorithm,
                                       const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
-    getUrl(Path{"verify/" + key + "/" + algorithm}),
+    getUrl(Vault::Path{"verify/" + key + "/" + algorithm}),
     parameters
   );
 }

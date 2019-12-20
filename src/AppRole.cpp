@@ -12,7 +12,7 @@ std::optional<std::string> AppRole::list() {
   }
 
   auto response = client_.getHttpClient().list(
-    getUrl(Path{"/role"}),
+    getUrl(Vault::Path{"/role"}),
     client_.getToken(),
     client_.getNamespace()
   );
@@ -22,7 +22,7 @@ std::optional<std::string> AppRole::list() {
          : std::nullopt;
 }
 
-std::optional<std::string> AppRole::create(const Path& roleName, const Parameters& parameters) {
+std::optional<std::string> AppRole::create(const Vault::Path& roleName, const Parameters& parameters) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -37,9 +37,9 @@ std::optional<std::string> AppRole::create(const Path& roleName, const Parameter
     }
   );
 
-  Path path{"/role"};
+  Vault::Path path{"/role"};
   auto response = client_.getHttpClient().post(
-    getUrl(Path{path + roleName}),
+    getUrl(Vault::Path{path + roleName}),
     client_.getToken(),
     client_.getNamespace(),
     j.dump()
@@ -50,18 +50,18 @@ std::optional<std::string> AppRole::create(const Path& roleName, const Parameter
          : std::nullopt;
 }
 
-std::optional<std::string> AppRole::update(const Path& roleName, const Parameters& parameters) {
+std::optional<std::string> AppRole::update(const Vault::Path& roleName, const Parameters& parameters) {
   return create(roleName, parameters);
 }
 
-std::optional<std::string> AppRole::read(const Path& roleName) {
+std::optional<std::string> AppRole::read(const Vault::Path& roleName) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
 
-  Path path = Path{"/role"};
+  Vault::Path path{"/role"};
   auto response = client_.getHttpClient().list(
-    getUrl(Path{path + roleName}),
+    getUrl(Vault::Path{path + roleName}),
     client_.getToken(),
     client_.getNamespace()
   );
@@ -71,7 +71,7 @@ std::optional<std::string> AppRole::read(const Path& roleName) {
          : std::nullopt;
 }
 
-Url AppRole::getUrl(const Path& path) {
+Vault::Url AppRole::getUrl(const Vault::Path& path) {
   return client_.getUrl("/v1/auth/approle", path);
 }
 

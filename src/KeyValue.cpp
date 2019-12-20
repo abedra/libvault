@@ -8,7 +8,7 @@ KeyValue::KeyValue(const VaultClient& client)
   , mount_("secret")
   {}
 
-KeyValue::KeyValue(const VaultClient& client, SecretMount mount)
+KeyValue::KeyValue(const VaultClient& client, Vault::SecretMount mount)
   : version_(KeyValue::Version::v2)
   , client_(client)
   , mount_(std::move(mount))
@@ -20,13 +20,13 @@ KeyValue::KeyValue(const VaultClient& client, KeyValue::Version version)
   , mount_("secret")
   {}
 
-KeyValue::KeyValue(const VaultClient &client, SecretMount mount, KeyValue::Version version)
+KeyValue::KeyValue(const VaultClient &client, Vault::SecretMount mount, KeyValue::Version version)
   : version_(version)
   , client_(client)
   , mount_(std::move(mount))
   {}
 
-Url KeyValue::getUrl(const Path& path) {
+Vault::Url KeyValue::getUrl(const Vault::Path& path) {
   switch (version_) {
   case KeyValue::Version::v1:
     return client_.getUrl("/v1/" + mount_ + "/", path);
@@ -37,11 +37,11 @@ Url KeyValue::getUrl(const Path& path) {
   }
 }
 
-Url KeyValue::getMetadataUrl(const Path& path) {
-  return Url{client_.getUrl("/v1/" + mount_ + "/metadata/", path)};
+Vault::Url KeyValue::getMetadataUrl(const Vault::Path& path) {
+  return Vault::Url{client_.getUrl("/v1/" + mount_ + "/metadata/", path)};
 }
 
-std::optional<std::string> KeyValue::list(const Path& path) {
+std::optional<std::string> KeyValue::list(const Vault::Path& path) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -67,7 +67,7 @@ std::optional<std::string> KeyValue::list(const Path& path) {
     : std::nullopt;
 }
 
-std::optional<std::string> KeyValue::get(const Path& path) {
+std::optional<std::string> KeyValue::get(const Vault::Path& path) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -83,7 +83,7 @@ std::optional<std::string> KeyValue::get(const Path& path) {
     : std::nullopt;
 }
 
-std::optional<std::string> KeyValue::put(const Path& path, Parameters parameters) {
+std::optional<std::string> KeyValue::put(const Vault::Path& path, Parameters parameters) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -110,7 +110,7 @@ std::optional<std::string> KeyValue::put(const Path& path, Parameters parameters
     : std::nullopt;
 }
 
-std::optional<std::string> KeyValue::del(const Path& path) {
+std::optional<std::string> KeyValue::del(const Vault::Path& path) {
   if (!client_.is_authenticated()) {
     return std::nullopt;
   }
@@ -126,7 +126,7 @@ std::optional<std::string> KeyValue::del(const Path& path) {
     : std::nullopt;
 }
 
-std::optional<std::string> KeyValue::del(const Path& path, std::vector<long> versions) {
+std::optional<std::string> KeyValue::del(const Vault::Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::nullopt;
   }
@@ -147,7 +147,7 @@ std::optional<std::string> KeyValue::del(const Path& path, std::vector<long> ver
     : std::nullopt;
 }
 
-std::optional<std::string> KeyValue::destroy(const Path& path, std::vector<long> versions) {
+std::optional<std::string> KeyValue::destroy(const Vault::Path& path, std::vector<long> versions) {
   if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
     return std::nullopt;
   }

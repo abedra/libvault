@@ -2,7 +2,7 @@
 #include "json.hpp"
 #include "VaultClient.h"
 
-AppRoleStrategy::AppRoleStrategy(RoleId roleId, SecretId secretId)
+AppRoleStrategy::AppRoleStrategy(Vault::RoleId roleId, Vault::SecretId secretId)
   : roleId_(std::move(roleId))
   , secretId_(std::move(secretId))
   {}
@@ -14,15 +14,15 @@ std::optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultC
   j["secret_id"] = secretId_.value();
 
   auto response = client.getHttpClient().post(
-    getUrl(client, Path{"/login"}),
+    getUrl(client, Vault::Path{"/login"}),
     client.getToken(),
 	  client.getNamespace(),
 	  j.dump()
   );
 
   if (HttpClient::is_success(response)) {
-    auto body = HttpResponseBodyString{response.value().body};
-    auto token = Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
+    auto body = Vault::HttpResponseBodyString{response.value().body};
+    auto token = Vault::Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
 
     return AuthenticationResponse{body, token};
   } else {
@@ -30,6 +30,6 @@ std::optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultC
   }
 }
 
-Url AppRoleStrategy::getUrl(const VaultClient& client, const Path& path) {
+Vault::Url AppRoleStrategy::getUrl(const VaultClient& client, const Vault::Path& path) {
   return client.getUrl("/v1/auth/approle", path);
 }

@@ -26,35 +26,35 @@ bool HttpClient::is_success(std::optional<HttpResponse> response) {
 }
 
 std::optional<HttpResponse>
-HttpClient::get(const Url& url, const Token& token, const Namespace& ns) const {
+HttpClient::get(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
 std::optional<HttpResponse>
-HttpClient::post(const Url& url, const Token& token, const Namespace& ns, std::string value) const {
+HttpClient::post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }
 
 std::optional<HttpResponse>
-HttpClient::del(const Url& url, const Token& token, const Namespace& ns) const {
+HttpClient::del(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 }
 
 std::optional<HttpResponse>
-HttpClient::list(const Url& url, const Token& token, const Namespace& ns) const {
+HttpClient::list(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
 }
 
 std::optional<HttpResponse>
-HttpClient::executeRequest(const Url& url,
-                           const Token& token,
-                           const Namespace& ns,
+HttpClient::executeRequest(const Vault::Url& url,
+                           const Vault::Token& token,
+                           const Vault::Namespace& ns,
                            const CurlSetupCallback& setupCallback) const {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
@@ -109,5 +109,5 @@ HttpClient::executeRequest(const Url& url,
     curl_slist_free_all(chunk);
   }
 
-  return std::optional<HttpResponse>({response_code, HttpResponseBodyString{buffer}});
+  return std::optional<HttpResponse>({response_code, Vault::HttpResponseBodyString{buffer}});
 }

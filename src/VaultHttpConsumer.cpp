@@ -3,7 +3,7 @@
 
 std::optional<std::string>
 VaultHttpConsumer::post(const VaultClient& client,
-                        const Url& url,
+                        const Vault::Url& url,
                         Parameters parameters) {
   if (!client.is_authenticated()) {
     return std::nullopt;

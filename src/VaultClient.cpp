@@ -34,7 +34,7 @@ VaultClient::VaultClient(VaultConfig& config,
   }
 }
 
-VaultClient::VaultClient(const VaultClient& other, const Token& token)
+VaultClient::VaultClient(const VaultClient& other, const Vault::Token& token)
     : host_(other.getHost())
     , port_(other.getPort())
     , namespace_(other.getNamespace())
@@ -45,6 +45,6 @@ VaultClient::VaultClient(const VaultClient& other, const Token& token)
     , token_(token)
     {}
 
-Url VaultClient::getUrl(const std::string& base, const Path& path) const {
-  return Url{(tls_ ? "https://" : "http://") + host_ + ":" + port_ + base + path};
+Vault::Url VaultClient::getUrl(const std::string& base, const Vault::Path& path) const {
+  return Vault::Url{(tls_ ? "https://" : "http://") + host_ + ":" + port_ + base + path};
 }
