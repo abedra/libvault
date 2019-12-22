@@ -44,11 +44,9 @@ void kv2(VaultClient vaultClient) {
 
   kv.put(path, data);
 
-  print_response(kv.get(path));
   print_response(kv.list(path));
 
   kv.destroy(path, std::vector<long>({40,41,42,43}));
-
   print_response(kv.get(path));
 }
 
@@ -123,12 +121,6 @@ void transit_sign(VaultClient vaultClient) {
   print_response(transit.sign(key, Vault::Algorithms::SHA2_512, parameters));
 }
 
-static void app_role(VaultClient vaultClient) {
-  AppRole appRole(vaultClient);
-
-  print_response(appRole.list());
-}
-
 static std::string getOrDefault(const char *name, std::string defaultValue) {
     auto value = std::getenv(name);
 
@@ -180,5 +172,4 @@ int main() {
   transit_random(vaultClient);
   transit_hash(vaultClient);
   transit_hmac(vaultClient);
-  app_role(vaultClient);
 }
