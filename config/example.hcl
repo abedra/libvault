@@ -6,6 +6,10 @@ path "secret/metadata/*" {
   capabilities = ["read", "update", "list", "delete", "create"]
 }
 
+path "legacy/*" {
+  capabilities = ["read", "update", "list", "delete", "create"]
+}
+
 path "sys/wrapping/unwrap" {
   capabilities = ["read", "create", "update"]
 }

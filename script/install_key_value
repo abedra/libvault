@@ -4,3 +4,4 @@ export VAULT_ADDR=http://127.0.0.1:8200
 TOKEN=`cat operator.txt | grep Root | awk '{print $4}'`
 
 VAULT_TOKEN=$TOKEN bin/vault secrets enable -version=2 -path=secret kv
+VAULT_TOKEN=$TOKEN bin/vault secrets enable -version=1 -path=legacy kv

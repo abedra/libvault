@@ -10,26 +10,6 @@ void print_response(std::optional<T> response) {
   }
 }
 
-void kv1(VaultClient vaultClient) {
-  auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
-  auto path = Vault::Path{"hello"};
-
-  std::unordered_map<std::string, std::string> data(
-  {
-    {"foo","bar"},
-    {"baz","foo"},
-    {"something", "quux"},
-  });
-
-  kv.put(path, data);
-
-  print_response(kv.get(path));
-  print_response(kv.list(path));
-
-  kv.del(path);
-  print_response(kv.get(path));
-}
-
 void transit_encrypt_decrypt(VaultClient vaultClient) {
   Transit transit(vaultClient);
   Parameters parameters({ {"plaintext", Base64::encode("Attack at dawn")} });
@@ -145,7 +125,6 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-  kv1(vaultClient);
   transit_encrypt_decrypt(vaultClient);
   transit_keys(vaultClient);
   transit_random(vaultClient);
