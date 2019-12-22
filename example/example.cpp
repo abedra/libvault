@@ -12,7 +12,7 @@ void print_response(std::optional<T> response) {
 
 void kv1(VaultClient vaultClient) {
   auto kv = KeyValue(vaultClient, KeyValue::Version::v1);
-  auto path = Path{"hello"};
+  auto path = Vault::Path{"hello"};
 
   std::unordered_map<std::string, std::string> data(
   {
@@ -31,9 +31,9 @@ void kv1(VaultClient vaultClient) {
 }
 
 void kv2(VaultClient vaultClient) {
-  SecretMount mount("test");
+  Vault::SecretMount mount("test");
   KeyValue kv(vaultClient, mount);
-  Path path("hello");
+  Vault::Path path("hello");
 
   std::unordered_map<std::string, std::string> data(
   {
@@ -54,8 +54,8 @@ void kv2(VaultClient vaultClient) {
 
 void transit_encrypt_decrypt(VaultClient vaultClient) {
   Transit transit(vaultClient);
-  Path path("mykey");
   Parameters parameters({ {"plaintext", Base64::encode("Attack at dawn")} });
+  Vault::Path path("mykey");
 
   print_response(transit.encrypt(path, parameters));
 
@@ -66,7 +66,7 @@ void transit_encrypt_decrypt(VaultClient vaultClient) {
 
 void transit_keys(VaultClient vaultClient) {
   Transit transit(vaultClient);
-  Path path("mykey");
+  Vault::Path path("mykey");
 
   print_response(transit.generate_data_key(path, {{}}));
   print_response(transit.generate_wrapped_data_key(path, {{}}));
@@ -87,40 +87,40 @@ void transit_hash(VaultClient vaultClient) {
   auto input = Base64::encode("Attack at dawn");
   Parameters parameters({ {"format","base64"}, {"input", input} });
 
-  print_response(transit.hash(Algorithms::SHA2_224, parameters));
-  print_response(transit.hash(Algorithms::SHA2_256, parameters));
-  print_response(transit.hash(Algorithms::SHA2_384, parameters));
-  print_response(transit.hash(Algorithms::SHA2_512, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_224, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_256, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_384, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_512, parameters));
 
   parameters = Parameters({ {"format","hex"}, {"input", input} });
 
-  print_response(transit.hash(Algorithms::SHA2_224, parameters));
-  print_response(transit.hash(Algorithms::SHA2_256, parameters));
-  print_response(transit.hash(Algorithms::SHA2_384, parameters));
-  print_response(transit.hash(Algorithms::SHA2_512, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_224, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_256, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_384, parameters));
+  print_response(transit.hash(Vault::Algorithms::SHA2_512, parameters));
 }
 
 void transit_hmac(VaultClient vaultClient) {
   Transit transit(vaultClient);
   Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
-  Path key("mykey");
+  Vault::Path key("mykey");
 
-  print_response(transit.hmac(key, Algorithms::SHA2_224, parameters));
-  print_response(transit.hmac(key, Algorithms::SHA2_256, parameters));
-  print_response(transit.hmac(key, Algorithms::SHA2_384, parameters));
-  print_response(transit.hmac(key, Algorithms::SHA2_512, parameters));
+  print_response(transit.hmac(key, Vault::Algorithms::SHA2_224, parameters));
+  print_response(transit.hmac(key, Vault::Algorithms::SHA2_256, parameters));
+  print_response(transit.hmac(key, Vault::Algorithms::SHA2_384, parameters));
+  print_response(transit.hmac(key, Vault::Algorithms::SHA2_512, parameters));
 }
 
 void transit_sign(VaultClient vaultClient) {
   Transit transit(vaultClient);
   Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
-  Path key("mykey");
+  Vault::Path key("mykey");
 
-  print_response(transit.sign(key, Algorithms::SHA1, parameters));
-  print_response(transit.sign(key, Algorithms::SHA2_224, parameters));
-  print_response(transit.sign(key, Algorithms::SHA2_256, parameters));
-  print_response(transit.sign(key, Algorithms::SHA2_384, parameters));
-  print_response(transit.sign(key, Algorithms::SHA2_512, parameters));
+  print_response(transit.sign(key, Vault::Algorithms::SHA1, parameters));
+  print_response(transit.sign(key, Vault::Algorithms::SHA2_224, parameters));
+  print_response(transit.sign(key, Vault::Algorithms::SHA2_256, parameters));
+  print_response(transit.sign(key, Vault::Algorithms::SHA2_384, parameters));
+  print_response(transit.sign(key, Vault::Algorithms::SHA2_512, parameters));
 }
 
 static void app_role(VaultClient vaultClient) {
@@ -136,17 +136,17 @@ static std::string getOrDefault(const char *name, std::string defaultValue) {
 }
 
 VaultClient loginWithAppRole(VaultConfig& config, HttpErrorCallback httpErrorCallback) {
-  auto roleId = RoleId{getOrDefault("APPROLE_ROLE_ID", "")};
-  auto secretId = SecretId{getOrDefault("APPROLE_SECRET_ID", "")};
-  auto authStrategy = AppRoleStrategy{roleId, secretId};
+  Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
+  Vault::SecretId secretId{getOrDefault("APPROLE_SECRET_ID", "")};
+  AppRoleStrategy authStrategy{roleId, secretId};
 
   return VaultClient{config, authStrategy, httpErrorCallback};
 }
 
 VaultClient loginWithWrappedAppRole(VaultConfig& config, HttpErrorCallback httpErrorCallback) {
-  auto roleId = RoleId{getOrDefault("APPROLE_ROLE_ID", "")};
-  auto wrappedToken = Token{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
-  auto wrappedAuthStrategy = WrappedSecretAppRoleStrategy{roleId, wrappedToken};
+  Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
+  Vault::Token wrappedToken{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
+  WrappedSecretAppRoleStrategy wrappedAuthStrategy{roleId, wrappedToken};
 
   return VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
 }
@@ -165,7 +165,7 @@ int main() {
   };
 
   auto config = VaultConfigBuilder()
-    .withHost(VaultHost{"localhost"})
+    .withHost(Vault::Host{"localhost"})
     .withTlsEnabled(false)
     .build();
 
@@ -173,12 +173,12 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-//  kv1(vaultClient);
-//  kv2(vaultClient);
-//  transit_encrypt_decrypt(vaultClient);
-//  transit_keys(vaultClient);
-//  transit_random(vaultClient);
-//  transit_hash(vaultClient);
-//  transit_hmac(vaultClient);
+  kv1(vaultClient);
+  kv2(vaultClient);
+  transit_encrypt_decrypt(vaultClient);
+  transit_keys(vaultClient);
+  transit_random(vaultClient);
+  transit_hash(vaultClient);
+  transit_hmac(vaultClient);
   app_role(vaultClient);
 }
