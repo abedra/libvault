@@ -40,7 +40,6 @@ set_target_properties(vault PROPERTIES
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
-#target_link_libraries(vault ${CURL_LIBRARIES})
 
 if(UNIX)
 install(TARGETS vault
@@ -56,12 +55,22 @@ if(ENABLE_TEST)
     enable_testing()
 
     add_executable(libvault_test test/test.cpp)
+    add_executable(libvault_integration_test test/integration/AppRoleTests.cpp)
+
     target_include_directories(libvault_test PRIVATE include)
+    target_include_directories(libvault_integration_test PRIVATE include)
+
     target_link_libraries(libvault_test vault)
     target_link_libraries(libvault_test curl)
     target_link_libraries(libvault_test Catch2::Catch2)
 
+    target_link_libraries(libvault_integration_test vault)
+    target_link_libraries(libvault_integration_test curl)
+    target_link_libraries(libvault_integration_test Catch2::Catch2)
+
     include(CTest)
     include(Catch)
+
     catch_discover_tests(libvault_test)
+    catch_discover_tests(libvault_integration_test)
 endif(ENABLE_TEST)
