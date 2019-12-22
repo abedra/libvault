@@ -30,26 +30,6 @@ void kv1(VaultClient vaultClient) {
   print_response(kv.get(path));
 }
 
-void kv2(VaultClient vaultClient) {
-  Vault::SecretMount mount("test");
-  KeyValue kv(vaultClient, mount);
-  Vault::Path path("hello");
-
-  std::unordered_map<std::string, std::string> data(
-  {
-    {"foo","world"},
-    {"baz","quux"},
-    {"something", "something else"},
-  });
-
-  kv.put(path, data);
-
-  print_response(kv.list(path));
-
-  kv.destroy(path, std::vector<long>({40,41,42,43}));
-  print_response(kv.get(path));
-}
-
 void transit_encrypt_decrypt(VaultClient vaultClient) {
   Transit transit(vaultClient);
   Parameters parameters({ {"plaintext", Base64::encode("Attack at dawn")} });
@@ -166,7 +146,6 @@ int main() {
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
   kv1(vaultClient);
-  kv2(vaultClient);
   transit_encrypt_decrypt(vaultClient);
   transit_keys(vaultClient);
   transit_random(vaultClient);

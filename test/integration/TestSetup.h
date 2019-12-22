@@ -27,7 +27,7 @@ inline VaultClient login() {
   VaultConfig config = VaultConfigBuilder()
       .withHost(Vault::Host{"localhost"})
       .withTlsEnabled(false)
-      .withDebug(true)
+      //.withDebug(true)
       .build();
 
   return VaultClient{config, authStrategy, httpErrorCallback};
