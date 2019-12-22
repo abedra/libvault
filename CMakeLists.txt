@@ -55,7 +55,7 @@ if(ENABLE_TEST)
     enable_testing()
 
     add_executable(libvault_test test/test.cpp)
-    add_executable(libvault_integration_test test/integration/AppRoleTests.cpp)
+    add_executable(libvault_integration_test test/integration/AppRoleTests.cpp test/integration/TestSetup.h test/integration/KeyValueTests.cpp)
 
     target_include_directories(libvault_test PRIVATE include)
     target_include_directories(libvault_integration_test PRIVATE include)

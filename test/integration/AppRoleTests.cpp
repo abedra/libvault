@@ -5,38 +5,11 @@
 #include "json.hpp"
 
 #include "VaultClient.h"
-
-template<typename T>
-void print_response(std::optional<T> response) {
-  if (response) {
-    std::cout << response.value() << std::endl;
-  } else {
-    std::cout << "Error" << std::endl;
-  }
-}
-
-static std::string getOrDefault(const char *name, const std::string& defaultValue) {
-  auto value = std::getenv(name);
-
-  return value ? value : defaultValue;
-}
-
-static std::unordered_map<std::string, std::string> responseToMap(const std::optional<std::string>& response) {
-  return nlohmann::json::parse(response.value())["data"];
-}
+#include "TestSetup.h"
 
 TEST_CASE("AppRole Management Functions")
 {
-  Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
-  Vault::SecretId secretId{getOrDefault("APPROLE_SECRET_ID", "")};
-  AppRoleStrategy authStrategy{roleId, secretId};
-  HttpErrorCallback httpErrorCallback = [&](const std::string& err) { std::cout << err << std::endl; };
-  VaultConfig config = VaultConfigBuilder()
-      .withHost(Vault::Host{"localhost"})
-      .withTlsEnabled(false)
-      .build();
-
-  VaultClient vaultClient{config, authStrategy, httpErrorCallback};
+  VaultClient vaultClient = login();
 
   SECTION("list")
   {

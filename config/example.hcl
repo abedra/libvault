@@ -2,8 +2,8 @@ path "secret/*" {
   capabilities = ["read", "update", "list", "delete", "create"]
 }
 
-path "secret" {
-  capabilities = ["list"]
+path "secret/metadata/*" {
+  capabilities = ["read", "update", "list", "delete", "create"]
 }
 
 path "sys/wrapping/unwrap" {
