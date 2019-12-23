@@ -10,18 +10,6 @@ void print_response(std::optional<T> response) {
   }
 }
 
-void transit_encrypt_decrypt(VaultClient vaultClient) {
-  Transit transit(vaultClient);
-  Parameters parameters({ {"plaintext", Base64::encode("Attack at dawn")} });
-  Vault::Path path("mykey");
-
-  print_response(transit.encrypt(path, parameters));
-
-  parameters = Parameters({ {"ciphertext", "vault:v1:wOWt0eYKlzLwVKitJchP9F456jMtiFZUc/tC8+0l5BE2SJLVw548yy6W"} });
-
-  print_response(transit.decrypt(path, parameters));
-}
-
 void transit_keys(VaultClient vaultClient) {
   Transit transit(vaultClient);
   Vault::Path path("mykey");
@@ -125,7 +113,6 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-  transit_encrypt_decrypt(vaultClient);
   transit_keys(vaultClient);
   transit_random(vaultClient);
   transit_hash(vaultClient);

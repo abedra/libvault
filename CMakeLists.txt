@@ -73,7 +73,7 @@ if(ENABLE_TEST)
                 test/integration/TestHelpers.h
                 test/integration/AppRoleTests.cpp
                 test/integration/KeyValueTests.cpp
-                test/integration/AuthenticationStrategies.cpp)
+                test/integration/AuthenticationStrategies.cpp test/integration/TransitTests.cpp)
 
         target_include_directories(libvault_integration_test PRIVATE include)
 
