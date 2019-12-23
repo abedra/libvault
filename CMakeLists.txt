@@ -71,9 +71,9 @@ if(ENABLE_TEST)
     if(ENABLE_INTEGRATION_TEST)
         add_executable(libvault_integration_test
                 test/integration/TestHelpers.h
-                test/integration/TestSetup.h
                 test/integration/AppRoleTests.cpp
-                test/integration/KeyValueTests.cpp)
+                test/integration/KeyValueTests.cpp
+                test/integration/AuthenticationStrategies.cpp)
 
         target_include_directories(libvault_integration_test PRIVATE include)
 

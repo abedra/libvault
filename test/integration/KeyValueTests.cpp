@@ -1,11 +1,10 @@
 #include <catch2/catch.hpp>
 
 #include "VaultClient.h"
-#include "TestSetup.h"
 #include "TestHelpers.h"
 
 TEST_CASE("KeyValue Functions") {
-  VaultClient vaultClient = login();
+  VaultClient vaultClient = TestHelpers::AppRole::login();
 
   SECTION("v1") {
     Vault::SecretMount secretMount{"legacy"};

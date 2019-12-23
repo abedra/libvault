@@ -10,5 +10,6 @@ SECRET_ID=`VAULT_TOKEN=$TOKEN bin/vault write -f auth/approle/role/client/secret
 
 rm -f .env
 
+echo "export VAULT_SINGLE_TOKEN=$TOKEN" >> .env
 echo "export APPROLE_ROLE_ID=$ROLE_ID" >> .env
 echo "export APPROLE_SECRET_ID=$SECRET_ID" >> .env

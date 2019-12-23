@@ -5,11 +5,11 @@
 #include "json.hpp"
 
 #include "VaultClient.h"
-#include "TestSetup.h"
+#include "TestHelpers.h"
 
 TEST_CASE("AppRole Management Functions")
 {
-  VaultClient vaultClient = login();
+  VaultClient vaultClient = TestHelpers::AppRole::login();
 
   SECTION("list")
   {
