@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(ENABLE_TEST "Enable tests?" ON)
+option(ENABLE_INTEGRATION_TEST "Enable integration tests?" OFF)
 
 find_package(CURL)
 if(CURL_FOUND)
@@ -55,22 +56,31 @@ if(ENABLE_TEST)
     enable_testing()
 
     add_executable(libvault_test test/test.cpp)
-    add_executable(libvault_integration_test test/integration/AppRoleTests.cpp test/integration/TestSetup.h test/integration/KeyValueTests.cpp test/integration/TestHelpers.h)
 
     target_include_directories(libvault_test PRIVATE include)
-    target_include_directories(libvault_integration_test PRIVATE include)
 
     target_link_libraries(libvault_test vault)
     target_link_libraries(libvault_test curl)
     target_link_libraries(libvault_test Catch2::Catch2)
 
-    target_link_libraries(libvault_integration_test vault)
-    target_link_libraries(libvault_integration_test curl)
-    target_link_libraries(libvault_integration_test Catch2::Catch2)
-
     include(CTest)
     include(Catch)
 
     catch_discover_tests(libvault_test)
-    catch_discover_tests(libvault_integration_test)
+
+    if(ENABLE_INTEGRATION_TEST)
+        add_executable(libvault_integration_test
+                test/integration/TestHelpers.h
+                test/integration/TestSetup.h
+                test/integration/AppRoleTests.cpp
+                test/integration/KeyValueTests.cpp)
+
+        target_include_directories(libvault_integration_test PRIVATE include)
+
+        target_link_libraries(libvault_integration_test vault)
+        target_link_libraries(libvault_integration_test curl)
+        target_link_libraries(libvault_integration_test Catch2::Catch2)
+
+        catch_discover_tests(libvault_integration_test)
+    endif()
 endif(ENABLE_TEST)
