@@ -4,6 +4,7 @@ project(vault VERSION 0.3.3 DESCRIPTION "Vault library for C++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_FLAGS_DEBUG --coverage)
 
 option(ENABLE_TEST "Enable tests?" ON)
 option(ENABLE_INTEGRATION_TEST "Enable integration tests?" OFF)
@@ -41,6 +42,9 @@ set_target_properties(vault PROPERTIES
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    target_link_libraries(vault gcov)
+endif()
 
 if(UNIX)
 install(TARGETS vault
