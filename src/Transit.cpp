@@ -65,8 +65,8 @@ std::optional<std::string> Transit::hash(const Vault::Algorithm& algorithm, cons
 }
 
 std::optional<std::string> Transit::hmac(const Vault::Path& key,
-                                    const Vault::Algorithm& algorithm,
-                                    const Parameters& parameters) {
+                                         const Vault::Algorithm& algorithm,
+                                         const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
     getUrl(Vault::Path{"hmac/" + key + "/" + algorithm}),
@@ -75,8 +75,8 @@ std::optional<std::string> Transit::hmac(const Vault::Path& key,
 }
 
 std::optional<std::string> Transit::sign(const Vault::Path& key,
-                                    const Vault::Algorithm& algorithm,
-                                    const Parameters& parameters) {
+                                         const Vault::Algorithm& algorithm,
+                                         const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
     getUrl(Vault::Path{"sign/" + key + "/" + algorithm}),
@@ -85,8 +85,8 @@ std::optional<std::string> Transit::sign(const Vault::Path& key,
 }
 
 std::optional<std::string> Transit::verify(const Vault::Path& key,
-                                      const Vault::Algorithm& algorithm,
-                                      const Parameters& parameters) {
+                                           const Vault::Algorithm& algorithm,
+                                           const Parameters& parameters) {
   return VaultHttpConsumer::post(
     client_,
     getUrl(Vault::Path{"verify/" + key + "/" + algorithm}),

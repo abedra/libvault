@@ -22,23 +22,6 @@ void print_response(std::optional<T> response) {
 }
 
 namespace TestHelpers {
-  namespace AppRole {
-    inline VaultClient login() {
-      Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
-      Vault::SecretId secretId{getOrDefault("APPROLE_SECRET_ID", "")};
-      AppRoleStrategy authStrategy{roleId, secretId};
-      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
-
-      VaultConfig config = VaultConfigBuilder()
-        .withHost(Vault::Host{"localhost"})
-        .withTlsEnabled(false)
-          //.withDebug(true)
-        .build();
-
-      return VaultClient{config, authStrategy, httpErrorCallback};
-    }
-  }
-
   namespace Token {
     inline VaultClient login() {
       Vault::Token token{getOrDefault("VAULT_SINGLE_TOKEN", "")};
@@ -51,6 +34,55 @@ namespace TestHelpers {
         .build();
 
       return VaultClient{config, tokenStrategy, httpErrorCallback};
+    }
+  }
+
+  namespace AppRole {
+    inline VaultClient login() {
+      Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
+      Vault::SecretId secretId{getOrDefault("APPROLE_SECRET_ID", "")};
+      AppRoleStrategy authStrategy{roleId, secretId};
+      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+
+      VaultConfig config = VaultConfigBuilder()
+        .withHost(Vault::Host{"localhost"})
+        .withTlsEnabled(false)
+        .withDebug(false)
+        .build();
+
+      return VaultClient{config, authStrategy, httpErrorCallback};
+    }
+  }
+
+  namespace WrappedAppRole {
+    inline VaultClient login() {
+      Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
+      Vault::Token wrappedToken{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
+      WrappedSecretAppRoleStrategy wrappedAuthStrategy{roleId, wrappedToken};
+      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      VaultConfig config = VaultConfigBuilder()
+        .withHost(Vault::Host{"localhost"})
+        .withTlsEnabled(false)
+        .withDebug(false)
+        .build();
+
+      return VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+    }
+  }
+
+  namespace Ldap {
+    inline VaultClient login() {
+      auto username = getOrDefault("LDAP_USERNAME", "");
+      auto password = getOrDefault("LDAP_PASSWORD", "");
+      auto ldapStrategy = LdapStrategy{username, password};
+      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      VaultConfig config = VaultConfigBuilder()
+        .withHost(Vault::Host{"localhost"})
+        .withTlsEnabled(false)
+        .withDebug(false)
+        .build();
+
+      return VaultClient{config, ldapStrategy, httpErrorCallback};
     }
   }
 }
@@ -118,6 +150,16 @@ namespace TestHelpers::Transit {
   inline void assertHmacEquals(const std::optional<std::string>& response, const std::string& expected) {
     if (response) {
       std::string actual = nlohmann::json::parse(response.value())["data"]["hmac"];
+
+      CHECK(expected == actual);
+    } else {
+      CHECK(false);
+    }
+  }
+
+  inline void assertSignatureEquals(const std::optional<std::string>& response, const std::string& expected) {
+    if (response) {
+      std::string actual = nlohmann::json::parse(response.value())["data"]["signature"];
 
       CHECK(expected == actual);
     } else {

@@ -16,48 +16,39 @@ The following example shows both a secret put and get. The most common scenario 
 
 int main(void)
 {
-    HttpErrorCallback httpErrorCallback = [&](std::string err) {
-      std::cout << err << std::endl;
-    };
+  HttpErrorCallback httpErrorCallback = [&](std::string err) {
+    std::cout << err << std::endl;
+  };
 
-    auto config = VaultConfigBuilder().build();
-    AppRoleStrategy authStrategy{RoleId{"<role_id>"}, SecretId{"<secret_id>"}};
-    VaultClient vaultClient{config, authStrategy, httpErrorCallback};
+  auto config = VaultConfigBuilder().build();
+  AppRoleStrategy authStrategy{Vault::RoleId{"<role_id>"}, Vault::SecretId{"<secret_id>"}};
+  VaultClient vaultClient{config, authStrategy, httpErrorCallback};
 
-    KeyValue kv{vaultClient, KeyValue::Version::v1};
-    Path mount{"/test"};
-    KeyValue kv2{vaultClient, mount};
+  KeyValue kv{vaultClient, KeyValue::Version::v1};
+  Vault::Path mount{"/test"};
+  KeyValue kv2{vaultClient, mount};
 
-    Parameters parameters(
+  Parameters parameters(
     {
-        {"foo","world"},
-        {"baz","quux"},
-        {"something", "something else"},
+      {"foo","world"},
+      {"baz","quux"},
+      {"something", "something else"},
     });
 
-    Path key{"hello"};
+  Vault::Path key{"hello"};
 
-    kv.put(key, parameters);
-    kv2.put(key, parameters);
+  kv.put(key, parameters);
+  kv2.put(key, parameters);
 
-    std::cout << kv.get(key) << std::endl;
-    std::cout << kv2.get(key) << std::endl;
+  std::cout << kv.get(key).value() << std::endl;
+  std::cout << kv2.get(key).value() << std::endl;
 }
 ```
 
 ## JSON Serialization
 
-This project uses [nlohmann/json](https://github.com/nlohmann/json) internally but does not expose it. This project makes no assumptions about serialization and returns `std:string` values that can be serialized by the tooling of your choice. Should you choose to use [nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp` file to your project and turn the result of  `VaultClient::get()` into a usable structure using the following example:
+This project uses [nlohmann/json](https://github.com/nlohmann/json) internally but does not expose it. This project makes no assumptions about serialization and returns `std:string` values that can be serialized by the tooling of your choice. Should you choose to use [nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp` file to your project. This projects integration tests have multiple examples of how to use it.
 
-```cpp
-#include "json.hpp"
-
-using json = nlohmann::json;
-
-// additional code removed for brevity, see example above
-auto data = json::parse(vaultClient.get("my_application"));
-std::cout << data["data"] << std::endl;
-```
 
 ## Compile and Install
 

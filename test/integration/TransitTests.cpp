@@ -127,4 +127,22 @@ TEST_CASE("Transit Functions")
     TestHelpers::Transit::assertHmacEquals(sha384, "vault:v1:+mw+T37535icD2XhAjAIETgRb7A30vy1UJnRv6uo0BDPhSeiUoERENLss6m3JZq3");
     TestHelpers::Transit::assertHmacEquals(sha512, "vault:v1:Iwss677l4ZoS1dtOjBwvwq5s044Mm6hVRSnjkVQOwdmX5hZJJVic7FcxOa0xP85ZhzzJczdSXRB/bnKsrwy5fA==");
   }
+
+  SECTION("Sign")
+  {
+    Vault::Path signkey("signkey");
+    Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
+
+    auto sha1 = transit.sign(signkey, Vault::Algorithms::SHA1, parameters);
+    auto sha224 = transit.sign(signkey, Vault::Algorithms::SHA2_224, parameters);
+    auto sha256 = transit.sign(signkey, Vault::Algorithms::SHA2_256, parameters);
+    auto sha384 = transit.sign(signkey, Vault::Algorithms::SHA2_384, parameters);
+    auto sha512 = transit.sign(signkey, Vault::Algorithms::SHA2_512, parameters);
+
+    TestHelpers::Transit::assertSignatureEquals(sha1,"vault:v1:8+E59yC7fw2KN5kiZZBbaxu49NhZqTdklJOFFLWA5hsDQiulqt9IQbo/6kAltKqrGmH22PH/bJkTjbiTwTr8Aw==");
+    TestHelpers::Transit::assertSignatureEquals(sha224, "vault:v1:8+E59yC7fw2KN5kiZZBbaxu49NhZqTdklJOFFLWA5hsDQiulqt9IQbo/6kAltKqrGmH22PH/bJkTjbiTwTr8Aw==");
+    TestHelpers::Transit::assertSignatureEquals(sha256, "vault:v1:8+E59yC7fw2KN5kiZZBbaxu49NhZqTdklJOFFLWA5hsDQiulqt9IQbo/6kAltKqrGmH22PH/bJkTjbiTwTr8Aw==");
+    TestHelpers::Transit::assertSignatureEquals(sha384, "vault:v1:8+E59yC7fw2KN5kiZZBbaxu49NhZqTdklJOFFLWA5hsDQiulqt9IQbo/6kAltKqrGmH22PH/bJkTjbiTwTr8Aw==");
+    TestHelpers::Transit::assertSignatureEquals(sha512, "vault:v1:8+E59yC7fw2KN5kiZZBbaxu49NhZqTdklJOFFLWA5hsDQiulqt9IQbo/6kAltKqrGmH22PH/bJkTjbiTwTr8Aw==");
+  }
 }
