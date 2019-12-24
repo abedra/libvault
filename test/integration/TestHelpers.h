@@ -114,4 +114,14 @@ namespace TestHelpers::Transit {
       CHECK(false);
     }
   }
+
+  inline void assertHmacEquals(const std::optional<std::string>& response, const std::string& expected) {
+    if (response) {
+      std::string actual = nlohmann::json::parse(response.value())["data"]["hmac"];
+
+      CHECK(expected == actual);
+    } else {
+      CHECK(false);
+    }
+  }
 }

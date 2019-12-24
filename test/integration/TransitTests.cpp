@@ -112,4 +112,19 @@ TEST_CASE("Transit Functions")
     TestHelpers::Transit::assertHashEquals(sha384, "77d9619604084a48abe0742b46246a008a1fae560e0b847033d8a2a1f776db4f5ca492b94a0fd335ff4ae42a24fc90a6");
     TestHelpers::Transit::assertHashEquals(sha512, "3103483687779b9714d5773c1aee6dfd1516510dba8b63b0034c382531539af5b836da29ce92c69021ac34cffa77638c8eb25df84aac9c1b082beeadd2789148");
   }
+
+  SECTION("HMac")
+  {
+    Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
+
+    auto sha224 = transit.hmac(path, Vault::Algorithms::SHA2_224, parameters);
+    auto sha256 = transit.hmac(path, Vault::Algorithms::SHA2_256, parameters);
+    auto sha384 = transit.hmac(path, Vault::Algorithms::SHA2_384, parameters);
+    auto sha512 = transit.hmac(path, Vault::Algorithms::SHA2_512, parameters);
+
+    TestHelpers::Transit::assertHmacEquals(sha224, "vault:v1:kAM8jwMxlIPqsvM2adCAn8bNpr0mtd7EraoAoQ==");
+    TestHelpers::Transit::assertHmacEquals(sha256, "vault:v1:aos50YYSKdGY9VfzwzLK4AkoTl5QREII17W44ntSlCg=");
+    TestHelpers::Transit::assertHmacEquals(sha384, "vault:v1:+mw+T37535icD2XhAjAIETgRb7A30vy1UJnRv6uo0BDPhSeiUoERENLss6m3JZq3");
+    TestHelpers::Transit::assertHmacEquals(sha512, "vault:v1:Iwss677l4ZoS1dtOjBwvwq5s044Mm6hVRSnjkVQOwdmX5hZJJVic7FcxOa0xP85ZhzzJczdSXRB/bnKsrwy5fA==");
+  }
 }

@@ -10,17 +10,6 @@ void print_response(std::optional<T> response) {
   }
 }
 
-void transit_hmac(VaultClient vaultClient) {
-  Transit transit(vaultClient);
-  Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
-  Vault::Path key("mykey");
-
-  print_response(transit.hmac(key, Vault::Algorithms::SHA2_224, parameters));
-  print_response(transit.hmac(key, Vault::Algorithms::SHA2_256, parameters));
-  print_response(transit.hmac(key, Vault::Algorithms::SHA2_384, parameters));
-  print_response(transit.hmac(key, Vault::Algorithms::SHA2_512, parameters));
-}
-
 void transit_sign(VaultClient vaultClient) {
   Transit transit(vaultClient);
   Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
@@ -77,6 +66,5 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-  transit_hmac(vaultClient);
   transit_sign(vaultClient);
 }
