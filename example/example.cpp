@@ -10,24 +10,6 @@ void print_response(std::optional<T> response) {
   }
 }
 
-void transit_hash(VaultClient vaultClient) {
-  Transit transit(vaultClient);
-  auto input = Base64::encode("Attack at dawn");
-  Parameters parameters({ {"format","base64"}, {"input", input} });
-
-  print_response(transit.hash(Vault::Algorithms::SHA2_224, parameters));
-  print_response(transit.hash(Vault::Algorithms::SHA2_256, parameters));
-  print_response(transit.hash(Vault::Algorithms::SHA2_384, parameters));
-  print_response(transit.hash(Vault::Algorithms::SHA2_512, parameters));
-
-  parameters = Parameters({ {"format","hex"}, {"input", input} });
-
-  print_response(transit.hash(Vault::Algorithms::SHA2_224, parameters));
-  print_response(transit.hash(Vault::Algorithms::SHA2_256, parameters));
-  print_response(transit.hash(Vault::Algorithms::SHA2_384, parameters));
-  print_response(transit.hash(Vault::Algorithms::SHA2_512, parameters));
-}
-
 void transit_hmac(VaultClient vaultClient) {
   Transit transit(vaultClient);
   Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
@@ -95,7 +77,6 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-  transit_hash(vaultClient);
   transit_hmac(vaultClient);
   transit_sign(vaultClient);
 }

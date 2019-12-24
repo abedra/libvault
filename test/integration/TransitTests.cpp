@@ -81,4 +81,35 @@ TEST_CASE("Transit Functions")
       CHECK(false);
     }
   }
+
+  SECTION("Hash base64") {
+    auto input = Base64::encode("Attack at dawn");
+    Parameters parameters({ {"format","base64"}, {"input", input} });
+
+    auto sha224 = transit.hash(Vault::Algorithms::SHA2_224, parameters);
+    auto sha256 = transit.hash(Vault::Algorithms::SHA2_256, parameters);
+    auto sha384 = transit.hash(Vault::Algorithms::SHA2_384, parameters);
+    auto sha512 = transit.hash(Vault::Algorithms::SHA2_512, parameters);
+
+    TestHelpers::Transit::assertHashEquals(sha224, "+vs7sVxlLrvkDYfSbd7LyHKFBvnQyzPbZKj69Q==");
+    TestHelpers::Transit::assertHashEquals(sha256, "+kPuU3On821JG+nldhfq4YrWLz+F1c7veO45/gDOXus=");
+    TestHelpers::Transit::assertHashEquals(sha384, "d9lhlgQISkir4HQrRiRqAIofrlYOC4RwM9iiofd2209cpJK5Sg/TNf9K5Cok/JCm");
+    TestHelpers::Transit::assertHashEquals(sha512, "MQNINod3m5cU1Xc8Gu5t/RUWUQ26i2OwA0w4JTFTmvW4NtopzpLGkCGsNM/6d2OMjrJd+EqsnBsIK+6t0niRSA==");
+  }
+
+  SECTION("Hash hex")
+  {
+    auto input = Base64::encode("Attack at dawn");
+    Parameters parameters({ {"format","hex"}, {"input", input} });
+
+    auto sha224 = transit.hash(Vault::Algorithms::SHA2_224, parameters);
+    auto sha256 = transit.hash(Vault::Algorithms::SHA2_256, parameters);
+    auto sha384 = transit.hash(Vault::Algorithms::SHA2_384, parameters);
+    auto sha512 = transit.hash(Vault::Algorithms::SHA2_512, parameters);
+
+    TestHelpers::Transit::assertHashEquals(sha224, "fafb3bb15c652ebbe40d87d26ddecbc8728506f9d0cb33db64a8faf5");
+    TestHelpers::Transit::assertHashEquals(sha256, "fa43ee5373a7f36d491be9e57617eae18ad62f3f85d5ceef78ee39fe00ce5eeb");
+    TestHelpers::Transit::assertHashEquals(sha384, "77d9619604084a48abe0742b46246a008a1fae560e0b847033d8a2a1f776db4f5ca492b94a0fd335ff4ae42a24fc90a6");
+    TestHelpers::Transit::assertHashEquals(sha512, "3103483687779b9714d5773c1aee6dfd1516510dba8b63b0034c382531539af5b836da29ce92c69021ac34cffa77638c8eb25df84aac9c1b082beeadd2789148");
+  }
 }
