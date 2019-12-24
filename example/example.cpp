@@ -10,14 +10,6 @@ void print_response(std::optional<T> response) {
   }
 }
 
-void transit_keys(VaultClient vaultClient) {
-  Transit transit(vaultClient);
-  Vault::Path path("mykey");
-
-  print_response(transit.generate_data_key(path, {{}}));
-  print_response(transit.generate_wrapped_data_key(path, {{}}));
-}
-
 void transit_random(VaultClient vaultClient) {
   Transit transit(vaultClient);
 
@@ -113,7 +105,6 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-  transit_keys(vaultClient);
   transit_random(vaultClient);
   transit_hash(vaultClient);
   transit_hmac(vaultClient);

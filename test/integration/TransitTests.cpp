@@ -6,12 +6,12 @@
 TEST_CASE("Transit Functions")
 {
   VaultClient vaultClient = TestHelpers::AppRole::login();
+  Transit transit(vaultClient);
+  Vault::Path path("mykey");
 
   SECTION("Encrypt/Decrypt Round Trip")
   {
-    Transit transit(vaultClient);
     Parameters plaintext({ {"plaintext", Base64::encode("Attack at dawn")} });
-    Vault::Path path("mykey");
     auto encryptResponse = transit.encrypt(path, plaintext);
 
     if (encryptResponse) {
@@ -24,6 +24,31 @@ TEST_CASE("Transit Functions")
       } else {
         CHECK(false);
       }
+    } else {
+      CHECK(false);
+    }
+  }
+
+  SECTION("Generate Data Key") {
+    auto response = transit.generate_data_key(path, {{}});
+
+    if (response) {
+      std::string key = nlohmann::json::parse(response.value())["data"]["plaintext"];
+
+      CHECK(key.length() == 44);
+    } else {
+      CHECK(false);
+    }
+  }
+
+  SECTION("Generate Wrapped Data Key")
+  {
+    auto response = transit.generate_wrapped_data_key(path, {{}});
+
+    if (response) {
+      std::string key = nlohmann::json::parse(response.value())["data"]["ciphertext"];
+
+      CHECK(key.length() == 89);
     } else {
       CHECK(false);
     }
