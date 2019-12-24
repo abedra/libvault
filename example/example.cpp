@@ -10,16 +10,6 @@ void print_response(std::optional<T> response) {
   }
 }
 
-void transit_random(VaultClient vaultClient) {
-  Transit transit(vaultClient);
-
-  Parameters parameters({ {"format","base64"} });
-  print_response(transit.generate_random_bytes(32, parameters));
-
-  parameters = Parameters({ {"format","hex"} });
-  print_response(transit.generate_random_bytes(32, parameters));
-}
-
 void transit_hash(VaultClient vaultClient) {
   Transit transit(vaultClient);
   auto input = Base64::encode("Attack at dawn");
@@ -105,7 +95,7 @@ int main() {
   // auto vaultClient = loginWithWrappedAppRole(config, httpErrorCallback)
   // auto vaultClient = loginWithLdap(config, httpErrorCallback)
 
-  transit_random(vaultClient);
   transit_hash(vaultClient);
   transit_hmac(vaultClient);
+  transit_sign(vaultClient);
 }

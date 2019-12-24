@@ -53,4 +53,32 @@ TEST_CASE("Transit Functions")
       CHECK(false);
     }
   }
+
+  SECTION("Random base64 bytes")
+  {
+    Parameters parameters({ {"format","base64"} });
+    auto response = transit.generate_random_bytes(32, parameters);
+
+    if (response) {
+      std::string data = nlohmann::json::parse(response.value())["data"]["random_bytes"];
+
+      CHECK(data.length() == 44);
+    } else {
+      CHECK(false);
+    }
+  }
+
+  SECTION("Random hex bytes")
+  {
+    Parameters parameters({ {"format","hex"} });
+    auto response = transit.generate_random_bytes(32, parameters);
+
+    if (response) {
+      std::string data = nlohmann::json::parse(response.value())["data"]["random_bytes"];
+
+      CHECK(data.length() == 64);
+    } else {
+      CHECK(false);
+    }
+  }
 }
