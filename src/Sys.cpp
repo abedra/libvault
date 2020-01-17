@@ -4,51 +4,15 @@
 Sys::Sys(const VaultClient &client) : client_(client) { }
 
 std::optional<std::string> Sys::health() {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  auto response = client_.getHttpClient().get(
-    getUrl(Vault::Path{"/health"}),
-    client_.getToken(),
-    client_.getNamespace()
-  );
-
-  return HttpClient::is_success(response)
-         ? std::optional<std::string>(response.value().body.value())
-         : std::nullopt;
+  return VaultHttpConsumer::get(client_, getUrl(Vault::Path{"/health"}));
 }
 
 std::optional<std::string> Sys::health(const Vault::Url &leader) {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  auto response = client_.getHttpClient().get(
-    Vault::Url{leader + "/v1/sys/health"},
-    client_.getToken(),
-    client_.getNamespace()
-  );
-
-  return HttpClient::is_success(response)
-         ? std::optional<std::string>(response.value().body.value())
-         : std::nullopt;
+  return VaultHttpConsumer::get(client_, Vault::Url{leader + "/v1/sys/health"});
 }
 
 std::optional<std::string> Sys::leader() {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  auto response = client_.getHttpClient().get(
-    getUrl(Vault::Path{"/leader"}),
-    client_.getToken(),
-    client_.getNamespace()
-  );
-
-  return HttpClient::is_success(response)
-         ? std::optional<std::string>(response.value().body.value())
-         : std::nullopt;
+  return VaultHttpConsumer::get(client_, getUrl(Vault::Path("/leader")));
 }
 
 Vault::Url Sys::getUrl(const Vault::Path &path) {

@@ -2,6 +2,32 @@
 #include "VaultClient.h"
 
 std::optional<std::string>
+VaultHttpConsumer::get(const VaultClient &client, const Vault::Url &url) {
+  if (!client.is_authenticated()) {
+    return std::nullopt;
+  }
+
+  auto response = client.getHttpClient().get(url, client.getToken(), client.getNamespace());
+
+  return HttpClient::is_success(response)
+         ? std::optional<std::string>(response.value().body.value())
+         : std::nullopt;
+}
+
+std::optional<std::string>
+VaultHttpConsumer::list(const VaultClient &client, const Vault::Url &url) {
+  if (!client.is_authenticated()) {
+    return std::nullopt;
+  }
+
+  auto response = client.getHttpClient().list(url, client.getToken(), client.getNamespace());
+
+  return HttpClient::is_success(response)
+         ? std::optional<std::string>(response.value().body.value())
+         : std::nullopt;
+}
+
+std::optional<std::string>
 VaultHttpConsumer::post(const VaultClient& client,
                         const Vault::Url& url,
                         Parameters parameters) {

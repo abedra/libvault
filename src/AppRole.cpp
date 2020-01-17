@@ -7,19 +7,7 @@ AppRole::AppRole(const VaultClient& vaultClient)
   {}
 
 std::optional<std::string> AppRole::list() {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  auto response = client_.getHttpClient().list(
-    getUrl(Vault::Path{"/role"}),
-    client_.getToken(),
-    client_.getNamespace()
-  );
-
-  return HttpClient::is_success(response)
-         ? std::optional<std::string>(response.value().body.value())
-         : std::nullopt;
+  return VaultHttpConsumer::list(client_, getUrl(Vault::Path{"/role"}));
 }
 
 std::optional<std::string> AppRole::create(const Vault::Path& roleName, const Parameters& parameters) {
@@ -55,23 +43,9 @@ std::optional<std::string> AppRole::update(const Vault::Path& roleName, const Pa
 }
 
 std::optional<std::string> AppRole::read(const Vault::Path& roleName) {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  Vault::Path path{"/role"};
-  auto response = client_.getHttpClient().list(
-    getUrl(Vault::Path{path + roleName}),
-    client_.getToken(),
-    client_.getNamespace()
-  );
-
-  return HttpClient::is_success(response)
-         ? std::optional<std::string>(response.value().body.value())
-         : std::nullopt;
+  return VaultHttpConsumer::get(client_, getUrl(Vault::Path{"/role" + roleName}));
 }
 
 Vault::Url AppRole::getUrl(const Vault::Path& path) {
   return client_.getUrl("/v1/auth/approle", path);
 }
-

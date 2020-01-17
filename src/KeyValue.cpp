@@ -42,45 +42,15 @@ Vault::Url KeyValue::getMetadataUrl(const Vault::Path& path) {
 }
 
 std::optional<std::string> KeyValue::list(const Vault::Path& path) {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  std::optional<HttpResponse> response;
-
   if (version_ == KeyValue::Version::v1) {
-    response = client_.getHttpClient().list(
-      getUrl(path),
-      client_.getToken(),
-      client_.getNamespace()
-    );
+    return VaultHttpConsumer::list(client_, getUrl(path));
   } else {
-    response = client_.getHttpClient().list(
-      getMetadataUrl(path),
-      client_.getToken(),
-      client_.getNamespace()
-    );
+    return VaultHttpConsumer::list(client_, getMetadataUrl(path));
   }
-
-  return HttpClient::is_success(response)
-    ? std::optional<std::string>(response.value().body.value())
-    : std::nullopt;
 }
 
 std::optional<std::string> KeyValue::get(const Vault::Path& path) {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  auto response = client_.getHttpClient().get(
-    getUrl(path),
-    client_.getToken(),
-    client_.getNamespace()
-  );
-
-  return HttpClient::is_success(response)
-    ? std::optional<std::string>(response.value().body.value())
-    : std::nullopt;
+  return VaultHttpConsumer::get(client_, getUrl(path));
 }
 
 std::optional<std::string> KeyValue::put(const Vault::Path& path, Parameters parameters) {

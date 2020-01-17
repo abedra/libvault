@@ -210,6 +210,8 @@ private:
 
 class VaultHttpConsumer {
 public:
+  static std::optional<std::string> get(const VaultClient& client, const Vault::Url& url);
+  static std::optional<std::string> list(const VaultClient& client, const Vault::Url& url);
   static std::optional<std::string> post(const VaultClient& client, const Vault::Url& url, Parameters parameters);
 };
 
