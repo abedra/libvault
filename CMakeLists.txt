@@ -32,7 +32,7 @@ add_library(vault SHARED
     src/Base64.cpp
     src/LdapStrategy.cpp
     src/VaultConfigBuilder.cpp
-    src/AppRole.cpp)
+    src/AppRole.cpp src/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
@@ -77,7 +77,7 @@ if(ENABLE_TEST)
                 test/integration/TestHelpers.h
                 test/integration/AppRoleTests.cpp
                 test/integration/KeyValueTests.cpp
-                test/integration/AuthenticationStrategies.cpp test/integration/TransitTests.cpp)
+                test/integration/AuthenticationStrategies.cpp test/integration/TransitTests.cpp test/integration/SysTests.cpp)
 
         target_include_directories(libvault_integration_test PRIVATE include)
 

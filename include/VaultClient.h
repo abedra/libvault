@@ -325,3 +325,15 @@ private:
   Vault::Url getUrl(const Vault::Path& path);
   const VaultClient& client_;
 };
+
+class Sys {
+public:
+  explicit Sys(const VaultClient& client);
+
+  std::optional<std::string> leader();
+  std::optional<std::string> health();
+  std::optional<std::string> health(const Vault::Url& leader);
+private:
+  Vault::Url getUrl(const Vault::Path& path);
+  const VaultClient& client_;
+};
