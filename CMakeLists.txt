@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(vault VERSION 0.3.3 DESCRIPTION "Vault library for C++")
+project(vault VERSION 0.4.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,7 +32,8 @@ add_library(vault SHARED
     src/Base64.cpp
     src/LdapStrategy.cpp
     src/VaultConfigBuilder.cpp
-    src/AppRole.cpp src/Sys.cpp)
+    src/AppRole.cpp
+    src/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}
@@ -74,10 +75,12 @@ if(ENABLE_TEST)
 
     if(ENABLE_INTEGRATION_TEST)
         add_executable(libvault_integration_test
-                test/integration/TestHelpers.h
-                test/integration/AppRoleTests.cpp
-                test/integration/KeyValueTests.cpp
-                test/integration/AuthenticationStrategies.cpp test/integration/TransitTests.cpp test/integration/SysTests.cpp)
+          test/integration/TestHelpers.h
+          test/integration/AppRoleTests.cpp
+          test/integration/KeyValueTests.cpp
+          test/integration/AuthenticationStrategies.cpp
+          test/integration/TransitTests.cpp
+          test/integration/SysTests.cpp)
 
         target_include_directories(libvault_integration_test PRIVATE include)
 
