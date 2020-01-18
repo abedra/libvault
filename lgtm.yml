@@ -1,0 +1,12 @@
+extraction:
+  cpp:
+    prepare:
+      packages:
+        - libcurl4
+        - libcurl4-openssl-dev
+
+    configure:
+      command: mkdir build && cd build && cmake -DENABLE_TEST=OFF -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../
+
+    index:
+      build_command: cd build && make
