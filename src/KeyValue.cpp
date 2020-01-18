@@ -27,14 +27,9 @@ KeyValue::KeyValue(const VaultClient &client, Vault::SecretMount mount, KeyValue
   {}
 
 Vault::Url KeyValue::getUrl(const Vault::Path& path) {
-  switch (version_) {
-  case KeyValue::Version::v1:
-    return client_.getUrl("/v1/" + mount_ + "/", path);
-  case KeyValue::Version::v2:
-    return client_.getUrl("/v1/" + mount_ + "/data/", path);
-  default:
-    return client_.getUrl("/v1/" + mount_ + "/data/", path);
-  }
+  return version_ == KeyValue::Version::v1
+    ? client_.getUrl("/v1/" + mount_ + "/", path)
+    : client_.getUrl("/v1/" + mount_ + "/data/", path);
 }
 
 Vault::Url KeyValue::getMetadataUrl(const Vault::Path& path) {
@@ -42,58 +37,30 @@ Vault::Url KeyValue::getMetadataUrl(const Vault::Path& path) {
 }
 
 std::optional<std::string> KeyValue::list(const Vault::Path& path) {
-  if (version_ == KeyValue::Version::v1) {
-    return VaultHttpConsumer::list(client_, getUrl(path));
-  } else {
-    return VaultHttpConsumer::list(client_, getMetadataUrl(path));
-  }
+  return version_ == KeyValue::Version::v1
+    ? VaultHttpConsumer::list(client_, getUrl(path))
+    : VaultHttpConsumer::list(client_, getMetadataUrl(path));
 }
 
 std::optional<std::string> KeyValue::get(const Vault::Path& path) {
   return VaultHttpConsumer::get(client_, getUrl(path));
 }
 
-std::optional<std::string> KeyValue::put(const Vault::Path& path, Parameters parameters) {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  nlohmann::json j;
-  j["data"] = nlohmann::json::object();
-  std::for_each(
-    parameters.begin(),
-    parameters.end(),
-    [&](std::pair<std::string, std::string> pair) {
-      j["data"][pair.first] = pair.second;
-    }
-  );
-
-  auto response = client_.getHttpClient().post(
-    getUrl(path),
-    client_.getToken(),
-    client_.getNamespace(),
-    j.dump()
-  );
-
-  return response
-    ? std::optional<std::string>(response.value().body.value())
-    : std::nullopt;
+std::optional<std::string> KeyValue::put(const Vault::Path& path, const Parameters& parameters) {
+  return VaultHttpConsumer::post(client_, getUrl(path), parameters, [&](const Parameters& params) {
+    nlohmann::json j;
+    j["data"] = nlohmann::json::object();
+    std::for_each(parameters.begin(), parameters.end(),
+      [&](std::pair<std::string, std::string> pair) {
+        j["data"][pair.first] = pair.second;
+      }
+    );
+    return j;
+  });
 }
 
 std::optional<std::string> KeyValue::del(const Vault::Path& path) {
-  if (!client_.is_authenticated()) {
-    return std::nullopt;
-  }
-
-  auto response = client_.getHttpClient().del(
-    getUrl(path),
-    client_.getToken(),
-    client_.getNamespace()
-  );
-
-  return HttpClient::is_success(response)
-    ? std::optional<std::string>(response.value().body.value())
-    : std::nullopt;
+  return VaultHttpConsumer::del(client_, getUrl(path));
 }
 
 std::optional<std::string> KeyValue::del(const Vault::Path& path, std::vector<long> versions) {

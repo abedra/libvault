@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "json.hpp"
 
 /* Tiny Types */
 
@@ -78,14 +79,15 @@ class VaultConfigBuilder;
 class VaultConfig;
 class VaultClient;
 
+/* Aliases */
+
+using Parameters = std::unordered_map<std::string, std::string>;
+
 /* Callbacks */
 
 using HttpErrorCallback = std::function<void(std::string)>;
 using CurlSetupCallback = std::function<void(CURL *curl)>;
-
-/* Aliases */
-
-using Parameters = std::unordered_map<std::string, std::string>;
+using JsonProducer = std::function<nlohmann::json(const Parameters& parameters)>;
 
 /* Classes */
 
@@ -205,6 +207,8 @@ public:
   static std::optional<std::string> get(const VaultClient& client, const Vault::Url& url);
   static std::optional<std::string> list(const VaultClient& client, const Vault::Url& url);
   static std::optional<std::string> post(const VaultClient& client, const Vault::Url& url, Parameters parameters);
+  static std::optional<std::string> post(const VaultClient& client, const Vault::Url& url, const Parameters& parameters, const JsonProducer& jsonProducer);
+  static std::optional<std::string> del(const VaultClient& client, const Vault::Url& url);
 };
 
 class Unwrap {
@@ -273,7 +277,7 @@ public:
 
   std::optional<std::string> list(const Vault::Path& path);
   std::optional<std::string> get(const Vault::Path& path);
-  std::optional<std::string> put(const Vault::Path& path, Parameters parameters);
+  std::optional<std::string> put(const Vault::Path& path, const Parameters& parameters);
   std::optional<std::string> del(const Vault::Path& path);
   std::optional<std::string> del(const Vault::Path& path, std::vector<long> versions);
   std::optional<std::string> destroy(const Vault::Path& path, std::vector<long> versions);
