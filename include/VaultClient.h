@@ -53,7 +53,7 @@ namespace Vault {
   };
 
   namespace Algorithms {
-    const static Vault::Algorithm SHA1 = Vault::Algorithm("sha1");
+    const static Vault::Algorithm SHA1 = Vault::Algorithm{"sha1"};
     const static Vault::Algorithm SHA2_224 = Vault::Algorithm{"sha2-224"};
     const static Vault::Algorithm SHA2_256 = Vault::Algorithm{"sha2-256"};
     const static Vault::Algorithm SHA2_384 = Vault::Algorithm{"sha2-384"};
@@ -175,7 +175,7 @@ public:
 
 class VaultClient {
 public:
-  VaultClient(const VaultClient& other, const Vault::Token& token);
+  VaultClient(const VaultClient& other, Vault::Token token);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy);
   VaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, HttpErrorCallback httpErrorCallback);
 

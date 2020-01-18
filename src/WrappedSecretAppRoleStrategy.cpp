@@ -7,9 +7,9 @@ WrappedSecretAppRoleStrategy::WrappedSecretAppRoleStrategy(Vault::RoleId roleId,
   {}
 
 std::optional<AuthenticationResponse> WrappedSecretAppRoleStrategy::authenticate(const VaultClient& vaultClient) {
-  VaultClient temp(vaultClient, token_);
+  VaultClient unauthenticated(vaultClient, token_);
 
-  auto secret_id = Unwrap::unwrap(temp);
+  auto secret_id = Unwrap::unwrap(unauthenticated);
 
   return secret_id
     ? AppRoleStrategy(roleId_, secret_id.value()).authenticate(vaultClient)

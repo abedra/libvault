@@ -14,9 +14,9 @@ Unwrap::unwrap(const VaultClient& client) {
     ""
   );
 
-    if (HttpClient::is_success(response)) {
-      return Vault::SecretId{nlohmann::json::parse(response.value().body.value())["data"]["secret_id"]};
-    } else {
-      return std::nullopt;
-    }
+  if (HttpClient::is_success(response)) {
+    return Vault::SecretId{nlohmann::json::parse(response.value().body.value())["data"]["secret_id"]};
+  } else {
+    return std::nullopt;
+  }
 }
