@@ -64,42 +64,35 @@ std::optional<std::string> KeyValue::del(const Vault::Path& path) {
 }
 
 std::optional<std::string> KeyValue::del(const Vault::Path& path, std::vector<long> versions) {
-  if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
+  if (version_ != KeyValue::Version::v2) {
     return std::nullopt;
   }
 
-  nlohmann::json j;
-  j["versions"] = versions;
-
-  auto response = client_.getHttpClient()
-    .post(
-      client_.getUrl("/v1" + mount_ + "/delete/", path),
-      client_.getToken(),
-      client_.getNamespace(),
-      j.dump()
-    );
-
-  return HttpClient::is_success(response)
-    ? std::optional<std::string>(response.value().body.value())
-    : std::nullopt;
+  return VaultHttpConsumer::post(
+    client_,
+    client_.getUrl("/v1" + mount_ + "/delete/", path),
+    Parameters{},
+    [&](auto params){
+      nlohmann::json j;
+      j["versions"] = versions;
+      return j;
+    }
+  );
 }
 
 std::optional<std::string> KeyValue::destroy(const Vault::Path& path, std::vector<long> versions) {
-  if (!client_.is_authenticated() || version_ != KeyValue::Version::v2) {
+  if (version_ != KeyValue::Version::v2) {
     return std::nullopt;
   }
 
-  nlohmann::json j;
-  j["versions"] = versions;
-
-  auto response = client_.getHttpClient().post(
+  return VaultHttpConsumer::post(
+    client_,
     client_.getUrl("/v1" + mount_ + "/destroy/", path),
-    client_.getToken(),
-    client_.getNamespace(),
-    j.dump()
+    Parameters{},
+    [&](auto params) {
+      nlohmann::json j;
+      j["versions"] = versions;
+      return j;
+    }
   );
-
-  return HttpClient::is_success(response)
-    ? std::optional<std::string>(response.value().body.value())
-    : std::nullopt;
 }
