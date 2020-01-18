@@ -1,4 +1,4 @@
-# libvault
+# libvault [![Build Status](https://travis-ci.org/abedra/libvault.svg?branch=master)](https://travis-ci.org/abedra/libvault)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
