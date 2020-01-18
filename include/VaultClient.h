@@ -21,17 +21,9 @@ struct TinyString {
   friend std::string operator+(const TinyString& tiny, const char* string) { return tiny.value() + string; }
   friend std::string operator+(const TinyString& tiny, const TinyString& other) { return tiny.value() + tiny.value(); }
 
-  [[nodiscard]] bool empty() const {
-    return value_.empty();
-  }
-
-  [[nodiscard]] const char* c_str() const {
-    return value_.c_str();
-  }
-
-  [[nodiscard]] const std::string& value() const {
-    return value_;
-  }
+  [[nodiscard]] bool empty() const { return value_.empty(); }
+  [[nodiscard]] const char* c_str() const { return value_.c_str(); }
+  [[nodiscard]] const std::string& value() const { return value_; }
 
 protected:
   std::string value_;
