@@ -1,10 +1,15 @@
 # libvault
 
-This repository contains a C++ library for accessing the KV secret store inside of a [Hashicorp Vault Server](https://www.vaultproject.io/)
+A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
+
+## C++ 17
+
+This project assumes a C++ 17 capable compiler. This includes GCC 7 or higher, and clang 3.8 or higher. Support for lower standards versions of C++ will not be accepted due to inconsistent implementations of optional.
 
 ## Dependencies
 
 * cURL
+* Catch2 (test only)
 
 ## Usage
 
@@ -47,7 +52,7 @@ int main(void)
 
 ## JSON Serialization
 
-This project uses [nlohmann/json](https://github.com/nlohmann/json) internally but does not expose it. This project makes no assumptions about serialization and returns `std:string` values that can be serialized by the tooling of your choice. Should you choose to use [nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp` file to your project. This projects integration tests have multiple examples of how to use it.
+This project uses [nlohmann/json](https://github.com/nlohmann/json) internally but does not expose it. This project makes no assumptions about serialization and returns `std:string` values that can be serialized by the tooling of your choice. Should you choose to use [nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp` file to your project. This project's integration tests have multiple examples of how to use it.
 
 
 ## Compile and Install
@@ -60,3 +65,27 @@ cd build
 cmake ../
 make
 ```
+
+### Compile Options
+
+The following custom options can be provided to CMake to control your build:
+
+* `ENABLE_TEST [ON|OFF]` - `[Default ON]` Standard unit tests (Requires the Catch2 testing library)
+* `ENABLE_INTEGRATION_TEST [ON|OFF]` - `[Default OFF]`Enable integration tests (Requires configured, running Vault)
+
+## Local Development
+
+This project uses a standard C++ development with CMake environment. Additionally, a running and configured instance of Vault is required to run the integration tests. This project contains scripts that will download Vault, configure it, and run it. You are of course welcome to use your own Vault instance, but you will need to use the configuration from the `script` folder for the tests to pass.
+
+### Vault Setup
+
+Use the provided scripts to setup and run your Vault environment:
+
+```shell script
+$ script/fetch_vault
+$ script/vault
+# In another terminal window
+$ script/bootstrap
+```
+
+This will ensure you have a working instance of Vault that will work with the integration tests. Note that this setup does not demonstrate a production worthy configuration and should only be used for reference or inside of this project. For you production Vault setup please consult the Hashicorp Vault best practices.
