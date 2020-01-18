@@ -95,5 +95,27 @@ VaultHttpConsumer::post(const VaultClient& client,
   return HttpClient::is_success(response)
          ? std::optional<std::string>(response.value().body.value())
          : std::nullopt;
+}
 
+std::optional<AuthenticationResponse>
+VaultHttpConsumer::authenticate(const VaultClient& client,
+                                const Vault::Url& url,
+                                const NoArgJsonProducer& jsonProducer) {
+  nlohmann::json j = jsonProducer();
+
+  auto response = client.getHttpClient().post(
+    url,
+    client.getToken(),
+    client.getNamespace(),
+    j.dump()
+  );
+
+  if (HttpClient::is_success(response)) {
+    auto body = Vault::HttpResponseBodyString{response.value().body};
+    auto token = Vault::Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
+
+    return AuthenticationResponse{body, token};
+  } else {
+    return std::nullopt;
+  }
 }

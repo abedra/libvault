@@ -8,26 +8,17 @@ AppRoleStrategy::AppRoleStrategy(Vault::RoleId roleId, Vault::SecretId secretId)
   {}
 
 std::optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient& client) {
-  nlohmann::json j;
-  j = nlohmann::json::object();
-  j["role_id"] = roleId_.value();
-  j["secret_id"] = secretId_.value();
-
-  auto response = client.getHttpClient().post(
+  return VaultHttpConsumer::authenticate(
+    client,
     getUrl(client, Vault::Path{"/login"}),
-    client.getToken(),
-	  client.getNamespace(),
-	  j.dump()
+    [&]() {
+      nlohmann::json j;
+      j = nlohmann::json::object();
+      j["role_id"] = roleId_.value();
+      j["secret_id"] = secretId_.value();
+      return j;
+    }
   );
-
-  if (HttpClient::is_success(response)) {
-    auto body = Vault::HttpResponseBodyString{response.value().body};
-    auto token = Vault::Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
-
-    return AuthenticationResponse{body, token};
-  } else {
-    return std::nullopt;
-  }
 }
 
 Vault::Url AppRoleStrategy::getUrl(const VaultClient& client, const Vault::Path& path) {

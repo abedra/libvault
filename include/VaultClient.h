@@ -88,6 +88,7 @@ using Parameters = std::unordered_map<std::string, std::string>;
 using HttpErrorCallback = std::function<void(std::string)>;
 using CurlSetupCallback = std::function<void(CURL *curl)>;
 using JsonProducer = std::function<nlohmann::json(const Parameters& parameters)>;
+using NoArgJsonProducer = std::function<nlohmann::json()>;
 
 /* Classes */
 
@@ -209,6 +210,8 @@ public:
   static std::optional<std::string> post(const VaultClient& client, const Vault::Url& url, Parameters parameters);
   static std::optional<std::string> post(const VaultClient& client, const Vault::Url& url, const Parameters& parameters, const JsonProducer& jsonProducer);
   static std::optional<std::string> del(const VaultClient& client, const Vault::Url& url);
+
+  static std::optional<AuthenticationResponse> authenticate(const VaultClient& client, const Vault::Url& url, const NoArgJsonProducer& jsonProducer);
 };
 
 class Unwrap {

@@ -8,26 +8,17 @@ LdapStrategy::LdapStrategy(std::string  username, std::string  password)
   , password_(std::move(password))
   {}
 
-std::optional<AuthenticationResponse> LdapStrategy::authenticate(const VaultClient &vaultClient) {
-  nlohmann::json j;
-  j = nlohmann::json::object();
-  j["password"] = password_;
-
-  auto response = vaultClient.getHttpClient().post(
-    getUrl(vaultClient, Vault::Path{username_}),
-    vaultClient.getToken(),
-    vaultClient.getNamespace(),
-    j.dump()
+std::optional<AuthenticationResponse> LdapStrategy::authenticate(const VaultClient &client) {
+  return VaultHttpConsumer::authenticate(
+    client,
+    getUrl(client, Vault::Path{username_}),
+    [&]() {
+      nlohmann::json j;
+      j = nlohmann::json::object();
+      j["password"] = password_;
+      return j;
+    }
   );
-
-  if (HttpClient::is_success(response)) {
-    auto body = Vault::HttpResponseBodyString{response.value().body};
-    auto token = Vault::Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
-
-    return AuthenticationResponse{body, token};
-  } else {
-    return std::nullopt;
-  }
 }
 
 Vault::Url LdapStrategy::getUrl(const VaultClient& client, const Vault::Path& username) {
