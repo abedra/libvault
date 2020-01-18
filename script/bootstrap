@@ -5,5 +5,8 @@ script/unseal
 script/install_policy
 script/install_approle
 script/install_key_value
+script/install_transit
 script/setup_approle
+script/setup_key_value
+script/setup_transit
 
