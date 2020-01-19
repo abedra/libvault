@@ -321,6 +321,22 @@ public:
   std::optional<std::string> create(const Vault::Path& roleName, const Parameters& parameters);
   std::optional<std::string> update(const Vault::Path& roleName, const Parameters& parameters);
   std::optional<std::string> read(const Vault::Path& roleName);
+  std::optional<std::string> del(const Vault::Path& roleName);
+
+  std::optional<std::string> getRoleId(const Vault::Path& roleName);
+  std::optional<std::string> updateRoleId(const Vault::Path& roleName, const Parameters& parameters);
+  std::optional<std::string> getRoleProperty(const Vault::Path& roleName, const Vault::Path& propertyName);
+  std::optional<std::string> updateRoleProperty(const Vault::Path& roleName, const Vault::Path& propertyName, const Parameters& parameters);
+  std::optional<std::string> deleteRoleProperty(const Vault::Path& roleName, const Vault::Path& propertyName);
+
+  std::optional<std::string> generateSecretId(const Vault::Path& roleName, const Parameters& parameters);
+  std::optional<std::string> listSecretAccessors(const Vault::Path& roleName);
+  std::optional<std::string> readSecretId(const Vault::Path& roleName, const Parameters& parameters);
+  std::optional<std::string> destroySecretId(const Vault::Path& roleName, const Parameters& parameters);
+  std::optional<std::string> readSecretIdAccessor(const Vault::Path& roleName, const Parameters& parameters);
+  std::optional<std::string> destroySecretIdAccessor(const Vault::Path& roleName, const Parameters& parameters);
+  std::optional<std::string> customSecretId(const Vault::Path& roleName, const Parameters& parameters);
+  std::optional<std::string> tidy(const Vault::Path& roleName);
 
 private:
   Vault::Url getUrl(const Vault::Path& path);
