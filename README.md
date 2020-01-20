@@ -31,23 +31,23 @@ int main(void)
     std::cout << err << std::endl;
   };
 
-  Vault::Config config = Vault::ConfigBuilder().build();
   Vault::AppRoleStrategy authStrategy{
     Vault::RoleId{"<role_id>"},
     Vault::SecretId{"<secret_id>"}
   };
+  
+  Vault::Config config = Vault::ConfigBuilder().build();  
   Vault::Client vaultClient{config, authStrategy, httpErrorCallback};
-
   Vault::KeyValue kv{vaultClient, Vault::KeyValue::Version::v1};
   Vault::Path mount{"/test"};
   Vault::KeyValue kv2{vaultClient, mount};
-
   Vault::Parameters parameters(
     {
       {"foo","world"},
       {"baz","quux"},
       {"something", "something else"},
-    });
+    }
+  );
 
   Vault::Path key{"hello"};
 
@@ -98,7 +98,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Auth Method       | Implemented | Integration Tested |
 |-------------------|-------------|--------------------|
 | AppRole           | Yes         | Yes                |
-| LDAP              | Partial     | Partial            |
+| LDAP              | Partial     | No                 |
 | Tokens            | Partial     | Partial            |
 | AliCloud          | No          | No                 |
 | AWS               | No          | No                 |

@@ -7,23 +7,24 @@ int main(void)
     std::cout << err << std::endl;
   };
 
-  Vault::Config config = Vault::ConfigBuilder().build();
+
   Vault::AppRoleStrategy authStrategy{
     Vault::RoleId{"<role_id>"},
     Vault::SecretId{"<secret_id>"}
   };
-  Vault::Client vaultClient{config, authStrategy, httpErrorCallback};
 
+  Vault::Config config = Vault::ConfigBuilder().build();
+  Vault::Client vaultClient{config, authStrategy, httpErrorCallback};
   Vault::KeyValue kv{vaultClient, Vault::KeyValue::Version::v1};
   Vault::Path mount{"/test"};
   Vault::KeyValue kv2{vaultClient, mount};
-
   Vault::Parameters parameters(
     {
       {"foo","world"},
       {"baz","quux"},
       {"something", "something else"},
-    });
+    }
+  );
 
   Vault::Path key{"hello"};
 
