@@ -65,6 +65,10 @@ std::optional<std::string> Vault::KeyValue::create(const Vault::Path& path, cons
 }
 
 std::optional<std::string> Vault::KeyValue::update(const Vault::Path& path, const Parameters& parameters) {
+  if (version_ != KeyValue::Version::v1) {
+    return std::nullopt;
+  }
+
   return Vault::HttpConsumer::put(
     client_,
     getUrl(path),
@@ -118,5 +122,79 @@ std::optional<std::string> Vault::KeyValue::destroy(const Vault::Path& path, std
       j["versions"] = versions;
       return j.dump();
     }
+  );
+}
+
+std::optional<std::string> Vault::KeyValue::undelete(const Path &path, std::vector<long> versions) {
+  if (version_ != KeyValue::Version::v2) {
+    return std::nullopt;
+  }
+
+  return Vault::HttpConsumer::post(
+    client_,
+    client_.getUrl("/v1" + mount_ + "/undelete/", path),
+    Parameters{},
+    [&](auto params) {
+      nlohmann::json j;
+      j["versions"] = versions;
+      return j.dump();
+    }
+  );
+}
+
+std::optional<std::string> Vault::KeyValue::readConfig() {
+  if (version_ != KeyValue::Version::v2) {
+    return std::nullopt;
+  }
+
+  return Vault::HttpConsumer::get(
+    client_,
+    client_.getUrl("/v1" + mount_, Vault::Path{"config"})
+  );
+}
+
+std::optional<std::string> Vault::KeyValue::updateConfig(const Parameters &parameters) {
+  if (version_ != KeyValue::Version::v2) {
+    return std::nullopt;
+  }
+
+  return Vault::HttpConsumer::post(
+    client_,
+    client_.getUrl("/v1" + mount_, Vault::Path{"config"}),
+    parameters
+  );
+}
+
+std::optional<std::string> Vault::KeyValue::readMetadata(const Path &path) {
+  if (version_ != KeyValue::Version::v2) {
+    return std::nullopt;
+  }
+
+  return Vault::HttpConsumer::get(
+    client_,
+    getMetadataUrl(path)
+  );
+}
+
+std::optional<std::string> Vault::KeyValue::updateMetadata(const Path &path, const Parameters &parameters) {
+  if (version_ != KeyValue::Version::v2) {
+    return std::nullopt;
+  }
+
+  return Vault::HttpConsumer::post(
+    client_,
+    getMetadataUrl(path),
+    parameters
+  );
+}
+
+std::optional<std::string> Vault::KeyValue::deleteMetadata(const Path &path) {
+  if (version_ != KeyValue::Version::v2) {
+    return std::nullopt;
+  }
+
+  return Vault::HttpConsumer::del(
+    client_,
+    getMetadataUrl(path)
   );
 }

@@ -278,7 +278,13 @@ namespace Vault {
     std::optional<std::string> update(const Path &path, const Parameters &parameters);
     std::optional<std::string> del(const Path &path);
     std::optional<std::string> del(const Path &path, std::vector<long> versions);
+    std::optional<std::string> undelete(const Path& path, std::vector<long> versions);
     std::optional<std::string> destroy(const Path &path, std::vector<long> versions);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> updateConfig(const Parameters& parameters);
+    std::optional<std::string> readMetadata(const Path& path);
+    std::optional<std::string> updateMetadata(const Path& path, const Parameters& parameters);
+    std::optional<std::string> deleteMetadata(const Path& path);
 
   private:
     Url getUrl(const Path& path);
