@@ -21,7 +21,7 @@ include_directories("${CMAKE_SOURCE_DIR}/lib")
 
 add_library(vault SHARED
     include/VaultClient.h
-    src/VaultHttpConsumer.cpp
+    src/HttpConsumer.cpp
     src/VaultClient.cpp
     src/HttpClient.cpp
     src/KeyValue.cpp
@@ -31,9 +31,9 @@ add_library(vault SHARED
     src/WrappedSecretAppRoleStrategy.cpp
     src/Base64.cpp
     src/LdapStrategy.cpp
-    src/VaultConfigBuilder.cpp
+    src/ConfigBuilder.cpp
     src/AppRole.cpp
-    src/Sys.cpp)
+    src/Sys.cpp )
 
 set_target_properties(vault PROPERTIES
   VERSION ${PROJECT_VERSION}

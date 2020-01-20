@@ -1,12 +1,12 @@
 #include "json.hpp"
 #include "VaultClient.h"
 
-Vault::Url Unwrap::getUrl(const VaultClient& client, const Vault::Path& path) {
+Vault::Url Vault::Unwrap::getUrl(const Vault::Client& client, const Vault::Path& path) {
   return client.getUrl("/v1/sys/wrapping", path);
 }
 
 std::optional<Vault::SecretId>
-Unwrap::unwrap(const VaultClient& client) {
+Vault::Unwrap::unwrap(const Vault::Client& client) {
   auto response = client.getHttpClient().post(
     getUrl(client, Vault::Path{"/unwrap"}),
     client.getToken(),

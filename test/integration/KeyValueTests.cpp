@@ -4,11 +4,11 @@
 #include "TestHelpers.h"
 
 TEST_CASE("KeyValue Functions") {
-  VaultClient vaultClient = TestHelpers::AppRole::login();
+  Vault::Client vaultClient = TestHelpers::AppRole::login();
 
   SECTION("v1") {
     Vault::SecretMount secretMount{"legacy"};
-    KeyValue kv(vaultClient, secretMount, KeyValue::Version::v1);
+    Vault::KeyValue kv(vaultClient, secretMount, Vault::KeyValue::Version::v1);
     Vault::Path path("hello");
 
     KV::setValues(kv, path);
@@ -18,7 +18,7 @@ TEST_CASE("KeyValue Functions") {
   }
 
   SECTION("v2") {
-    KeyValue kv(vaultClient);
+    Vault::KeyValue kv(vaultClient);
     Vault::Path path("hello");
 
     KV::setValues(kv, path);

@@ -8,11 +8,11 @@
 
 TEST_CASE("Sys Functions")
 {
-  VaultClient vaultClient = TestHelpers::AppRole::login();
+  Vault::Client vaultClient = TestHelpers::AppRole::login();
 
   SECTION("health")
   {
-    Sys sys(vaultClient);
+    Vault::Sys sys(vaultClient);
     auto response = sys.health();
 
     if (response) {
@@ -27,7 +27,7 @@ TEST_CASE("Sys Functions")
 
   SECTION("health with supplied leader")
   {
-    Sys sys(vaultClient);
+    Vault::Sys sys(vaultClient);
     auto response = sys.health(Vault::Path{"http://localhost:8200"});
 
     if (response) {
@@ -42,7 +42,7 @@ TEST_CASE("Sys Functions")
 
   SECTION("leader")
   {
-    Sys sys(vaultClient);
+    Vault::Sys sys(vaultClient);
     auto response = sys.leader();
 
     if (response) {

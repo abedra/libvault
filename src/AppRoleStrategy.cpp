@@ -2,13 +2,14 @@
 #include "json.hpp"
 #include "VaultClient.h"
 
-AppRoleStrategy::AppRoleStrategy(Vault::RoleId roleId, Vault::SecretId secretId)
+Vault::AppRoleStrategy::AppRoleStrategy(Vault::RoleId roleId, Vault::SecretId secretId)
   : roleId_(std::move(roleId))
   , secretId_(std::move(secretId))
   {}
 
-std::optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultClient& client) {
-  return VaultHttpConsumer::authenticate(
+std::optional<Vault::AuthenticationResponse>
+Vault::AppRoleStrategy::authenticate(const Vault::Client& client) {
+  return Vault::HttpConsumer::authenticate(
     client,
     getUrl(client, Vault::Path{"/login"}),
     [&]() {
@@ -16,11 +17,11 @@ std::optional<AuthenticationResponse> AppRoleStrategy::authenticate(const VaultC
       j = nlohmann::json::object();
       j["role_id"] = roleId_.value();
       j["secret_id"] = secretId_.value();
-      return j;
+      return j.dump();
     }
   );
 }
 
-Vault::Url AppRoleStrategy::getUrl(const VaultClient& client, const Vault::Path& path) {
+Vault::Url Vault::AppRoleStrategy::getUrl(const Vault::Client& client, const Vault::Path& path) {
   return client.getUrl("/v1/auth/approle", path);
 }

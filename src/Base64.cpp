@@ -1,14 +1,14 @@
 #include "VaultClient.h"
 
-bool Base64::is_base64(unsigned char c) {
+bool Vault::Base64::is_base64(unsigned char c) {
   return (isalnum(c) || (c == '+') || (c == '/'));
 }
 
-std::string Base64::encode(std::string value) {
+std::string Vault::Base64::encode(const std::string& value) {
   return encode(reinterpret_cast<const unsigned char*>(value.c_str()), value.length());
 }
 
-std::string Base64::encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
+std::string Vault::Base64::encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
   std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   std::string ret;
   int i = 0;
@@ -54,7 +54,7 @@ std::string Base64::encode(unsigned char const* bytes_to_encode, unsigned int in
   return ret;
 }
 
-std::string Base64::decode(std::string const& encoded_string) {
+std::string Vault::Base64::decode(std::string const& encoded_string) {
   std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   int in_len = encoded_string.size();
   int i = 0;

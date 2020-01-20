@@ -7,8 +7,8 @@ TEST_CASE("Authentication Strategies")
 {
   SECTION("Token")
   {
-    VaultClient vaultClient = TestHelpers::Token::login();
-    KeyValue kv(vaultClient);
+    Vault::Client vaultClient = TestHelpers::Token::login();
+    Vault::KeyValue kv(vaultClient);
     Vault::Path path("hello");
 
     KV::setValues(kv, path);
@@ -17,8 +17,8 @@ TEST_CASE("Authentication Strategies")
 
   SECTION("AppRole")
   {
-    VaultClient vaultClient = TestHelpers::AppRole::login();
-    KeyValue kv(vaultClient);
+    Vault::Client vaultClient = TestHelpers::AppRole::login();
+    Vault::KeyValue kv(vaultClient);
     Vault::Path path("hello");
 
     KV::setValues(kv, path);

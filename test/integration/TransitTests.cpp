@@ -5,18 +5,18 @@
 
 TEST_CASE("Transit Functions")
 {
-  VaultClient vaultClient = TestHelpers::AppRole::login();
-  Transit transit(vaultClient);
+  Vault::Client vaultClient = TestHelpers::AppRole::login();
+  Vault::Transit transit(vaultClient);
   Vault::Path path("mykey");
 
   SECTION("Encrypt/Decrypt Round Trip")
   {
-    Parameters plaintext({ {"plaintext", Base64::encode("Attack at dawn")} });
+    Vault::Parameters plaintext({ {"plaintext", Vault::Base64::encode("Attack at dawn")} });
     auto encryptResponse = transit.encrypt(path, plaintext);
 
     if (encryptResponse) {
       std::string ciphertextString = nlohmann::json::parse(encryptResponse.value())["data"]["ciphertext"];
-      Parameters ciphertext({ {"ciphertext", ciphertextString} });
+      Vault::Parameters ciphertext({ {"ciphertext", ciphertextString} });
       auto decryptResponse = transit.decrypt(path, ciphertext);
 
       if (decryptResponse) {
@@ -56,7 +56,7 @@ TEST_CASE("Transit Functions")
 
   SECTION("Random base64 bytes")
   {
-    Parameters parameters({ {"format","base64"} });
+    Vault::Parameters parameters({ {"format","base64"} });
     auto response = transit.generate_random_bytes(32, parameters);
 
     if (response) {
@@ -70,7 +70,7 @@ TEST_CASE("Transit Functions")
 
   SECTION("Random hex bytes")
   {
-    Parameters parameters({ {"format","hex"} });
+    Vault::Parameters parameters({ {"format","hex"} });
     auto response = transit.generate_random_bytes(32, parameters);
 
     if (response) {
@@ -83,8 +83,8 @@ TEST_CASE("Transit Functions")
   }
 
   SECTION("Hash base64") {
-    auto input = Base64::encode("Attack at dawn");
-    Parameters parameters({ {"format","base64"}, {"input", input} });
+    auto input = Vault::Base64::encode("Attack at dawn");
+    Vault::Parameters parameters({ {"format","base64"}, {"input", input} });
 
     auto sha224 = transit.hash(Vault::Algorithms::SHA2_224, parameters);
     auto sha256 = transit.hash(Vault::Algorithms::SHA2_256, parameters);
@@ -99,8 +99,8 @@ TEST_CASE("Transit Functions")
 
   SECTION("Hash hex")
   {
-    auto input = Base64::encode("Attack at dawn");
-    Parameters parameters({ {"format","hex"}, {"input", input} });
+    auto input = Vault::Base64::encode("Attack at dawn");
+    Vault::Parameters parameters({ {"format","hex"}, {"input", input} });
 
     auto sha224 = transit.hash(Vault::Algorithms::SHA2_224, parameters);
     auto sha256 = transit.hash(Vault::Algorithms::SHA2_256, parameters);
@@ -115,7 +115,7 @@ TEST_CASE("Transit Functions")
 
   SECTION("HMac")
   {
-    Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
+    Vault::Parameters parameters({ {"input", Vault::Base64::encode("Attack at dawn")} });
 
     auto sha224 = transit.hmac(path, Vault::Algorithms::SHA2_224, parameters);
     auto sha256 = transit.hmac(path, Vault::Algorithms::SHA2_256, parameters);
@@ -131,7 +131,7 @@ TEST_CASE("Transit Functions")
   SECTION("Sign")
   {
     Vault::Path signkey("signkey");
-    Parameters parameters({ {"input", Base64::encode("Attack at dawn")} });
+    Vault::Parameters parameters({ {"input", Vault::Base64::encode("Attack at dawn")} });
 
     auto sha1 = transit.sign(signkey, Vault::Algorithms::SHA1, parameters);
     auto sha224 = transit.sign(signkey, Vault::Algorithms::SHA2_224, parameters);

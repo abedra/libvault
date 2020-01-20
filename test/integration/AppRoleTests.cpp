@@ -9,11 +9,11 @@
 
 TEST_CASE("AppRole Management Functions")
 {
-  VaultClient vaultClient = TestHelpers::AppRole::login();
+  Vault::Client vaultClient = TestHelpers::AppRole::login();
 
   SECTION("list")
   {
-      AppRole appRole(vaultClient);
+      Vault::AppRole appRole(vaultClient);
       auto response = appRole.list();
 
       if (response) {

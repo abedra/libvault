@@ -4,123 +4,125 @@
 
 #include "VaultClient.h"
 
-class FailedAuth : public AuthenticationStrategy {
+class FailedAuth : public Vault::AuthenticationStrategy {
 public:
-  std::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
+  std::optional<Vault::AuthenticationResponse> authenticate(const Vault::Client& client) override {
     return std::nullopt;
   }
 private:
 };
 
-class SuccessfulAuth : public AuthenticationStrategy {
+class SuccessfulAuth : public Vault::AuthenticationStrategy {
 public:
-  std::optional<AuthenticationResponse> authenticate(const VaultClient& client) override {
-    return std::optional<AuthenticationResponse>({Vault::HttpResponseBodyString{""}, Vault::Token{"success"}});
+  std::optional<Vault::AuthenticationResponse> authenticate(const Vault::Client& client) override {
+    return std::optional<Vault::AuthenticationResponse>({Vault::HttpResponseBodyString{""}, Vault::Token{"success"}});
   }
 private:
 };
 
-class MockHttpClient : public HttpClient {
+class MockHttpClient : public Vault::HttpClient {
 public:
-  explicit MockHttpClient(VaultConfig& config) : HttpClient(config) {}
+  explicit MockHttpClient(Vault::Config& config) : HttpClient(config) {}
 
-  void SetResponse(std::optional<HttpResponse> response) {
+  void SetResponse(std::optional<Vault::HttpResponse> response) {
     response_ = response;
   }
 
-  [[nodiscard]] std::optional<HttpResponse> get(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
+  [[nodiscard]] std::optional<Vault::HttpResponse> get(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
     return response_;
   }
-  [[nodiscard]] std::optional<HttpResponse> post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, std::string value) const override {
+  [[nodiscard]] std::optional<Vault::HttpResponse> post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, std::string value) const override {
     return response_;
   }
-  [[nodiscard]] std::optional<HttpResponse> del(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
+  [[nodiscard]] std::optional<Vault::HttpResponse> del(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
     return response_;
   }
-  [[nodiscard]] std::optional<HttpResponse> list(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
+  [[nodiscard]] std::optional<Vault::HttpResponse> list(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
     return response_;
   }
 private:
-  std::optional<HttpResponse> response_;
+  std::optional<Vault::HttpResponse> response_;
 };
 
-class MockVaultClient : public VaultClient {
+class MockVaultClient : public Vault::Client {
 public:
-  MockVaultClient(VaultConfig& config, AuthenticationStrategy& authStrategy, const MockHttpClient& mockHttpClient)
-    : VaultClient(config, authStrategy), mockHttpClient_(mockHttpClient) {}
+  MockVaultClient(Vault::Config& config, Vault::AuthenticationStrategy& authStrategy, const MockHttpClient& mockHttpClient)
+    : Vault::Client(config, authStrategy)
+    , mockHttpClient_(mockHttpClient)
+    {}
 
-  [[nodiscard]] const HttpClient& getHttpClient() const override {
+  [[nodiscard]] const Vault::HttpClient& getHttpClient() const override {
     return mockHttpClient_;
   }
 private:
   const MockHttpClient& mockHttpClient_;
 };
 
-auto config = VaultConfigBuilder().build();
+auto config = Vault::ConfigBuilder().build();
 
 TEST_CASE("VaultClient#is_authenticated failure")
 {
   auto strategy = FailedAuth();
-  auto vaultClient = VaultClient(config, strategy);
+  auto vaultClient = Vault::Client(config, strategy);
   REQUIRE(!vaultClient.is_authenticated());
 }
 
 TEST_CASE("VaultClient#is_authenticated success")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(config, strategy);
+  auto vaultClient = Vault::Client(config, strategy);
   REQUIRE(vaultClient.is_authenticated());
 }
 
 TEST_CASE("VaultClient#getUrl")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(config, strategy);
+  auto vaultClient = Vault::Client(config, strategy);
   REQUIRE(vaultClient.getUrl("/base", Vault::Path{"/path"}).value() == "https://localhost:8200/base/path");
 }
 
 TEST_CASE("VaultClient#getUrl tls false")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(VaultConfigBuilder().withTlsEnabled(false).build(), strategy);
+  auto vaultClient = Vault::Client(Vault::ConfigBuilder().withTlsEnabled(false).build(), strategy);
   REQUIRE(vaultClient.getUrl("/base", Vault::Path{"/path"}).value() == "http://localhost:8200/base/path");
 }
 
 TEST_CASE("VaultClient#getToken")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(config, strategy);
+  auto vaultClient = Vault::Client(config, strategy);
   REQUIRE(vaultClient.getToken().value() == "success");
 }
 
 TEST_CASE("VaultClient#getNamespace")
 {
   auto strategy = SuccessfulAuth();
-  auto vaultClient = VaultClient(VaultConfigBuilder().withNamespace(Vault::Namespace{"ns"}).build(), strategy);
+  auto vaultClient = Vault::Client(Vault::ConfigBuilder().withNamespace(Vault::Namespace{"ns"}).build(), strategy);
   REQUIRE(vaultClient.getNamespace().value() == "ns");
 }
 
 TEST_CASE("HttpClient#is_success when response is empty")
 {
   auto response = std::nullopt;
-  REQUIRE(!HttpClient::is_success(response));
+  REQUIRE(!Vault::HttpClient::is_success(response));
 }
 
 TEST_CASE("HttpClient#is_success when status code not 200")
 {
-  auto response = std::optional<HttpResponse>({403, Vault::HttpResponseBodyString{"Permission Denied"}});
-  REQUIRE(!HttpClient::is_success(response));
+  auto response = std::optional<Vault::HttpResponse>({403, Vault::HttpResponseBodyString{"Permission Denied"}});
+  REQUIRE(!Vault::HttpClient::is_success(response));
 }
 
 TEST_CASE("HttpClient#is_success when status 200")
 {
-  auto response = std::optional<HttpResponse>({200, Vault::HttpResponseBodyString{"OK"}});
-  REQUIRE(HttpClient::is_success(response));
+  auto response = std::optional<Vault::HttpResponse>({200, Vault::HttpResponseBodyString{"OK"}});
+  REQUIRE(Vault::HttpClient::is_success(response));
 }
 
 TEST_CASE("VaultConfig#make default")
 {
-  config= VaultConfigBuilder().build();
+  config= Vault::ConfigBuilder().build();
 
   REQUIRE(config.getHost().value() == "localhost");
   REQUIRE(config.getPort().value() == "8200");
@@ -131,7 +133,7 @@ TEST_CASE("VaultConfig#make default")
 
 TEST_CASE("VaultConfig#make options set")
 {
-  config= VaultConfigBuilder()
+  config= Vault::ConfigBuilder()
     .withHost(Vault::Host{"example.com"})
     .withPort(Vault::Port{"8100"})
     .withTlsVerification(false)
@@ -150,7 +152,7 @@ TEST_CASE("VaultConfig#make options set")
 
 TEST_CASE("MockHttpClient#return mocked response")
 {
-  auto httpClient = MockHttpClient(VaultConfigBuilder().build());
+  auto httpClient = MockHttpClient(Vault::ConfigBuilder().build());
 
   httpClient.SetResponse(std::nullopt);
   REQUIRE(httpClient.get(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
@@ -158,7 +160,7 @@ TEST_CASE("MockHttpClient#return mocked response")
   REQUIRE(httpClient.del(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
   REQUIRE(httpClient.list(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
 
-  auto resp = HttpResponse{200, Vault::HttpResponseBodyString("success")};
+  auto resp = Vault::HttpResponse{200, Vault::HttpResponseBodyString("success")};
   httpClient.SetResponse(resp);
   auto getResp = httpClient.get(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar"));
   REQUIRE(getResp.has_value());
@@ -180,7 +182,7 @@ TEST_CASE("MockHttpClient#return mocked response")
 
 TEST_CASE("MockVaultClient#mock getHttpClient")
 {
-  auto config = VaultConfigBuilder().build();
+  auto config = Vault::ConfigBuilder().build();
   auto strategy = SuccessfulAuth();
   auto httpClient = MockHttpClient(config);
   auto vaultClient = MockVaultClient(config, strategy, httpClient);

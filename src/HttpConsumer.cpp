@@ -3,7 +3,7 @@
 #include "VaultClient.h"
 
 std::optional<std::string>
-VaultHttpConsumer::get(const VaultClient &client, const Vault::Url &url) {
+Vault::HttpConsumer::get(const Vault::Client &client, const Vault::Url &url) {
   if (!client.is_authenticated()) {
     return std::nullopt;
   }
@@ -16,7 +16,7 @@ VaultHttpConsumer::get(const VaultClient &client, const Vault::Url &url) {
 }
 
 std::optional<std::string>
-VaultHttpConsumer::list(const VaultClient &client, const Vault::Url &url) {
+Vault::HttpConsumer::list(const Vault::Client &client, const Vault::Url &url) {
   if (!client.is_authenticated()) {
     return std::nullopt;
   }
@@ -29,7 +29,7 @@ VaultHttpConsumer::list(const VaultClient &client, const Vault::Url &url) {
 }
 
 std::optional<std::string>
-VaultHttpConsumer::del(const VaultClient &client, const Vault::Url &url) {
+Vault::HttpConsumer::del(const Vault::Client &client, const Vault::Url &url) {
     if (!client.is_authenticated()) {
         return std::nullopt;
     }
@@ -46,9 +46,9 @@ VaultHttpConsumer::del(const VaultClient &client, const Vault::Url &url) {
 }
 
 std::optional<std::string>
-VaultHttpConsumer::post(const VaultClient& client,
-                        const Vault::Url& url,
-                        Parameters parameters) {
+Vault::HttpConsumer::post(const Vault::Client& client,
+                          const Vault::Url& url,
+                          Parameters parameters) {
   if (!client.is_authenticated()) {
     return std::nullopt;
   }
@@ -75,21 +75,19 @@ VaultHttpConsumer::post(const VaultClient& client,
 }
 
 std::optional<std::string>
-VaultHttpConsumer::post(const VaultClient& client,
-                        const Vault::Url& url,
-                        const Parameters& parameters,
-                        const JsonProducer& jsonProducer) {
+Vault::HttpConsumer::post(const Vault::Client& client,
+                          const Vault::Url& url,
+                          const Parameters& parameters,
+                          const JsonProducer& jsonProducer) {
   if (!client.is_authenticated()) {
     return std::nullopt;
   }
-
-  nlohmann::json j = jsonProducer(parameters);
 
   auto response = client.getHttpClient().post(
     url,
     client.getToken(),
     client.getNamespace(),
-    j.dump()
+    jsonProducer(parameters)
   );
 
   return HttpClient::is_success(response)
@@ -97,17 +95,15 @@ VaultHttpConsumer::post(const VaultClient& client,
          : std::nullopt;
 }
 
-std::optional<AuthenticationResponse>
-VaultHttpConsumer::authenticate(const VaultClient& client,
-                                const Vault::Url& url,
-                                const NoArgJsonProducer& jsonProducer) {
-  nlohmann::json j = jsonProducer();
-
+std::optional<Vault::AuthenticationResponse>
+Vault::HttpConsumer::authenticate(const Vault::Client& client,
+                                  const Vault::Url& url,
+                                  const NoArgJsonProducer& jsonProducer) {
   auto response = client.getHttpClient().post(
     url,
     client.getToken(),
     client.getNamespace(),
-    j.dump()
+    jsonProducer()
   );
 
   if (HttpClient::is_success(response)) {

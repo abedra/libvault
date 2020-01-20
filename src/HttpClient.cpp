@@ -7,55 +7,55 @@ writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
   return size * nmemb;
 }
 
-HttpClient::HttpClient(VaultConfig& config)
+Vault::HttpClient::HttpClient(Vault::Config& config)
   : debug_(config.getDebug())
   , verify_(config.getVerify())
   , connectTimeout_(config.getConnectTimeout().value)
   , errorCallback_([&](const std::string& err){})
 {}
 
-HttpClient::HttpClient(VaultConfig& config, HttpErrorCallback errorCallback) :
+Vault::HttpClient::HttpClient(Vault::Config& config, HttpErrorCallback errorCallback) :
   debug_(config.getDebug()),
   verify_(config.getVerify()),
   connectTimeout_(config.getConnectTimeout().value),
   errorCallback_(std::move(errorCallback))
 {}
 
-bool HttpClient::is_success(std::optional<HttpResponse> response) {
+bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
   return response && response.value().statusCode.value == 200;
 }
 
-std::optional<HttpResponse>
-HttpClient::get(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
+std::optional<Vault::HttpResponse>
+Vault::HttpClient::get(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
-std::optional<HttpResponse>
-HttpClient::post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, std::string value) const {
+std::optional<Vault::HttpResponse>
+Vault::HttpClient::post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }
 
-std::optional<HttpResponse>
-HttpClient::del(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
+std::optional<Vault::HttpResponse>
+Vault::HttpClient::del(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
   });
 }
 
-std::optional<HttpResponse>
-HttpClient::list(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
+std::optional<Vault::HttpResponse>
+Vault::HttpClient::list(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
   });
 }
 
-std::optional<HttpResponse>
-HttpClient::executeRequest(const Vault::Url& url,
-                           const Vault::Token& token,
-                           const Vault::Namespace& ns,
-                           const CurlSetupCallback& setupCallback) const {
+std::optional<Vault::HttpResponse>
+Vault::HttpClient::executeRequest(const Vault::Url& url,
+                                  const Vault::Token& token,
+                                  const Vault::Namespace& ns,
+                                  const CurlSetupCallback& setupCallback) const {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
   std::string buffer;

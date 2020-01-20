@@ -1,8 +1,7 @@
 #include <utility>
 #include "VaultClient.h"
 
-VaultClient::VaultClient(VaultConfig& config,
-                         AuthenticationStrategy& authStrategy)
+Vault::Client::Client(Vault::Config& config, AuthenticationStrategy& authStrategy)
   : host_(config.getHost())
   , port_(config.getPort())
   , namespace_(config.getNamespace())
@@ -17,9 +16,9 @@ VaultClient::VaultClient(VaultConfig& config,
   }
 }
 
-VaultClient::VaultClient(VaultConfig& config,
-                         AuthenticationStrategy& authStrategy,
-                         HttpErrorCallback httpErrorCallback)
+Vault::Client::Client(Vault::Config& config,
+                      AuthenticationStrategy& authStrategy,
+                      HttpErrorCallback httpErrorCallback)
   : host_(config.getHost())
   , port_(config.getPort())
   , namespace_(config.getNamespace())
@@ -34,7 +33,7 @@ VaultClient::VaultClient(VaultConfig& config,
   }
 }
 
-VaultClient::VaultClient(const VaultClient& other, Vault::Token token)
+Vault::Client::Client(const Vault::Client& other, Vault::Token token)
   : host_(other.getHost())
   , port_(other.getPort())
   , namespace_(other.getNamespace())
@@ -45,6 +44,6 @@ VaultClient::VaultClient(const VaultClient& other, Vault::Token token)
   , token_(std::move(token))
 {}
 
-Vault::Url VaultClient::getUrl(const std::string& base, const Vault::Path& path) const {
+Vault::Url Vault::Client::getUrl(const std::string& base, const Vault::Path& path) const {
   return Vault::Url{(tls_ ? "https://" : "http://") + host_ + ":" + port_ + base + path};
 }

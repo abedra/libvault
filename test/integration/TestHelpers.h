@@ -23,73 +23,73 @@ void print_response(std::optional<T> response) {
 
 namespace TestHelpers {
   namespace Token {
-    inline VaultClient login() {
+    inline Vault::Client login() {
       Vault::Token token{getOrDefault("VAULT_SINGLE_TOKEN", "")};
-      TokenStrategy tokenStrategy{token};
-      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::TokenStrategy tokenStrategy{token};
+      Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
 
-      VaultConfig config = VaultConfigBuilder()
+      Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
         .withTlsEnabled(false)
         .build();
 
-      return VaultClient{config, tokenStrategy, httpErrorCallback};
+      return Vault::Client{config, tokenStrategy, httpErrorCallback};
     }
   }
 
   namespace AppRole {
-    inline VaultClient login() {
+    inline Vault::Client login() {
       Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
       Vault::SecretId secretId{getOrDefault("APPROLE_SECRET_ID", "")};
-      AppRoleStrategy authStrategy{roleId, secretId};
-      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::AppRoleStrategy authStrategy{roleId, secretId};
+      Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
 
-      VaultConfig config = VaultConfigBuilder()
+      Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
         .withTlsEnabled(false)
         .withDebug(false)
         .build();
 
-      return VaultClient{config, authStrategy, httpErrorCallback};
+      return Vault::Client{config, authStrategy, httpErrorCallback};
     }
   }
 
   namespace WrappedAppRole {
-    inline VaultClient login() {
+    inline Vault::Client login() {
       Vault::RoleId roleId{getOrDefault("APPROLE_ROLE_ID", "")};
       Vault::Token wrappedToken{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
-      WrappedSecretAppRoleStrategy wrappedAuthStrategy{roleId, wrappedToken};
-      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
-      VaultConfig config = VaultConfigBuilder()
+      Vault::WrappedSecretAppRoleStrategy wrappedAuthStrategy{roleId, wrappedToken};
+      Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
         .withTlsEnabled(false)
         .withDebug(false)
         .build();
 
-      return VaultClient{config, wrappedAuthStrategy, httpErrorCallback};
+      return Vault::Client{config, wrappedAuthStrategy, httpErrorCallback};
     }
   }
 
   namespace Ldap {
-    inline VaultClient login() {
+    inline Vault::Client login() {
       auto username = getOrDefault("LDAP_USERNAME", "");
       auto password = getOrDefault("LDAP_PASSWORD", "");
-      auto ldapStrategy = LdapStrategy{username, password};
-      HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
-      VaultConfig config = VaultConfigBuilder()
+      auto ldapStrategy = Vault::LdapStrategy{username, password};
+      Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
         .withTlsEnabled(false)
         .withDebug(false)
         .build();
 
-      return VaultClient{config, ldapStrategy, httpErrorCallback};
+      return Vault::Client{config, ldapStrategy, httpErrorCallback};
     }
   }
 }
 
 namespace KV {
-  inline void setValues(KeyValue kv, const Vault::Path &path) {
-    Parameters data(
+  inline void setValues(Vault::KeyValue kv, const Vault::Path &path) {
+    Vault::Parameters data(
       {
         {"foo",       "world"},
         {"baz",       "quux"},
@@ -99,7 +99,7 @@ namespace KV {
     kv.put(path, data);
   }
 
-  inline void assertListValues(KeyValue kv) {
+  inline void assertListValues(Vault::KeyValue kv) {
     // TODO: Should probably refactor the list method, this doesn't make much sense
     auto response = kv.list(Vault::Path{""});
 
@@ -113,7 +113,7 @@ namespace KV {
     }
   }
 
-  inline void assertGetValues(KeyValue kv, const Vault::Path &path) {
+  inline void assertGetValues(Vault::KeyValue kv, const Vault::Path &path) {
     auto response = kv.get(path);
 
     if (response) {
@@ -129,7 +129,7 @@ namespace KV {
     }
   }
 
-  inline void assertDestroyValues(KeyValue kv, const Vault::Path &path) {
+  inline void assertDestroyValues(Vault::KeyValue kv, const Vault::Path &path) {
     kv.del(path);
 
     CHECK(!kv.get(path));

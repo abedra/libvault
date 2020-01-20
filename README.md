@@ -27,19 +27,22 @@ The following example shows both a secret put and get. The most common scenario 
 
 int main(void)
 {
-  HttpErrorCallback httpErrorCallback = [&](std::string err) {
+  Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
     std::cout << err << std::endl;
   };
 
-  auto config = VaultConfigBuilder().build();
-  AppRoleStrategy authStrategy{Vault::RoleId{"<role_id>"}, Vault::SecretId{"<secret_id>"}};
-  VaultClient vaultClient{config, authStrategy, httpErrorCallback};
+  Vault::Config config = Vault::ConfigBuilder().build();
+  Vault::AppRoleStrategy authStrategy{
+    Vault::RoleId{"<role_id>"},
+    Vault::SecretId{"<secret_id>"}
+  };
+  Vault::Client vaultClient{config, authStrategy, httpErrorCallback};
 
-  KeyValue kv{vaultClient, KeyValue::Version::v1};
+  Vault::KeyValue kv{vaultClient, Vault::KeyValue::Version::v1};
   Vault::Path mount{"/test"};
-  KeyValue kv2{vaultClient, mount};
+  Vault::KeyValue kv2{vaultClient, mount};
 
-  Parameters parameters(
+  Vault::Parameters parameters(
     {
       {"foo","world"},
       {"baz","quux"},
