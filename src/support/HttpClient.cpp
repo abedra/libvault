@@ -26,13 +26,29 @@ bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
 }
 
 std::optional<Vault::HttpResponse>
-Vault::HttpClient::get(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
+Vault::HttpClient::get(const Vault::Url& url,
+                       const Vault::Token& token,
+                       const Vault::Namespace& ns) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {});
 }
 
 std::optional<Vault::HttpResponse>
-Vault::HttpClient::post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, std::string value) const {
+Vault::HttpClient::post(const Vault::Url& url,
+                        const Vault::Token& token,
+                        const Vault::Namespace& ns,
+                        std::string value) const {
   return executeRequest(url, token, ns, [&](CURL *curl) {
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
+  });
+}
+
+std::optional<Vault::HttpResponse>
+Vault::HttpClient::put(const Vault::Url& url,
+                       const Vault::Token& token,
+                       const Vault::Namespace& ns,
+                       std::string value) const {
+  return executeRequest(url, token, ns, [&](CURL *curl) {
+    curl_easy_setopt(curl, CURLOPT_PUT, 1L);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
   });
 }

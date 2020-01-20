@@ -13,7 +13,7 @@ TEST_CASE("KeyValue Functions") {
 
     KV::setValues(kv, path);
     KV::assertListValues(kv);
-    KV::assertGetValues(kv, path);
+    KV::assertReadValues(kv, path);
     KV::assertDestroyValues(kv, path);
   }
 
@@ -23,7 +23,7 @@ TEST_CASE("KeyValue Functions") {
 
     KV::setValues(kv, path);
     KV::assertListValues(kv);
-    KV::assertGetValues(kv, path);
+    KV::assertReadValues(kv, path);
     KV::assertDestroyValues(kv, path);
   }
 }

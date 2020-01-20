@@ -42,22 +42,46 @@ std::optional<std::string> Vault::KeyValue::list(const Vault::Path& path) {
     : Vault::HttpConsumer::list(client_, getMetadataUrl(path));
 }
 
-std::optional<std::string> Vault::KeyValue::get(const Vault::Path& path) {
+std::optional<std::string> Vault::KeyValue::read(const Vault::Path& path) {
   return Vault::HttpConsumer::get(client_, getUrl(path));
 }
 
-std::optional<std::string> Vault::KeyValue::put(const Vault::Path& path, const Parameters& parameters) {
-  return Vault::HttpConsumer::post(client_, getUrl(path), parameters, [&](const Parameters& params) {
-    nlohmann::json j;
-    j["data"] = nlohmann::json::object();
-    std::for_each(parameters.begin(), parameters.end(),
-      [&](std::pair<std::string, std::string> pair) {
-        j["data"][pair.first] = pair.second;
-      }
-    );
-    return j.dump();
-  });
+std::optional<std::string> Vault::KeyValue::create(const Vault::Path& path, const Parameters& parameters) {
+  return Vault::HttpConsumer::post(
+    client_,
+    getUrl(path),
+    parameters,
+    [&](const Parameters& params) {
+      nlohmann::json j;
+      j["data"] = nlohmann::json::object();
+      std::for_each(parameters.begin(), parameters.end(),
+        [&](std::pair<std::string, std::string> pair) {
+          j["data"][pair.first] = pair.second;
+        }
+      );
+      return j.dump();
+    }
+  );
 }
+
+std::optional<std::string> Vault::KeyValue::update(const Vault::Path& path, const Parameters& parameters) {
+  return Vault::HttpConsumer::put(
+    client_,
+    getUrl(path),
+    parameters,
+    [&](const Parameters& params) {
+      nlohmann::json j;
+      j["data"] = nlohmann::json::object();
+      std::for_each(parameters.begin(), parameters.end(),
+        [&](std::pair<std::string, std::string> pair) {
+          j["data"][pair.first] = pair.second;
+        }
+      );
+      return j.dump();
+    }
+  );
+}
+
 
 std::optional<std::string> Vault::KeyValue::del(const Vault::Path& path) {
   return Vault::HttpConsumer::del(client_, getUrl(path));

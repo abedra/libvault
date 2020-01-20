@@ -93,6 +93,7 @@ namespace Vault {
 
     [[nodiscard]] virtual std::optional<HttpResponse> get(const Url &url, const Token &token, const Namespace &ns) const;
     [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, std::string value) const;
+    [[nodiscard]] virtual std::optional<HttpResponse> put(const Url &url, const Token &token, const Namespace &ns, std::string value) const;
     [[nodiscard]] virtual std::optional<HttpResponse> del(const Url &url, const Token &token, const Namespace &ns) const;
     [[nodiscard]] virtual std::optional<HttpResponse> list(const Url &url, const Token &token, const Namespace &ns) const;
 
@@ -197,6 +198,7 @@ namespace Vault {
     static std::optional<std::string> list(const Client &client, const Url &url);
     static std::optional<std::string> post(const Client &client, const Url &url, Parameters parameters);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
+    static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> del(const Client &client, const Url &url);
     static std::optional<Vault::AuthenticationResponse> authenticate(const Client &client, const Url &url, const NoArgJsonProducer &jsonProducer);
   };
@@ -271,8 +273,9 @@ namespace Vault {
     KeyValue(const Client &client, Vault::SecretMount mount, KeyValue::Version version);
 
     std::optional<std::string> list(const Path &path);
-    std::optional<std::string> get(const Path &path);
-    std::optional<std::string> put(const Path &path, const Parameters &parameters);
+    std::optional<std::string> read(const Path &path);
+    std::optional<std::string> create(const Path &path, const Parameters &parameters);
+    std::optional<std::string> update(const Path &path, const Parameters &parameters);
     std::optional<std::string> del(const Path &path);
     std::optional<std::string> del(const Path &path, std::vector<long> versions);
     std::optional<std::string> destroy(const Path &path, std::vector<long> versions);

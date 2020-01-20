@@ -12,7 +12,7 @@ TEST_CASE("Authentication Strategies")
     Vault::Path path("hello");
 
     KV::setValues(kv, path);
-    KV::assertGetValues(kv, path);
+    KV::assertReadValues(kv, path);
   }
 
   SECTION("AppRole")
@@ -22,6 +22,6 @@ TEST_CASE("Authentication Strategies")
     Vault::Path path("hello");
 
     KV::setValues(kv, path);
-    KV::assertGetValues(kv, path);
+    KV::assertReadValues(kv, path);
   }
 }

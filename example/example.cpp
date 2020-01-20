@@ -28,9 +28,9 @@ int main(void)
 
   Vault::Path key{"hello"};
 
-  kv.put(key, parameters);
-  kv2.put(key, parameters);
+  kv.create(key, parameters);
+  kv2.create(key, parameters);
 
-  std::cout << kv.get(key).value() << std::endl;
-  std::cout << kv2.get(key).value() << std::endl;
+  std::cout << kv.read(key).value() << std::endl;
+  std::cout << kv2.read(key).value() << std::endl;
 }

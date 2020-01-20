@@ -31,12 +31,13 @@ int main(void)
     std::cout << err << std::endl;
   };
 
+
   Vault::AppRoleStrategy authStrategy{
     Vault::RoleId{"<role_id>"},
     Vault::SecretId{"<secret_id>"}
   };
-  
-  Vault::Config config = Vault::ConfigBuilder().build();  
+
+  Vault::Config config = Vault::ConfigBuilder().build();
   Vault::Client vaultClient{config, authStrategy, httpErrorCallback};
   Vault::KeyValue kv{vaultClient, Vault::KeyValue::Version::v1};
   Vault::Path mount{"/test"};
@@ -51,11 +52,11 @@ int main(void)
 
   Vault::Path key{"hello"};
 
-  kv.put(key, parameters);
-  kv2.put(key, parameters);
+  kv.create(key, parameters);
+  kv2.create(key, parameters);
 
-  std::cout << kv.get(key).value() << std::endl;
-  std::cout << kv2.get(key).value() << std::endl;
+  std::cout << kv.read(key).value() << std::endl;
+  std::cout << kv2.read(key).value() << std::endl;
 }
 ```
 

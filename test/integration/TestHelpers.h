@@ -96,7 +96,7 @@ namespace KV {
         {"something", "something else"},
       });
 
-    kv.put(path, data);
+    kv.create(path, data);
   }
 
   inline void assertListValues(Vault::KeyValue kv) {
@@ -113,8 +113,8 @@ namespace KV {
     }
   }
 
-  inline void assertGetValues(Vault::KeyValue kv, const Vault::Path &path) {
-    auto response = kv.get(path);
+  inline void assertReadValues(Vault::KeyValue kv, const Vault::Path &path) {
+    auto response = kv.read(path);
 
     if (response) {
       std::unordered_map<std::string, std::string> secrets = nlohmann::json::parse(response.value())["data"]["data"];
@@ -132,7 +132,7 @@ namespace KV {
   inline void assertDestroyValues(Vault::KeyValue kv, const Vault::Path &path) {
     kv.del(path);
 
-    CHECK(!kv.get(path));
+    CHECK(!kv.read(path));
   }
 }
 
