@@ -63,6 +63,103 @@ int main(void)
 
 This project uses [nlohmann/json](https://github.com/nlohmann/json) internally but does not expose it. This project makes no assumptions about serialization and returns `std:string` values that can be serialized by the tooling of your choice. Should you choose to use [nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp` file to your project. This project's integration tests have multiple examples of how to use it.
 
+## Feature Support
+
+The following tables show support for each of the secret backends, auth methods, and system endpoints. Because the surface area is so large, endpoints are implemented as needed. Pull requests are welcome. Feel free to file an issue or submit a pull request for additional support.
+
+| Secret Backend   | Implemented | Integration Tested |
+|------------------|-------------|--------------------|
+| Key/Value V1     | Partial     | Partial            |
+| Key/Value V2     | Partial     | Partial            |
+| Transit          | Partial     | Partial            |
+| Active Directory | No          | No                 |
+| Ali Cloud        | No          | No                 |
+| AWS              | No          | No                 |
+| Azure            | No          | No                 |
+| Cubbyhole        | No          | No                 |
+| Cassandra        | No          | No                 |
+| Elasticsearch    | No          | No                 |
+| Influxdb         | No          | No                 |
+| HanaDB           | No          | No                 |
+| MSSQL            | No          | No                 |
+| MySQL/MariaDB    | No          | No                 |
+| PostgreSQL       | No          | No                 |
+| Oracle           | No          | No                 |
+| Google Cloud     | No          | No                 |
+| Google Cloud KMS | No          | No                 |
+| KMIP             | No          | No                 |
+| Identities       | No          | No                 |
+| Nomad            | No          | No                 |
+| PKI              | No          | No                 |
+| RabbitMQ         | No          | No                 |
+| SSH              | No          | No                 |
+| TOTP             | No          | No                 |
+
+| Auth Method       | Implemented | Integration Tested |
+|-------------------|-------------|--------------------|
+| AppRole           | Yes         | Yes                |
+| LDAP              | Partial     | Partial            |
+| Tokens            | Partial     | Partial            |
+| AliCloud          | No          | No                 |
+| AWS               | No          | No                 |
+| Azure             | No          | No                 |
+| Cloud Foundry     | No          | No                 |
+| GitHub            | No          | No                 |
+| Google Cloud      | No          | No                 |
+| JWT/OIDC          | No          | No                 |
+| Kubernetes        | No          | No                 |
+| OCI               | No          | No                 |
+| Okta              | No          | No                 |
+| RADIUS            | No          | No                 |
+| TLS Certificate   | No          | No                 |
+| Username/Password | No          | No                 |
+
+| System Backend              | Implemented | Integration Tested |
+|-----------------------------|-------------|--------------------|
+| /sys/health                 | Yes         | Yes                |
+| /sys/leader                 | Yes         | Yes                |
+| /sys/wrapping               | Partial     | Partial            |
+| /sys/audit                  | No          | No                 |
+| /sys/audit-hash             | No          | No                 |
+| /sys/auth                   | No          | No                 |
+| /sys/capabilities           | No          | No                 |
+| /sys/capabilities-accessor  | No          | No                 |
+| /sys/capabilities-self      | No          | No                 |
+| /sys/config/audititng       | No          | No                 |
+| /sys/config/control-group   | No          | No                 |
+| /sys/config/cors            | No          | No                 |
+| /sys/config/state           | No          | No                 |
+| /sys/config/ui              | No          | No                 |
+| /sys/control-group          | No          | No                 |
+| /sys/generate-root          | No          | No                 |
+| /sys/host-info              | No          | No                 |
+| /sys/init                   | No          | No                 |
+| /sys/internal/specs/openapi | No          | No                 |
+| /sys/internal/ui/mounts     | No          | No                 |
+| /sys/key-status             | No          | No                 |
+| /sys/leases                 | No          | No                 |
+| /sys/license                | No          | No                 |
+| /sys/metrics                | No          | No                 |
+| /sys/mfa                    | No          | No                 |
+| /sys/mounts                 | No          | No                 |
+| /sys/namespaces             | No          | No                 |
+| /sys/plugins/reload/backend | No          | No                 |
+| /sys/plugins/catalog        | No          | No                 |
+| /sys/policy                 | No          | No                 |
+| /sys/pprof                  | No          | No                 |
+| /sys/raw                    | No          | No                 |
+| /sys/rekey                  | No          | No                 |
+| /sys/rekey-recovery-key     | No          | No                 |
+| /sys/remount                | No          | No                 |
+| /sys/replication            | No          | No                 |
+| /sys/rotate                 | No          | No                 |
+| /sys/seal                   | No          | No                 |
+| /sys/seal-status            | No          | No                 |
+| /sys/sealwrap/rewrap        | No          | No                 |
+| /sys/step-down              | No          | No                 |
+| /sys/storage                | No          | No                 |
+| /sys/tools                  | No          | No                 |
+| /sys/unseal                 | No          | No                 |
 
 ## Compile and Install
 
