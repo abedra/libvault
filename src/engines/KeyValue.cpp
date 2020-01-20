@@ -1,4 +1,5 @@
 #include <utility>
+#include <iostream>
 #include "json.hpp"
 #include "VaultClient.h"
 
@@ -149,7 +150,7 @@ std::optional<std::string> Vault::KeyValue::readConfig() {
 
   return Vault::HttpConsumer::get(
     client_,
-    client_.getUrl("/v1" + mount_, Vault::Path{"config"})
+    client_.getUrl("/v1/" + mount_, Vault::Path{"/config"})
   );
 }
 
@@ -160,7 +161,7 @@ std::optional<std::string> Vault::KeyValue::updateConfig(const Parameters &param
 
   return Vault::HttpConsumer::post(
     client_,
-    client_.getUrl("/v1" + mount_, Vault::Path{"config"}),
+    client_.getUrl("/v1/" + mount_, Vault::Path{"/config"}),
     parameters
   );
 }

@@ -129,7 +129,7 @@ namespace KV {
     }
   }
 
-  inline void assertDestroyValues(Vault::KeyValue kv, const Vault::Path &path) {
+  inline void assertDeleteValues(Vault::KeyValue kv, const Vault::Path &path) {
     kv.del(path);
 
     CHECK(!kv.read(path));
