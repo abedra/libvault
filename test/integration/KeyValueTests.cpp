@@ -11,10 +11,25 @@ TEST_CASE("KeyValue Functions") {
     Vault::KeyValue kv(vaultClient, secretMount, Vault::KeyValue::Version::v1);
     Vault::Path path("hello");
 
-    KV::setValues(kv, path);
-    KV::assertListValues(kv);
-    KV::assertReadValues(kv, path);
-    KV::assertDeleteValues(kv, path);
+    SECTION("CRUD") {
+      KV::setValues(kv, path);
+      KV::assertListValues(kv);
+      KV::assertReadValues(kv, path);
+      KV::assertDeleteValues(kv, path);
+    }
+
+    SECTION("v2 only") {
+      std::vector<std::optional<std::string>> responses;
+      responses.push_back(kv.readConfig());
+      responses.push_back(kv.updateConfig({}));
+      responses.push_back(kv.readMetadata(path));
+      responses.push_back(kv.updateMetadata(path, {}));
+      responses.push_back(kv.deleteMetadata(path));
+
+      for(auto &response : responses) {
+        CHECK(!response);
+      }
+    }
   }
 
   SECTION("v2") {
@@ -39,6 +54,25 @@ TEST_CASE("KeyValue Functions") {
         CHECK(config.size() == 2);
         CHECK(config["cas_required"] == false);
         CHECK(config["max_versions"] == 10);
+      } else {
+        CHECK(false);
+      }
+    }
+
+    SECTION("metadata") {
+      Vault::Parameters parameters({ {"max_versions", "10"} });
+      kv.updateMetadata(path, parameters);
+
+      auto response = kv.readMetadata(path);
+      if (response) {
+        auto metadata = nlohmann::json::parse(response.value())["data"];
+
+        CHECK(metadata["current_version"] > 0);
+        CHECK(metadata["max_versions"] == 10);
+
+        kv.deleteMetadata(path);
+        response = kv.readMetadata(path);
+        CHECK(!response);
       } else {
         CHECK(false);
       }
