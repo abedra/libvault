@@ -10,6 +10,7 @@ TEST_CASE("KeyValue Functions") {
     Vault::SecretMount secretMount{"legacy"};
     Vault::KeyValue kv(vaultClient, secretMount, Vault::KeyValue::Version::v1);
     Vault::Path path("hello");
+    std::vector<long> versions({1, 2, 3});
 
     SECTION("CRUD") {
       KV::setValues(kv, path);
@@ -25,6 +26,9 @@ TEST_CASE("KeyValue Functions") {
       responses.push_back(kv.readMetadata(path));
       responses.push_back(kv.updateMetadata(path, {}));
       responses.push_back(kv.deleteMetadata(path));
+      responses.push_back(kv.del(path, versions));
+      responses.push_back(kv.destroy(path, versions));
+      responses.push_back(kv.undelete(path, versions));
 
       for(auto &response : responses) {
         CHECK(!response);
@@ -41,6 +45,11 @@ TEST_CASE("KeyValue Functions") {
       KV::assertListValues(kv);
       KV::assertReadValues(kv, path);
       KV::assertDeleteValues(kv, path);
+    }
+
+    SECTION("v1 only") {
+      auto response = kv.update(path, {});
+      CHECK(!response);
     }
 
     SECTION("config") {

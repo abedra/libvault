@@ -70,8 +70,8 @@ The following tables show support for each of the secret backends, auth methods,
 
 | Secret Backend   | Implemented | Integration Tested |
 |------------------|-------------|--------------------|
-| Key/Value V1     | Partial     | Partial            |
-| Key/Value V2     | Partial     | Partial            |
+| Key/Value V1     | Yes         | Partial            |
+| Key/Value V2     | Yes         | Partial            |
 | Transit          | Partial     | Partial            |
 | Active Directory | No          | No                 |
 | Ali Cloud        | No          | No                 |
