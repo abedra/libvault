@@ -101,7 +101,7 @@ std::optional<std::string> Vault::KeyValue::del(const Vault::Path& path, std::ve
     client_,
     client_.getUrl("/v1" + mount_ + "/delete/", path),
     Parameters{},
-    [&](auto params){
+    [&](const Parameters& params){
       nlohmann::json j;
       j["versions"] = versions;
       return j.dump();
@@ -118,7 +118,7 @@ std::optional<std::string> Vault::KeyValue::destroy(const Vault::Path& path, std
     client_,
     client_.getUrl("/v1" + mount_ + "/destroy/", path),
     Parameters{},
-    [&](auto params) {
+    [&](const Parameters& params) {
       nlohmann::json j;
       j["versions"] = versions;
       return j.dump();
@@ -135,7 +135,7 @@ std::optional<std::string> Vault::KeyValue::undelete(const Path &path, std::vect
     client_,
     client_.getUrl("/v1" + mount_ + "/undelete/", path),
     Parameters{},
-    [&](auto params) {
+    [&](const Parameters& params) {
       nlohmann::json j;
       j["versions"] = versions;
       return j.dump();

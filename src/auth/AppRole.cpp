@@ -12,18 +12,23 @@ std::optional<std::string> Vault::AppRole::list() {
 
 std::optional<std::string>
 Vault::AppRole::create(const Vault::Path& roleName, const Parameters& parameters) {
-  return Vault::HttpConsumer::post(client_, getUrl(roleName), parameters, [&](auto params) {
-    nlohmann::json j;
-    j["data"] = nlohmann::json::object();
-    std::for_each(
-      parameters.begin(),
-      parameters.end(),
-      [&](std::pair<std::string, std::string> pair) {
-        j["data"][pair.first] = pair.second;
-      }
-    );
-    return j.dump();
-  });
+  return Vault::HttpConsumer::post(
+    client_,
+    getUrl(roleName),
+    parameters,
+    [&](const Parameters& params) {
+      nlohmann::json j;
+      j["data"] = nlohmann::json::object();
+      std::for_each(
+        parameters.begin(),
+        parameters.end(),
+        [&](std::pair<std::string, std::string> pair) {
+          j["data"][pair.first] = pair.second;
+        }
+      );
+      return j.dump();
+    }
+  );
 }
 
 std::optional<std::string>

@@ -48,6 +48,37 @@ Vault::HttpConsumer::del(const Vault::Client &client, const Vault::Url &url) {
 std::optional<std::string>
 Vault::HttpConsumer::post(const Vault::Client& client,
                           const Vault::Url& url,
+                          const Vault::Parameters& parameters,
+                          const Vault::CurlHeaderCallback& headerCallback) {
+  if (!client.is_authenticated()) {
+    return std::nullopt;
+  }
+
+  nlohmann::json j = nlohmann::json::object();
+  std::for_each(
+    parameters.begin(),
+    parameters.end(),
+    [&](std::pair<std::string, std::string> pair) {
+      j[pair.first] = pair.second;
+    }
+  );
+
+  auto response = client.getHttpClient().post(
+    url,
+    client.getToken(),
+    client.getNamespace(),
+    j.dump(),
+    headerCallback
+  );
+
+  return HttpClient::is_success(response)
+         ? std::optional<std::string>(response.value().body.value())
+         : std::nullopt;
+}
+
+std::optional<std::string>
+Vault::HttpConsumer::post(const Vault::Client& client,
+                          const Vault::Url& url,
                           Parameters parameters) {
   if (!client.is_authenticated()) {
     return std::nullopt;

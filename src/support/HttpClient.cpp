@@ -10,68 +10,116 @@ writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
 Vault::HttpClient::HttpClient(Vault::Config& config)
   : debug_(config.getDebug())
   , verify_(config.getVerify())
-  , connectTimeout_(config.getConnectTimeout().value)
+  , connectTimeout_(config.getConnectTimeout().value())
   , errorCallback_([&](const std::string& err){})
 {}
 
 Vault::HttpClient::HttpClient(Vault::Config& config, HttpErrorCallback errorCallback) :
   debug_(config.getDebug()),
   verify_(config.getVerify()),
-  connectTimeout_(config.getConnectTimeout().value),
+  connectTimeout_(config.getConnectTimeout().value()),
   errorCallback_(std::move(errorCallback))
 {}
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
-  return response && response.value().statusCode.value == 200;
+  return response && response.value().statusCode.value() == 200;
 }
 
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::get(const Vault::Url& url,
                        const Vault::Token& token,
                        const Vault::Namespace& ns) const {
-  return executeRequest(url, token, ns, [&](CURL *curl) {});
+  return executeRequest(
+    url,
+    token,
+    ns,
+    [&](CURL *curl) {},
+    [&](curl_slist *chunk){ return chunk; }
+  );
 }
 
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::post(const Vault::Url& url,
                         const Vault::Token& token,
                         const Vault::Namespace& ns,
-                        std::string value) const {
-  return executeRequest(url, token, ns, [&](CURL *curl) {
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
-  });
+                        const std::string& value) const {
+  return executeRequest(
+    url,
+    token,
+    ns,
+    [&](CURL *curl) {
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
+    },
+    [&](curl_slist *chunk){ return chunk; }
+  );
+}
+
+std::optional<Vault::HttpResponse>
+Vault::HttpClient::post(const Vault::Url& url,
+                        const Vault::Token& token,
+                        const Vault::Namespace& ns,
+                        const std::string& value,
+                        const Vault::CurlHeaderCallback& headerCallback) const {
+  return executeRequest(
+    url,
+    token,
+    ns,
+    [&](CURL *curl) {
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
+    },
+    headerCallback
+  );
 }
 
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::put(const Vault::Url& url,
                        const Vault::Token& token,
                        const Vault::Namespace& ns,
-                       std::string value) const {
-  return executeRequest(url, token, ns, [&](CURL *curl) {
-    curl_easy_setopt(curl, CURLOPT_PUT, 1L);
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
-  });
+                       const std::string& value) const {
+  return executeRequest(
+    url,
+    token,
+    ns,
+    [&](CURL *curl) {
+      curl_easy_setopt(curl, CURLOPT_PUT, 1L);
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
+    },
+    [&](curl_slist *chunk){ return chunk; }
+  );
 }
 
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::del(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
-  return executeRequest(url, token, ns, [&](CURL *curl) {
-    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-  });
+  return executeRequest(
+    url,
+    token,
+    ns,
+    [&](CURL *curl) {
+      curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+    },
+    [&](curl_slist *chunk){ return chunk; }
+  );
 }
 
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::list(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const {
-  return executeRequest(url, token, ns, [&](CURL *curl) {
-    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
-  });
+  return executeRequest(
+    url,
+    token,
+    ns,
+    [&](CURL *curl) {
+      curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
+    },
+    [&](curl_slist *chunk){ return chunk; }
+  );
 }
 
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::executeRequest(const Vault::Url& url,
                                   const Vault::Token& token,
                                   const Vault::Namespace& ns,
-                                  const CurlSetupCallback& setupCallback) const {
+                                  const Vault::CurlSetupCallback& setupCallback,
+                                  const Vault::CurlHeaderCallback& curlHeaderCallback) const {
   CURL *curl;
   CURLcode res = CURLE_SEND_ERROR;
   std::string buffer;
@@ -90,6 +138,7 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     }
 
     chunk = curl_slist_append(chunk, "Content-Type: application/json");
+    chunk = curlHeaderCallback(chunk);
 
     if (verify_) {
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
@@ -125,5 +174,8 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     curl_slist_free_all(chunk);
   }
 
-  return std::optional<HttpResponse>({response_code, Vault::HttpResponseBodyString{buffer}});
+  return std::optional<HttpResponse>({
+    Vault::HttpResponseStatusCode{response_code},
+    Vault::HttpResponseBodyString{buffer}
+  });
 }

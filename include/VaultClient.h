@@ -41,13 +41,25 @@ namespace Vault {
   typedef TinyString Algorithm;
   typedef TinyString SecretMount;
 
-  struct HttpResponseStatusCode {
-    long value;
+  struct TinyLong {
+    TinyLong() = default;
+    explicit TinyLong(const long value) : value_(value) {}
+
+    friend long operator+(const long addend, const TinyLong other) { return addend + other.value_; }
+    friend long operator+(const TinyLong other, const long addend) { return other.value_ + addend; }
+    friend long operator+(const TinyLong current, const TinyLong other) { return current.value_ + other.value_; }
+
+    friend std::string operator+(const char *other, const TinyLong current) { return other + std::to_string(current.value_); }
+
+    [[nodiscard]] long value() const { return value_; }
+
+  protected:
+    long value_;
   };
 
-  struct ConnectTimeout {
-    long value;
-  };
+  typedef TinyLong HttpResponseStatusCode;
+  typedef TinyLong ConnectTimeout;
+  typedef TinyLong TTL;
 
   namespace Algorithms {
     const static Vault::Algorithm SHA1 = Vault::Algorithm{"sha1"};
@@ -74,6 +86,7 @@ namespace Vault {
   using Parameters = std::unordered_map<std::string, std::string>;
   using HttpErrorCallback = std::function<void(std::string)>;
   using CurlSetupCallback = std::function<void(CURL *curl)>;
+  using CurlHeaderCallback = std::function<curl_slist*(curl_slist *chunk)>;
   using JsonProducer = std::function<std::string(const Parameters &parameters)>;
   using NoArgJsonProducer = std::function<std::string()>;
 
@@ -92,8 +105,9 @@ namespace Vault {
     HttpClient(Config &config, HttpErrorCallback errorCallback);
 
     [[nodiscard]] virtual std::optional<HttpResponse> get(const Url &url, const Token &token, const Namespace &ns) const;
-    [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, std::string value) const;
-    [[nodiscard]] virtual std::optional<HttpResponse> put(const Url &url, const Token &token, const Namespace &ns, std::string value) const;
+    [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, const std::string& value) const;
+    [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, const std::string& value, const CurlHeaderCallback& headerCallback) const;
+    [[nodiscard]] virtual std::optional<HttpResponse> put(const Url &url, const Token &token, const Namespace &ns, const std::string& value) const;
     [[nodiscard]] virtual std::optional<HttpResponse> del(const Url &url, const Token &token, const Namespace &ns) const;
     [[nodiscard]] virtual std::optional<HttpResponse> list(const Url &url, const Token &token, const Namespace &ns) const;
 
@@ -105,7 +119,7 @@ namespace Vault {
     long connectTimeout_;
     HttpErrorCallback errorCallback_;
 
-    [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback) const;
+    [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback) const;
   };
 
   class Config {
@@ -198,6 +212,7 @@ namespace Vault {
     static std::optional<std::string> list(const Client &client, const Url &url);
     static std::optional<std::string> post(const Client &client, const Url &url, Parameters parameters);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
+    static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
     static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> del(const Client &client, const Url &url);
     static std::optional<Vault::AuthenticationResponse> authenticate(const Client &client, const Url &url, const NoArgJsonProducer &jsonProducer);
@@ -352,6 +367,7 @@ namespace Vault {
     std::optional<std::string> leader();
     std::optional<std::string> health();
     std::optional<std::string> health(const Url &leader);
+    std::optional<std::string> wrap(const Parameters& parameters, const TTL& ttl);
 
   private:
     Url getUrl(const Path &path);
