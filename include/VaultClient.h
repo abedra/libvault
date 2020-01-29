@@ -218,14 +218,6 @@ namespace Vault {
     static std::optional<Vault::AuthenticationResponse> authenticate(const Client &client, const Url &url, const NoArgJsonProducer &jsonProducer);
   };
 
-  class Unwrap {
-  public:
-    static std::optional<SecretId> unwrap(const Client &client);
-
-  private:
-    static Vault::Url getUrl(const Client &client, const Path &path);
-  };
-
   class TokenStrategy : public AuthenticationStrategy {
   public:
     explicit TokenStrategy(Token token) : token_(std::move(token)) {}
@@ -368,6 +360,7 @@ namespace Vault {
     std::optional<std::string> health();
     std::optional<std::string> health(const Url &leader);
     std::optional<std::string> wrap(const Parameters& parameters, const TTL& ttl);
+    std::optional<SecretId> unwrap(const Client &client);
 
   private:
     Url getUrl(const Path &path);

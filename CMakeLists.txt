@@ -27,7 +27,6 @@ add_library(vault SHARED
     src/engines/KeyValue.cpp
     src/engines/Transit.cpp
     src/auth/AppRoleStrategy.cpp
-    src/system/Unwrap.cpp
     src/auth/WrappedSecretAppRoleStrategy.cpp
     src/support/Base64.cpp
     src/auth/LdapStrategy.cpp
