@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 #include <optional>
+#include <utility>
 
 #include "VaultClient.h"
 
@@ -25,13 +26,13 @@ public:
   explicit MockHttpClient(Vault::Config& config) : HttpClient(config) {}
 
   void SetResponse(std::optional<Vault::HttpResponse> response) {
-    response_ = response;
+    response_ = std::move(response);
   }
 
   [[nodiscard]] std::optional<Vault::HttpResponse> get(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
     return response_;
   }
-  [[nodiscard]] std::optional<Vault::HttpResponse> post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, std::string value) const override {
+  [[nodiscard]] std::optional<Vault::HttpResponse> post(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns, const std::string& value) const override {
     return response_;
   }
   [[nodiscard]] std::optional<Vault::HttpResponse> del(const Vault::Url& url, const Vault::Token& token, const Vault::Namespace& ns) const override {
@@ -110,13 +111,13 @@ TEST_CASE("HttpClient#is_success when response is empty")
 
 TEST_CASE("HttpClient#is_success when status code not 200")
 {
-  auto response = std::optional<Vault::HttpResponse>({403, Vault::HttpResponseBodyString{"Permission Denied"}});
+  auto response = std::optional<Vault::HttpResponse>({Vault::HttpResponseStatusCode{403}, Vault::HttpResponseBodyString{"Permission Denied"}});
   REQUIRE(!Vault::HttpClient::is_success(response));
 }
 
 TEST_CASE("HttpClient#is_success when status 200")
 {
-  auto response = std::optional<Vault::HttpResponse>({200, Vault::HttpResponseBodyString{"OK"}});
+  auto response = std::optional<Vault::HttpResponse>({Vault::HttpResponseStatusCode{200}, Vault::HttpResponseBodyString{"OK"}});
   REQUIRE(Vault::HttpClient::is_success(response));
 }
 
@@ -128,7 +129,7 @@ TEST_CASE("VaultConfig#make default")
   REQUIRE(config.getPort().value() == "8200");
   REQUIRE(config.getTls() == true);
   REQUIRE(config.getDebug() == false);
-  REQUIRE(config.getConnectTimeout().value == 10);
+  REQUIRE(config.getConnectTimeout().value() == 10);
 }
 
 TEST_CASE("VaultConfig#make options set")
@@ -147,7 +148,7 @@ TEST_CASE("VaultConfig#make options set")
   REQUIRE(config.getTls() == false);
   REQUIRE(config.getDebug() == true);
   REQUIRE(config.getVerify() == false);
-  REQUIRE(config.getConnectTimeout().value == 5);
+  REQUIRE(config.getConnectTimeout().value() == 5);
 }
 
 TEST_CASE("MockHttpClient#return mocked response")
@@ -160,23 +161,23 @@ TEST_CASE("MockHttpClient#return mocked response")
   REQUIRE(httpClient.del(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
   REQUIRE(httpClient.list(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
 
-  auto resp = Vault::HttpResponse{200, Vault::HttpResponseBodyString("success")};
+  auto resp = Vault::HttpResponse{Vault::HttpResponseStatusCode{200}, Vault::HttpResponseBodyString("success")};
   httpClient.SetResponse(resp);
   auto getResp = httpClient.get(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar"));
   REQUIRE(getResp.has_value());
-  REQUIRE(getResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(getResp->statusCode.value() == resp.statusCode.value());
   REQUIRE(getResp->body.value() == resp.body.value());
   auto postResp = httpClient.post(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar"), "baz");
   REQUIRE(postResp.has_value());
-  REQUIRE(postResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(postResp->statusCode.value() == resp.statusCode.value());
   REQUIRE(postResp->body.value() == resp.body.value());
   auto delResp = httpClient.del(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar"));
   REQUIRE(delResp.has_value());
-  REQUIRE(delResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(delResp->statusCode.value() == resp.statusCode.value());
   REQUIRE(delResp->body.value() == resp.body.value());
   auto listResp = httpClient.list(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar"));
   REQUIRE(listResp.has_value());
-  REQUIRE(listResp->statusCode.value == resp.statusCode.value);
+  REQUIRE(listResp->statusCode.value() == resp.statusCode.value());
   REQUIRE(listResp->body.value() == resp.body.value());
 }
 
