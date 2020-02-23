@@ -4,7 +4,7 @@
 #include "json.hpp"
 
 #include "VaultClient.h"
-#include "TestHelpers.h"
+#include "../TestHelpers.h"
 
 TEST_CASE("Sys Functions")
 {
