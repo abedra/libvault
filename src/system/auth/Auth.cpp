@@ -17,7 +17,7 @@ std::optional<std::string> Vault::Sys::Auth::readTuning(const Path &path) {
 }
 
 std::optional<std::string> Vault::Sys::Auth::tune(const Path &path, const Parameters &parameters) {
-  return Vault::HttpConsumer::post(client_, getUrl(path), parameters);
+  return Vault::HttpConsumer::post(client_, getUrl(Vault::Path{path + "/tune"}), parameters);
 }
 
 Vault::Url Vault::Sys::Auth::getUrl(const Vault::Path &path) {
