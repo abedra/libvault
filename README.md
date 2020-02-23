@@ -119,10 +119,10 @@ The following tables show support for each of the secret backends, auth methods,
 |-----------------------------|-------------|--------------------|
 | /sys/health                 | Yes         | Yes                |
 | /sys/leader                 | Yes         | Yes                |
+| /sys/auth                   | Yes         | Yes                |
 | /sys/wrapping               | Partial     | Partial            |
 | /sys/audit                  | No          | No                 |
 | /sys/audit-hash             | No          | No                 |
-| /sys/auth                   | No          | No                 |
 | /sys/capabilities           | No          | No                 |
 | /sys/capabilities-accessor  | No          | No                 |
 | /sys/capabilities-self      | No          | No                 |

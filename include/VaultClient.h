@@ -362,6 +362,21 @@ namespace Vault {
     std::optional<std::string> wrap(const Parameters& parameters, const TTL& ttl);
     std::optional<SecretId> unwrap(const Client &client);
 
+    class Auth {
+    public:
+      explicit Auth(const Client& client) : client_(client) {}
+
+      std::optional<std::string> list();
+      std::optional<std::string> enable(const Path& path, const Parameters& parameters);
+      std::optional<std::string> disable(const Path& path);
+      std::optional<std::string> readTuning(const Path& path);
+      std::optional<std::string> tune(const Path& path, const Parameters& parameters);
+
+    private:
+      Url getUrl(const Path& path);
+      const Client& client_;
+    };
+
   private:
     Url getUrl(const Path &path);
 
