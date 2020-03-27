@@ -42,6 +42,7 @@ set_target_properties(vault PROPERTIES
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
+target_link_libraries(vault curl)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
   target_link_libraries(vault gcov)
 endif ()
