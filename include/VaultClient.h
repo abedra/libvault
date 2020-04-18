@@ -360,7 +360,7 @@ namespace Vault {
     std::optional<std::string> health();
     std::optional<std::string> health(const Url &leader);
     std::optional<std::string> wrap(const Parameters& parameters, const TTL& ttl);
-    std::optional<SecretId> unwrap(const Client &client);
+    std::optional<std::string> unwrap(const Token& token);
 
     class Auth {
     public:

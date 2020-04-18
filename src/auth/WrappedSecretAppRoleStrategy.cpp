@@ -1,4 +1,6 @@
 #include <utility>
+
+#include "json.hpp"
 #include "VaultClient.h"
 
 Vault::WrappedSecretAppRoleStrategy::WrappedSecretAppRoleStrategy(Vault::RoleId roleId, const Vault::Token &token)
@@ -8,12 +10,14 @@ Vault::WrappedSecretAppRoleStrategy::WrappedSecretAppRoleStrategy(Vault::RoleId 
 
 std::optional<Vault::AuthenticationResponse>
 Vault::WrappedSecretAppRoleStrategy::authenticate(const Client &client) {
-  Vault::Client unauthenticated(client, token_);
   Vault::Sys sys(client);
 
-  auto secretId = sys.unwrap(unauthenticated);
+  auto unwrapped = sys.unwrap(token_);
 
-  return secretId
-         ? AppRoleStrategy(roleId_, secretId.value()).authenticate(client)
-         : std::nullopt;
+  if (unwrapped) {
+    auto secretId = Vault::SecretId{nlohmann::json::parse(unwrapped.value())["data"]["secret_id"]};
+    return AppRoleStrategy(roleId_, secretId).authenticate(client);
+  } else {
+    return std::nullopt;
+  }
 }

@@ -31,18 +31,16 @@ std::optional<std::string> Vault::Sys::wrap(const Parameters &parameters, const 
   );
 }
 
-std::optional<Vault::SecretId>
-Vault::Sys::unwrap(const Vault::Client& client) {
-  auto response = client.getHttpClient().post(
+std::optional<std::string>
+Vault::Sys::unwrap(const Vault::Token& token) {
+  auto response = client_.getHttpClient().post(
     getUrl(Vault::Path{"/wrapping/unwrap"}),
-    client.getToken(),
-    client.getNamespace(),
+    token,
+    client_.getNamespace(),
     ""
   );
 
-  if (HttpClient::is_success(response)) {
-    return Vault::SecretId{nlohmann::json::parse(response.value().body.value())["data"]["secret_id"]};
-  } else {
-    return std::nullopt;
-  }
+  return HttpClient::is_success(response)
+         ? std::optional<std::string>(response.value().body.value())
+         : std::nullopt;
 }

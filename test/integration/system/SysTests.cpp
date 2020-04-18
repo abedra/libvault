@@ -67,5 +67,26 @@ TEST_CASE("Sys Functions")
       CHECK(false);
     }
   }
+
+  SECTION("unwrap") {
+    Vault::Parameters parameters({{"foo", "bar"}});
+    auto wrapped = sys.wrap(parameters, Vault::TTL{300});
+
+    if (wrapped) {
+      auto wrap_info = nlohmann::json::parse(wrapped.value())["wrap_info"];
+      auto token = Vault::Token{wrap_info["token"]};
+      auto unwrapClient = Vault::Client(vaultClient, token);
+      auto unwrapped = sys.unwrap(token);
+
+      if (unwrapped) {
+        auto data = nlohmann::json::parse(unwrapped.value())["data"];
+        CHECK(data["foo"] == "bar");
+      } else {
+        CHECK(false);
+      }
+    } else {
+      CHECK(false);
+    }
+  }
 }
 

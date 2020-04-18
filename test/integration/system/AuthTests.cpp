@@ -1,11 +1,10 @@
-#include <catch2/catch.hpp>
 #include <optional>
-#include <VaultClient.h>
+#include <catch2/catch.hpp>
 
 #include "json.hpp"
 
-#include "VaultClient.h"
 #include "../TestHelpers.h"
+#include "VaultClient.h"
 
 TEST_CASE("Auth Functions") {
   Vault::Client vaultClient = TestHelpers::Token::login();
