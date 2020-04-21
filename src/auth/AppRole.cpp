@@ -17,16 +17,12 @@ Vault::AppRole::create(const Vault::Path& roleName, const Parameters& parameters
     getUrl(roleName),
     parameters,
     [&](const Parameters& params) {
-      nlohmann::json j;
-      j["data"] = nlohmann::json::object();
-      std::for_each(
-        parameters.begin(),
-        parameters.end(),
-        [&](std::pair<std::string, std::string> pair) {
-          j["data"][pair.first] = pair.second;
-        }
-      );
-      return j.dump();
+      nlohmann::json json;
+      json["data"] = nlohmann::json::object();
+      for (auto&& [key, value] : params) {
+        json["data"][key] = value;
+      }
+      return json.dump();
     }
   );
 }

@@ -210,7 +210,7 @@ namespace Vault {
   public:
     static std::optional<std::string> get(const Client &client, const Url &url);
     static std::optional<std::string> list(const Client &client, const Url &url);
-    static std::optional<std::string> post(const Client &client, const Url &url, Parameters parameters);
+    static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
     static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);

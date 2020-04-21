@@ -54,20 +54,16 @@ Vault::HttpConsumer::post(const Vault::Client& client,
     return std::nullopt;
   }
 
-  nlohmann::json j = nlohmann::json::object();
-  std::for_each(
-    parameters.begin(),
-    parameters.end(),
-    [&](std::pair<std::string, std::string> pair) {
-      j[pair.first] = pair.second;
-    }
-  );
+  nlohmann::json json = nlohmann::json::object();
+  for (auto&& [key, value] : parameters) {
+    json[key] = value;
+  }
 
   auto response = client.getHttpClient().post(
     url,
     client.getToken(),
     client.getNamespace(),
-    j.dump(),
+    json.dump(),
     headerCallback
   );
 
@@ -79,25 +75,21 @@ Vault::HttpConsumer::post(const Vault::Client& client,
 std::optional<std::string>
 Vault::HttpConsumer::post(const Vault::Client& client,
                           const Vault::Url& url,
-                          Parameters parameters) {
+                          const Parameters& parameters) {
   if (!client.is_authenticated()) {
     return std::nullopt;
   }
 
-  nlohmann::json j = nlohmann::json::object();
-  std::for_each(
-    parameters.begin(),
-    parameters.end(),
-    [&](std::pair<std::string, std::string> pair) {
-      j[pair.first] = pair.second;
-    }
-  );
+  nlohmann::json json = nlohmann::json::object();
+  for (auto&& [key, value] : parameters) {
+    json[key] = value;
+  }
 
   auto response = client.getHttpClient().post(
-      url,
-      client.getToken(),
-      client.getNamespace(),
-      j.dump()
+    url,
+    client.getToken(),
+    client.getNamespace(),
+    json.dump()
   );
 
   return HttpClient::is_success(response)
