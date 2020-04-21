@@ -10,8 +10,7 @@ Vault::Client::Client(Vault::Config& config, AuthenticationStrategy& authStrateg
   , httpClient_(HttpClient(config))
   , debug_(config.getDebug())
 {
-  auto result = authStrategy_.authenticate(*this);
-  if (result) {
+  if (auto result = authStrategy_.authenticate(*this)) {
     token_ = result.value().token;
   }
 }
@@ -27,8 +26,7 @@ Vault::Client::Client(Vault::Config& config,
   , httpClient_(HttpClient(config, std::move(httpErrorCallback)))
   , debug_(config.getDebug())
 {
-  auto result = authStrategy_.authenticate(*this);
-  if (result) {
+  if (auto result = authStrategy_.authenticate(*this)) {
     token_ = result.value().token;
   }
 }
