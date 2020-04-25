@@ -14,6 +14,10 @@ path "sys/wrapping/unwrap" {
   capabilities = ["read", "create", "update"]
 }
 
+path "sys/wrapping/rewrap" {
+  capabilities = ["read", "create", "update"]
+}
+
 path "auth/approle/login" {
   capabilities = ["create", "read"]
 }

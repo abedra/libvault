@@ -110,5 +110,29 @@ TEST_CASE("Sys Functions")
       CHECK(false);
     }
   }
+
+  SECTION("rewrap")
+  {
+    Vault::Parameters parameters({{"foo", "bar"}});
+    auto wrapped = sys.wrap(parameters, Vault::TTL{300});
+
+    if (wrapped) {
+      auto wrap_info = nlohmann::json::parse(wrapped.value())["wrap_info"];
+      auto token = Vault::Token{wrap_info["token"]};
+      auto rewrapped = sys.rewrap(token);
+
+      if (rewrapped) {
+        auto rewrap_info = nlohmann::json::parse(rewrapped.value())["wrap_info"];
+        CHECK(wrap_info["token"] != rewrap_info["token"]);
+        CHECK(!rewrap_info["token"].empty());
+        CHECK(!rewrap_info["accessor"].empty());
+        CHECK(rewrap_info["ttl"] == 300);
+      } else {
+        CHECK(false);
+      }
+    } else {
+      CHECK(false);
+    }
+  }
 }
 

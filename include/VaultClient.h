@@ -359,23 +359,25 @@ namespace Vault {
     std::optional<std::string> leader();
     std::optional<std::string> health();
     std::optional<std::string> health(const Url &leader);
-    std::optional<std::string> wrap(const Parameters& parameters, const TTL& ttl);
-    std::optional<std::string> unwrap(const Token& token);
-    std::optional<std::string> lookup(const Token& token);
+    std::optional<std::string> wrap(const Parameters &parameters, const TTL &ttl);
+    std::optional<std::string> unwrap(const Token &token);
+    std::optional<std::string> lookup(const Token &token);
+    std::optional<std::string> rewrap(const Token &token);
 
     class Auth {
     public:
-      explicit Auth(const Client& client) : client_(client) {}
+      explicit Auth(const Client &client) : client_(client) {}
 
       std::optional<std::string> list();
-      std::optional<std::string> enable(const Path& path, const Parameters& parameters);
-      std::optional<std::string> disable(const Path& path);
-      std::optional<std::string> readTuning(const Path& path);
-      std::optional<std::string> tune(const Path& path, const Parameters& parameters);
+      std::optional<std::string> enable(const Path &path, const Parameters &parameters);
+      std::optional<std::string> disable(const Path &path);
+      std::optional<std::string> readTuning(const Path &path);
+      std::optional<std::string> tune(const Path &path, const Parameters &parameters);
 
     private:
-      Url getUrl(const Path& path);
-      const Client& client_;
+      Url getUrl(const Path &path);
+
+      const Client &client_;
     };
 
   private:

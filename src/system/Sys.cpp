@@ -52,3 +52,11 @@ std::optional<std::string> Vault::Sys::lookup(const Token &token) {
     Parameters({{"token", token.value()}})
   );
 }
+
+std::optional<std::string> Vault::Sys::rewrap(const Token &token) {
+  return Vault::HttpConsumer::post(
+    client_,
+    getUrl(Vault::Path{"/wrapping/rewrap"}),
+    Parameters({{"token", token.value()}})
+  );
+}
