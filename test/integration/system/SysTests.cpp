@@ -68,6 +68,28 @@ TEST_CASE("Sys Functions")
     }
   }
 
+  SECTION("lookup")
+  {
+    Vault::Parameters parameters({{"foo", "bar"}});
+    auto wrapped = sys.wrap(parameters, Vault::TTL{300});
+
+    if (wrapped) {
+      auto wrap_info = nlohmann::json::parse(wrapped.value())["wrap_info"];
+      auto token = Vault::Token{wrap_info["token"]};
+      auto lookup = sys.lookup(token);
+
+      if (lookup) {
+        auto data = nlohmann::json::parse(lookup.value())["data"];
+        CHECK(data["creation_ttl"] == 300);
+        CHECK(data["creation_path"] == "sys/wrapping/wrap");
+      } else {
+        CHECK(false);
+      }
+    } else {
+      CHECK(false);
+    }
+  }
+
   SECTION("unwrap") {
     Vault::Parameters parameters({{"foo", "bar"}});
     auto wrapped = sys.wrap(parameters, Vault::TTL{300});

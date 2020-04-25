@@ -361,6 +361,7 @@ namespace Vault {
     std::optional<std::string> health(const Url &leader);
     std::optional<std::string> wrap(const Parameters& parameters, const TTL& ttl);
     std::optional<std::string> unwrap(const Token& token);
+    std::optional<std::string> lookup(const Token& token);
 
     class Auth {
     public:

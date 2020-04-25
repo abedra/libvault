@@ -44,3 +44,11 @@ Vault::Sys::unwrap(const Vault::Token& token) {
          ? std::optional<std::string>(response.value().body.value())
          : std::nullopt;
 }
+
+std::optional<std::string> Vault::Sys::lookup(const Token &token) {
+  return Vault::HttpConsumer::post(
+    client_,
+    getUrl(Vault::Path{"/wrapping/lookup"}),
+    Parameters({{"token", token.value()}})
+  );
+}
