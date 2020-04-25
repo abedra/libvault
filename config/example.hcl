@@ -29,3 +29,7 @@ path "auth/approle/role/*" {
 path "transit/*" {
   capabilities = [ "create", "read", "update", "delete", "list" ]
 }
+
+path "totp/*" {
+  capabilities = [ "create", "read", "update", "delete", "list" ]
+}

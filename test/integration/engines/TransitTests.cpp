@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include "VaultClient.h"
-#include "TestHelpers.h"
+#include "../TestHelpers.h"
 
 TEST_CASE("Transit Functions")
 {

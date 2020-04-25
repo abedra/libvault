@@ -33,7 +33,8 @@ add_library(vault SHARED
     src/domain/ConfigBuilder.cpp
     src/auth/AppRole.cpp
     src/system/Sys.cpp
-    src/system/auth/Auth.cpp)
+    src/system/auth/Auth.cpp
+    src/engines/Totp.cpp)
 
 set_target_properties(vault PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -75,11 +76,12 @@ if (ENABLE_TEST)
     add_executable(libvault_integration_test
         test/integration/TestHelpers.h
         test/integration/AppRoleTests.cpp
-        test/integration/KeyValueTests.cpp
+        test/integration/engines/KeyValueTests.cpp
         test/integration/AuthenticationStrategies.cpp
-        test/integration/TransitTests.cpp
+        test/integration/engines/TransitTests.cpp
         test/integration/system/SysTests.cpp
-        test/integration/system/AuthTests.cpp)
+        test/integration/system/AuthTests.cpp
+        test/integration/engines/TotpTests.cpp)
 
     target_include_directories(libvault_integration_test PRIVATE include)
 
