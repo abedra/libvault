@@ -33,3 +33,7 @@ path "transit/*" {
 path "totp/*" {
   capabilities = [ "create", "read", "update", "delete", "list" ]
 }
+
+path "cubbyhole/*" {
+  capabilities = [ "create", "read", "update", "delete", "list" ]
+}
