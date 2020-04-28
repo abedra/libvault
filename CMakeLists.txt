@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS_DEBUG --coverage)
 
 option(ENABLE_TEST "Enable tests?" ON)
 option(ENABLE_INTEGRATION_TEST "Enable integration tests?" OFF)
+option(LINK_CURL "Link curl library for vault" OFF)
 
 find_package(CURL)
 if (CURL_FOUND)
@@ -44,6 +45,10 @@ set_target_properties(vault PROPERTIES
 
 target_include_directories(vault PRIVATE include)
 target_include_directories(vault PRIVATE src)
+
+if(LINK_CURL)
+  target_link_libraries(vault curl)
+endif(LINK_CURL)
 if (CMAKE_BUILD_TYPE MATCHES Debug)
   target_link_libraries(vault gcov)
 endif ()
