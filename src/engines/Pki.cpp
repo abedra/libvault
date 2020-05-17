@@ -64,6 +64,10 @@ std::optional<std::string> Vault::Pki::tidy(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Vault::Path{"tidy"}), parameters);
 }
 
+std::optional<std::string> Vault::Pki::revokeCertificate(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Vault::Path{"revoke"}), parameters);
+}
+
 Vault::Url Vault::Pki::getUrl(const Path &path) {
   return client_.getUrl("/v1/pki/", path);
 }

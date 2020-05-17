@@ -25,20 +25,30 @@ TEST_CASE("Pki")
   pki.setUrls(urlParameters);
   pki.createRole(Vault::Path{"example-dot-com"}, roleParameters);
 
-  SECTION("Issue Certificate")
+  SECTION("Issue/Revoke Certificate")
   {
     Vault::Path path("example-dot-com");
     Vault::Parameters parameters({{"common_name", "www.my-website.com"}});
 
-    auto response = pki.issue(path, parameters);
+    auto issueResponse = pki.issue(path, parameters);
 
-    if (response) {
-      auto data = nlohmann::json::parse(response.value())["data"];
+    if (issueResponse) {
+      auto data = nlohmann::json::parse(issueResponse.value())["data"];
 
       CHECK(data["private_key_type"] == "rsa");
       CHECK(!data["certificate"].empty());
       CHECK(!data["private_key"].empty());
       CHECK(!data["serial_number"].empty());
+
+      Vault::Parameters revokeParameters({{"serial_number", data["serial_number"]}});
+      auto revokeResponse = pki.revokeCertificate(revokeParameters);
+
+      if (revokeResponse) {
+        auto revocation_time = nlohmann::json::parse(revokeResponse.value())["data"]["revocation_time"];
+        CHECK(revocation_time > 0);
+      } else {
+        CHECK(false);
+      }
     } else {
       CHECK(false);
     }
