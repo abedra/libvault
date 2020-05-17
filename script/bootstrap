@@ -7,6 +7,7 @@ script/install_approle
 script/install_key_value
 script/install_transit
 script/install_totp
+script/install_pki
 script/setup_approle
 script/setup_key_value
 script/setup_transit

@@ -27,13 +27,17 @@ path "auth/approle/role/*" {
 }
 
 path "transit/*" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
+  capabilities = ["create", "read", "update", "delete", "list"]
 }
 
 path "totp/*" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
+  capabilities = ["create", "read", "update", "delete", "list"]
 }
 
 path "cubbyhole/*" {
-  capabilities = [ "create", "read", "update", "delete", "list" ]
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+
+path "pki/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
 }
