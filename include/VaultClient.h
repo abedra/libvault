@@ -435,6 +435,8 @@ namespace Vault {
     std::optional<std::string> issue(const Path &path, const Parameters &parameters);
     std::optional<std::string> listCertificates();
     std::optional<std::string> readCertificate(const Path &path);
+    std::optional<std::string> readCrlConfiguration();
+    std::optional<std::string> setCrlConfiguration(const Parameters &parameters);
 
   private:
     Url getUrl(const Path &path);

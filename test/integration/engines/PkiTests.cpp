@@ -25,7 +25,7 @@ TEST_CASE("Pki")
   pki.setUrls(urlParameters);
   pki.createRole(Vault::Path{"example-dot-com"}, roleParameters);
 
-  SECTION("Issue")
+  SECTION("Issue Certificate")
   {
     Vault::Path path("example-dot-com");
     Vault::Parameters parameters({{"common_name", "www.my-website.com"}});
@@ -44,7 +44,7 @@ TEST_CASE("Pki")
     }
   }
 
-  SECTION("List")
+  SECTION("List Certificates")
   {
     auto response = pki.listCertificates();
 
@@ -63,6 +63,22 @@ TEST_CASE("Pki")
     if (response) {
       auto data = nlohmann::json::parse(response.value())["data"];
       CHECK(!data.empty());
+    } else {
+      CHECK(false);
+    }
+  }
+
+  SECTION("Read CRL Configuration")
+  {
+    Vault::Parameters parameters({{"expiry", "72h"}});
+    pki.setCrlConfiguration(parameters);
+
+    auto response = pki.readCrlConfiguration();
+
+    if (response) {
+      auto data = nlohmann::json::parse(response.value())["data"];
+      CHECK(data["disable"] == false);
+      CHECK(data["expiry"] == "72h");
     } else {
       CHECK(false);
     }

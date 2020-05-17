@@ -48,6 +48,14 @@ std::optional<std::string> Vault::Pki::listCertificates() {
   return HttpConsumer::list(client_, getUrl(Vault::Path{"certs"}));
 }
 
+std::optional<std::string> Vault::Pki::readCrlConfiguration() {
+  return HttpConsumer::get(client_, getUrl(Vault::Path{"config/crl"}));
+}
+
+std::optional<std::string> Vault::Pki::setCrlConfiguration(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Vault::Path{"config/crl"}), parameters);
+}
+
 Vault::Url Vault::Pki::getUrl(const Path &path) {
   return client_.getUrl("/v1/pki/", path);
 }
