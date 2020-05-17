@@ -438,6 +438,7 @@ namespace Vault {
     std::optional<std::string> readCrlConfiguration();
     std::optional<std::string> setCrlConfiguration(const Parameters &parameters);
     std::optional<std::string> rotateCrl();
+    std::optional<std::string> tidy(const Parameters &parameters);
 
   private:
     Url getUrl(const Path &path);
