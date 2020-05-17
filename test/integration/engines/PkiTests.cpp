@@ -50,8 +50,19 @@ TEST_CASE("Pki")
 
     if (response) {
       auto data = nlohmann::json::parse(response.value())["data"];
-      std::cout << data << std::endl;
       CHECK(data["keys"].size() > 0);
+    } else {
+      CHECK(false);
+    }
+  }
+
+  SECTION("Read Certificate")
+  {
+    auto response = pki.readCertificate(Vault::Path{"crl"});
+
+    if (response) {
+      auto data = nlohmann::json::parse(response.value())["data"];
+      CHECK(!data.empty());
     } else {
       CHECK(false);
     }

@@ -40,6 +40,10 @@ std::optional<std::string> Vault::Pki::issue(const Path &path, const Parameters 
   );
 }
 
+std::optional<std::string> Vault::Pki::readCertificate(const Path &path) {
+  return HttpConsumer::get(client_, getUrl(Vault::Path{"cert/" + path}));
+}
+
 std::optional<std::string> Vault::Pki::listCertificates() {
   return HttpConsumer::list(client_, getUrl(Vault::Path{"certs"}));
 }
