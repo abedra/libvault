@@ -31,6 +31,7 @@ namespace TestHelpers {
       Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
         .withTlsEnabled(false)
+        .withDebug(false)
         .build();
 
       return Vault::Client{config, tokenStrategy, httpErrorCallback};

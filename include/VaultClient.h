@@ -40,6 +40,7 @@ namespace Vault {
   typedef TinyString Port;
   typedef TinyString Algorithm;
   typedef TinyString SecretMount;
+  typedef TinyString RootCertificateType;
 
   struct TinyLong {
     TinyLong() = default;
@@ -67,7 +68,12 @@ namespace Vault {
     const static Vault::Algorithm SHA2_256 = Vault::Algorithm{"sha2-256"};
     const static Vault::Algorithm SHA2_384 = Vault::Algorithm{"sha2-384"};
     const static Vault::Algorithm SHA2_512 = Vault::Algorithm{"sha2-512"};
-  };
+  }
+
+  namespace RootCertificateTypes {
+    const static Vault::RootCertificateType INTERNAL = Vault::RootCertificateType("internal");
+    const static Vault::RootCertificateType EXPORTED = Vault::RootCertificateType("exported");
+  }
 
   struct HttpResponse {
     HttpResponseStatusCode statusCode{};
@@ -411,6 +417,29 @@ namespace Vault {
     std::optional<std::string> read(const Path &path);
     std::optional<std::string> list(const Path &path);
     std::optional<std::string> del(const Path &path);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
+
+  class Pki {
+  public:
+    explicit Pki(const Client &client) : client_(client) {}
+
+    std::optional<std::string> generateRoot(const RootCertificateType &rootCertificateType, const Parameters &parameters);
+    std::optional<std::string> setUrls(const Parameters &parameters);
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> issue(const Path &path, const Parameters &parameters);
+    std::optional<std::string> listCertificates();
+    std::optional<std::string> readCertificate(const Path &path);
+    std::optional<std::string> readCrlConfiguration();
+    std::optional<std::string> setCrlConfiguration(const Parameters &parameters);
+    std::optional<std::string> rotateCrl();
+    std::optional<std::string> tidy(const Parameters &parameters);
+    std::optional<std::string> revokeCertificate(const Parameters &parameters);
 
   private:
     Url getUrl(const Path &path);

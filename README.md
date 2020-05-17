@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.9.1-4a8fff)](https://img.shields.io/badge/version-0.9.1-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.10.0-4a8fff)](https://img.shields.io/badge/version-0.10.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -70,11 +70,12 @@ The following tables show support for each of the secret backends, auth methods,
 
 | Secret Backend   | Implemented | Integration Tested |
 |------------------|-------------|--------------------|
+| TOTP             | Yes         | Yes                |
+| Cubbyhole        | Yes         | Yes                |
 | Key/Value V1     | Yes         | Partial            |
 | Key/Value V2     | Yes         | Partial            |
 | Transit          | Partial     | Partial            |
-| TOTP             | Yes         | Yes                |
-| Cubbyhole        | Yes         | Yes                |
+| PKI              | Partial     | Partial            |
 | Active Directory | No          | No                 |
 | Ali Cloud        | No          | No                 |
 | AWS              | No          | No                 |
@@ -92,7 +93,6 @@ The following tables show support for each of the secret backends, auth methods,
 | KMIP             | No          | No                 |
 | Identities       | No          | No                 |
 | Nomad            | No          | No                 |
-| PKI              | No          | No                 |
 | RabbitMQ         | No          | No                 |
 | SSH              | No          | No                 |
 
