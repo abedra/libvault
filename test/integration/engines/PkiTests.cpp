@@ -43,4 +43,17 @@ TEST_CASE("Pki")
       CHECK(false);
     }
   }
+
+  SECTION("List")
+  {
+    auto response = pki.listCertificates();
+
+    if (response) {
+      auto data = nlohmann::json::parse(response.value())["data"];
+      std::cout << data << std::endl;
+      CHECK(data["keys"].size() > 0);
+    } else {
+      CHECK(false);
+    }
+  }
 }

@@ -433,6 +433,7 @@ namespace Vault {
     std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
     std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
     std::optional<std::string> issue(const Path &path, const Parameters &parameters);
+    std::optional<std::string> listCertificates();
 
   private:
     Url getUrl(const Path &path);
