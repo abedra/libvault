@@ -437,6 +437,7 @@ namespace Vault {
     std::optional<std::string> readCertificate(const Path &path);
     std::optional<std::string> readCrlConfiguration();
     std::optional<std::string> setCrlConfiguration(const Parameters &parameters);
+    std::optional<std::string> rotateCrl();
 
   private:
     Url getUrl(const Path &path);

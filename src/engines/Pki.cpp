@@ -56,6 +56,10 @@ std::optional<std::string> Vault::Pki::setCrlConfiguration(const Parameters &par
   return HttpConsumer::post(client_, getUrl(Vault::Path{"config/crl"}), parameters);
 }
 
+std::optional<std::string> Vault::Pki::rotateCrl() {
+  return HttpConsumer::get(client_, getUrl(Vault::Path{"crl/rotate"}));
+}
+
 Vault::Url Vault::Pki::getUrl(const Path &path) {
   return client_.getUrl("/v1/pki/", path);
 }

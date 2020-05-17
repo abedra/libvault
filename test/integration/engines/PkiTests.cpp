@@ -83,4 +83,16 @@ TEST_CASE("Pki")
       CHECK(false);
     }
   }
+
+  SECTION("Rotate CRL")
+  {
+    auto response = pki.rotateCrl();
+
+    if (response) {
+      auto success = nlohmann::json::parse(response.value())["data"]["success"];
+      CHECK(success == true);
+    } else {
+      CHECK(false);
+    }
+  }
 }
