@@ -37,7 +37,8 @@ add_library(vault SHARED
     src/system/auth/Auth.cpp
     src/engines/Totp.cpp
     src/engines/Cubbyhole.cpp
-    src/engines/Pki.cpp)
+    src/engines/Pki.cpp
+    src/engines/RabbitMq.cpp)
 
 set_target_properties(vault PROPERTIES
     VERSION ${PROJECT_VERSION}

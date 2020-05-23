@@ -41,3 +41,7 @@ path "cubbyhole/*" {
 path "pki/*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }
+
+path "rabbitmq/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}

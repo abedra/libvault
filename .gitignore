@@ -11,3 +11,4 @@ data
 bin
 operator.txt
 .env
+venv
