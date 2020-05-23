@@ -91,7 +91,8 @@ if (ENABLE_TEST)
         test/integration/system/AuthTests.cpp
         test/integration/engines/TotpTests.cpp
         test/integration/engines/CubbyholeTests.cpp
-        test/integration/engines/PkiTests.cpp)
+        test/integration/engines/PkiTests.cpp
+        test/integration/engines/RabbitMqTests.cpp)
 
     target_include_directories(libvault_integration_test PRIVATE include)
 
