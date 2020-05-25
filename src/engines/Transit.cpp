@@ -83,6 +83,22 @@ std::optional<std::string> Vault::Transit::backup(const Path &path) {
   return HttpConsumer::get(client_, getUrl(Path{"backup/" + path}));
 }
 
+std::optional<std::string> Vault::Transit::restore(const Path &path, const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"restore/" + path}), parameters);
+}
+
+std::optional<std::string> Vault::Transit::trim(const Path &path, const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"keys/" + path + "/trim"}), parameters);
+}
+
+std::optional<std::string> Vault::Transit::configureCache(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"cache-config"}), parameters);
+}
+
+std::optional<std::string> Vault::Transit::readCacheConfiguration() {
+  return HttpConsumer::get(client_, getUrl(Path{"cache-config"}));
+}
+
 Vault::Url Vault::Transit::getUrl(const Path& path) {
   return client_.getUrl("/v1/transit/", path);
 }

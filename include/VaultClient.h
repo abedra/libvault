@@ -337,6 +337,10 @@ namespace Vault {
     std::optional<std::string> sign(const Path &key, const Algorithm &algorithm, const Parameters &Parameters);
     std::optional<std::string> verify(const Path &key, const Algorithm &algorithm, const Parameters &Parameters);
     std::optional<std::string> backup(const Path &path);
+    std::optional<std::string> restore(const Path &path, const Parameters &parameters);
+    std::optional<std::string> trim(const Path &path, const Parameters &parameters);
+    std::optional<std::string> configureCache(const Parameters &parameters);
+    std::optional<std::string> readCacheConfiguration();
 
   private:
     Url getUrl(const Path &path);
