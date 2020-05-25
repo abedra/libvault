@@ -41,6 +41,7 @@ namespace Vault {
   typedef TinyString Algorithm;
   typedef TinyString SecretMount;
   typedef TinyString RootCertificateType;
+  typedef TinyString KeyType;
 
   struct TinyLong {
     TinyLong() = default;
@@ -73,6 +74,12 @@ namespace Vault {
   namespace RootCertificateTypes {
     const static Vault::RootCertificateType INTERNAL = Vault::RootCertificateType("internal");
     const static Vault::RootCertificateType EXPORTED = Vault::RootCertificateType("exported");
+  }
+
+  namespace KeyTypes {
+    const static Vault::KeyType ENCRYPTION_KEY = Vault::KeyType{"encryption-key"};
+    const static Vault::KeyType SIGNING_KEY = Vault::KeyType{"signing-key"};
+    const static Vault::KeyType HMAC_KEY = Vault::KeyType{"hmac-key"};
   }
 
   struct HttpResponse {
@@ -310,17 +317,26 @@ namespace Vault {
 
   class Transit {
   public:
-    explicit Transit(const Client &client);
+    explicit Transit(const Client &client) : client_(client) {}
 
+    std::optional<std::string> createKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readKey(const Path &path);
+    std::optional<std::string> deleteKey(const Path &path);
+    std::optional<std::string> listKeys();
+    std::optional<std::string> updateKeyConfiguration(const Path &path, const Parameters &parameters);
+    std::optional<std::string> rotateKey(const Path &path);
+    std::optional<std::string> exportKey(const KeyType &keyType, const Path &path, const Path &version);
     std::optional<std::string> encrypt(const Path &path, const Parameters &parameters);
     std::optional<std::string> decrypt(const Path &path, const Parameters &parameters);
-    std::optional<std::string> generate_data_key(const Path &path, const Parameters &parameters);
-    std::optional<std::string> generate_wrapped_data_key(const Path &path, const Parameters &parameters);
-    std::optional<std::string> generate_random_bytes(int num_bytes, const Parameters &parameters);
+    std::optional<std::string> rewrap(const Path &path, const Parameters &parameters);
+    std::optional<std::string> generateDataKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> generateWrappedDataKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> generateRandomBytes(int num_bytes, const Parameters &parameters);
     std::optional<std::string> hash(const Algorithm &algorithm, const Parameters &parameters);
     std::optional<std::string> hmac(const Path &key, const Algorithm &algorithm, const Parameters &Parameters);
     std::optional<std::string> sign(const Path &key, const Algorithm &algorithm, const Parameters &Parameters);
     std::optional<std::string> verify(const Path &key, const Algorithm &algorithm, const Parameters &Parameters);
+    std::optional<std::string> backup(const Path &path);
 
   private:
     Url getUrl(const Path &path);

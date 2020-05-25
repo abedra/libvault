@@ -75,7 +75,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Key/Value V1     | Yes         | Partial            |
 | Key/Value V2     | Yes         | Partial            |
 | RabbitMQ         | Yes         | Partial            |
-| Transit          | Partial     | Partial            |
+| Transit          | Yes         | Partial            |
 | PKI              | Partial     | Partial            |
 | PostgreSQL       | Partial     | Partial            |
 | Cassandra        | Partial     | No                 |

@@ -30,7 +30,7 @@ TEST_CASE("Transit Functions")
   }
 
   SECTION("Generate Data Key") {
-    auto response = transit.generate_data_key(path, {{}});
+    auto response = transit.generateDataKey(path, {{}});
 
     if (response) {
       std::string key = nlohmann::json::parse(response.value())["data"]["plaintext"];
@@ -43,7 +43,7 @@ TEST_CASE("Transit Functions")
 
   SECTION("Generate Wrapped Data Key")
   {
-    auto response = transit.generate_wrapped_data_key(path, {{}});
+    auto response = transit.generateWrappedDataKey(path, {{}});
 
     if (response) {
       std::string key = nlohmann::json::parse(response.value())["data"]["ciphertext"];
@@ -57,7 +57,7 @@ TEST_CASE("Transit Functions")
   SECTION("Random base64 bytes")
   {
     Vault::Parameters parameters({ {"format","base64"} });
-    auto response = transit.generate_random_bytes(32, parameters);
+    auto response = transit.generateRandomBytes(32, parameters);
 
     if (response) {
       std::string data = nlohmann::json::parse(response.value())["data"]["random_bytes"];
@@ -71,7 +71,7 @@ TEST_CASE("Transit Functions")
   SECTION("Random hex bytes")
   {
     Vault::Parameters parameters({ {"format","hex"} });
-    auto response = transit.generate_random_bytes(32, parameters);
+    auto response = transit.generateRandomBytes(32, parameters);
 
     if (response) {
       std::string data = nlohmann::json::parse(response.value())["data"]["random_bytes"];
