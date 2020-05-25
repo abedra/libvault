@@ -7,3 +7,5 @@ create table things(
 );
 
 insert into things(name) values ('test');
+
+select * from things;
