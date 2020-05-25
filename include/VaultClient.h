@@ -528,4 +528,32 @@ namespace Vault {
 
       const Client &client_;
   };
+
+  class SSH {
+  public:
+    explicit SSH(const Client &client) : client_(client) {}
+
+    std::optional<std::string> createKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteKey(const Path &path);
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readRole(const Path &path);
+    std::optional<std::string> listRoles();
+    std::optional<std::string> deleteRole(const Path &path);
+    std::optional<std::string> listZeroAddressRoles();
+    std::optional<std::string> configureZeroAddressRoles(const Parameters &parameters);
+    std::optional<std::string> deleteZeroAddressRole();
+    std::optional<std::string> generateCredentials(const Path &path, const Parameters &parameters);
+    std::optional<std::string> listRolesByIp(const Parameters &parameters);
+    std::optional<std::string> verifyOtp(const Parameters &parameters);
+    std::optional<std::string> configureCA(const Parameters &parameters);
+    std::optional<std::string> deleteCA();
+    std::optional<std::string> readPublicKey();
+    std::optional<std::string> signKey(const Path &path, const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }

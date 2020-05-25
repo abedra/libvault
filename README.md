@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.16.0-4a8fff)](https://img.shields.io/badge/version-0.16.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.17.0-4a8fff)](https://img.shields.io/badge/version-0.17.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -85,6 +85,7 @@ The following tables show support for each of the secret backends, auth methods,
 | MSSQL            | Yes         | No                 |
 | MySQL/MariaDB    | Yes         | No                 |
 | Oracle           | Yes         | No                 |
+| SSH              | Yes         | No                 |
 | Active Directory | No          | No                 |
 | Ali Cloud        | No          | No                 |
 | AWS              | No          | No                 |
@@ -94,7 +95,6 @@ The following tables show support for each of the secret backends, auth methods,
 | KMIP             | No          | No                 |
 | Identities       | No          | No                 |
 | Nomad            | No          | No                 |
-| SSH              | No          | No                 |
 
 | Auth Method       | Implemented | Integration Tested |
 |-------------------|-------------|--------------------|
@@ -126,7 +126,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/capabilities           | No          | No                 |
 | /sys/capabilities-accessor  | No          | No                 |
 | /sys/capabilities-self      | No          | No                 |
-| /sys/config/audititng       | No          | No                 |
+| /sys/config/auditing        | No          | No                 |
 | /sys/config/control-group   | No          | No                 |
 | /sys/config/cors            | No          | No                 |
 | /sys/config/state           | No          | No                 |
