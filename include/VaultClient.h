@@ -452,9 +452,11 @@ namespace Vault {
     explicit RabbitMq(const Client &client) : client_(client) {}
 
     std::optional<std::string> configureConnection(const Parameters &parameters);
+    std::optional<std::string> configureLease(const Parameters &parameters);
     std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
-    std::optional<std::string> generateCredentials(const Path &path);
+    std::optional<std::string> readRole(const Path &path);
     std::optional<std::string> deleteRole(const Path &path);
+    std::optional<std::string> generateCredentials(const Path &path);
 
   private:
     Url getUrl(const Path &path);

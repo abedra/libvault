@@ -74,9 +74,9 @@ The following tables show support for each of the secret backends, auth methods,
 | Cubbyhole        | Yes         | Yes                |
 | Key/Value V1     | Yes         | Partial            |
 | Key/Value V2     | Yes         | Partial            |
+| RabbitMQ         | Yes         | Partial            |
 | Transit          | Partial     | Partial            |
 | PKI              | Partial     | Partial            |
-| RabbitMQ         | Partial     | Partial            |
 | PostgreSQL       | Partial     | Partial            |
 | Cassandra        | Partial     | No                 |
 | Elasticsearch    | Partial     | No                 |
