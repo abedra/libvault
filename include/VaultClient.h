@@ -506,9 +506,22 @@ namespace Vault {
       explicit Database(const Client &client) : client_(client) {}
 
       std::optional<std::string> configureConnection(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readConnection(const Path &path);
+      std::optional<std::string> listConnections();
+      std::optional<std::string> deleteConnection(const Path &path);
+      std::optional<std::string> resetConnection(const Path &path);
+      std::optional<std::string> rotateRootCredentials(const Path &path);
       std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> listRoles();
       std::optional<std::string> deleteRole(const Path &path);
       std::optional<std::string> generateCredentials(const Path &path);
+      std::optional<std::string> createStaticRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readStaticRole(const Path &path);
+      std::optional<std::string> listStaticRoles();
+      std::optional<std::string> deleteStaticRole(const Path &path);
+      std::optional<std::string> getStaticCredentials(const Path &path);
+      std::optional<std::string> rotateStaticCredentials(const Path &path);
 
   private:
       Url getUrl(const Path &path);
