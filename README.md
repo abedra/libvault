@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.11.0-4a8fff)](https://img.shields.io/badge/version-0.11.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.12.0-4a8fff)](https://img.shields.io/badge/version-0.12.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -77,18 +77,18 @@ The following tables show support for each of the secret backends, auth methods,
 | Transit          | Partial     | Partial            |
 | PKI              | Partial     | Partial            |
 | RabbitMQ         | Partial     | Partial            |
+| PostgreSQL       | Partial     | Partial            |
+| Cassandra        | Partial     | No                 |
+| Elasticsearch    | Partial     | No                 |
+| Influxdb         | Partial     | No                 |
+| HanaDB           | Partial     | No                 |
+| MSSQL            | Partial     | No                 |
+| MySQL/MariaDB    | Partial     | No                 |
+| Oracle           | Partial     | No                 |
 | Active Directory | No          | No                 |
 | Ali Cloud        | No          | No                 |
 | AWS              | No          | No                 |
 | Azure            | No          | No                 |
-| Cassandra        | No          | No                 |
-| Elasticsearch    | No          | No                 |
-| Influxdb         | No          | No                 |
-| HanaDB           | No          | No                 |
-| MSSQL            | No          | No                 |
-| MySQL/MariaDB    | No          | No                 |
-| PostgreSQL       | No          | No                 |
-| Oracle           | No          | No                 |
 | Google Cloud     | No          | No                 |
 | Google Cloud KMS | No          | No                 |
 | KMIP             | No          | No                 |

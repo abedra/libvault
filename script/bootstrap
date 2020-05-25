@@ -9,6 +9,7 @@ script/install_transit
 script/install_totp
 script/install_pki
 script/install_rabbitmq
+script/install_database
 script/setup_approle
 script/setup_key_value
 script/setup_transit

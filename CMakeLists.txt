@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(vault VERSION 0.11.0 DESCRIPTION "Vault library for C++")
+project(vault VERSION 0.12.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -38,7 +38,8 @@ add_library(vault SHARED
     src/engines/Totp.cpp
     src/engines/Cubbyhole.cpp
     src/engines/Pki.cpp
-    src/engines/RabbitMq.cpp)
+    src/engines/RabbitMq.cpp
+    src/engines/Database.cpp)
 
 set_target_properties(vault PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -92,7 +93,8 @@ if (ENABLE_TEST)
         test/integration/engines/TotpTests.cpp
         test/integration/engines/CubbyholeTests.cpp
         test/integration/engines/PkiTests.cpp
-        test/integration/engines/RabbitMqTests.cpp)
+        test/integration/engines/RabbitMqTests.cpp
+        test/integration/engines/DatabaseTests.cpp)
 
     target_include_directories(libvault_integration_test PRIVATE include)
 

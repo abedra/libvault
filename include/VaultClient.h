@@ -461,4 +461,19 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class Database {
+  public:
+      explicit Database(const Client &client) : client_(client) {}
+
+      std::optional<std::string> configureConnection(const Path &path, const Parameters &parameters);
+      std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> generateCredentials(const Path &path);
+
+  private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+  };
 }
