@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.14.0-4a8fff)](https://img.shields.io/badge/version-0.14.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.15.0-4a8fff)](https://img.shields.io/badge/version-0.15.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -76,7 +76,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Key/Value V2     | Yes         | Partial            |
 | RabbitMQ         | Yes         | Partial            |
 | Transit          | Yes         | Partial            |
-| PKI              | Partial     | Partial            |
+| PKI              | Yes         | Partial            |
 | PostgreSQL       | Partial     | Partial            |
 | Cassandra        | Partial     | No                 |
 | Elasticsearch    | Partial     | No                 |

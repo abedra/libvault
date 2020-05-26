@@ -448,16 +448,33 @@ namespace Vault {
   public:
     explicit Pki(const Client &client) : client_(client) {}
 
+    std::optional<std::string> readCACertificate();
+    std::optional<std::string> readCACertificateChain();
     std::optional<std::string> generateRoot(const RootCertificateType &rootCertificateType, const Parameters &parameters);
+    std::optional<std::string> deleteRoot();
     std::optional<std::string> setUrls(const Parameters &parameters);
     std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
     std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readRole(const Path &path);
+    std::optional<std::string> listRoles();
+    std::optional<std::string> deleteRole(const Path &path);
     std::optional<std::string> issue(const Path &path, const Parameters &parameters);
     std::optional<std::string> listCertificates();
     std::optional<std::string> readCertificate(const Path &path);
+    std::optional<std::string> configureCA(const Parameters &parameters);
     std::optional<std::string> readCrlConfiguration();
     std::optional<std::string> setCrlConfiguration(const Parameters &parameters);
+    std::optional<std::string> readURLs();
+    std::optional<std::string> setURLs(const Parameters &parameters);
+    std::optional<std::string> readCRL();
     std::optional<std::string> rotateCrl();
+    std::optional<std::string> generateIntermediate(const KeyType &keyType, const Parameters &parameters);
+    std::optional<std::string> signIntermediate(const Parameters &parameters);
+    std::optional<std::string> setSignedIntermediate(const Parameters &parameters);
+    std::optional<std::string> signSelfIssued(const Parameters &parameters);
+    std::optional<std::string> sign(const Path &path, const Parameters &parameters);
+    std::optional<std::string> signVerbatim(const Path &path, const Parameters &parameters);
+    std::optional<std::string> generateCertificate(const Path &path, const Parameters &parameters);
     std::optional<std::string> tidy(const Parameters &parameters);
     std::optional<std::string> revokeCertificate(const Parameters &parameters);
 
