@@ -31,7 +31,6 @@ TEST_CASE("PostgreSQL") {
 
         if (response) {
             auto data = nlohmann::json::parse(response.value())["data"];
-            std::cout << data << std::endl;
             CHECK(!data["username"].empty());
             CHECK(!data["password"].empty());
         } else {
