@@ -13,8 +13,8 @@ std::string Vault::Base64::encode(unsigned char const* bytes_to_encode, unsigned
   std::string ret;
   int i = 0;
   int j = 0;
-  unsigned char char_array_3[3];
-  unsigned char char_array_4[4];
+  unsigned char char_array_3[3] = {0};
+  unsigned char char_array_4[4] = {0};
 
   while (in_len--) {
     char_array_3[i++] = *(bytes_to_encode++);
