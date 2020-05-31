@@ -557,4 +557,32 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class ActiveDirectory {
+  public:
+    explicit ActiveDirectory(const Client &client) : client_(client) {}
+
+    std::optional<std::string> createConfig(const Parameters &parameters);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> deleteConfig();
+    std::optional<std::string> readRoles();
+    std::optional<std::string> readRole(const Path &path);
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteRole(const Path &path);
+    std::optional<std::string> readCredentials(const Path &path);
+    std::optional<std::string> readServiceAccounts();
+    std::optional<std::string> readServiceAccount(const Path &path);
+    std::optional<std::string> createServiceAccount(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteServiceAccount(const Path &path);
+    std::optional<std::string> checkout(const Path &path, const Parameters &parameters);
+    std::optional<std::string> checkin(const Path &path, const Parameters &parameters);
+    std::optional<std::string> manageCheckin(const Path &path, const Parameters &parameters);
+    std::optional<std::string> status(const Path &path);
+    std::optional<std::string> rotateRootCredentials();
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }

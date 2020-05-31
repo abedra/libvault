@@ -41,7 +41,8 @@ add_library(vault SHARED
     src/engines/Pki.cpp
     src/engines/RabbitMq.cpp
     src/engines/Database.cpp
-    src/engines/SSH.cpp)
+    src/engines/SSH.cpp
+    src/engines/ActiveDirectory.cpp)
 
 set_target_properties(vault PROPERTIES
     VERSION ${PROJECT_VERSION}
