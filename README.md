@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.18.0-4a8fff)](https://img.shields.io/badge/version-0.18.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.19.0-4a8fff)](https://img.shields.io/badge/version-0.19.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -86,8 +86,8 @@ The following tables show support for each of the secret backends, auth methods,
 | MySQL/MariaDB    | Yes         | No                 |
 | Oracle           | Yes         | No                 |
 | SSH              | Yes         | No                 |
-| Active Directory | No          | No                 |
-| Ali Cloud        | No          | No                 |
+| Active Directory | Yes         | No                 |
+| Ali Cloud        | Yes         | No                 |
 | AWS              | No          | No                 |
 | Azure            | No          | No                 |
 | Google Cloud     | No          | No                 |
@@ -101,7 +101,7 @@ The following tables show support for each of the secret backends, auth methods,
 | AppRole           | Yes         | Yes                |
 | LDAP              | Partial     | No                 |
 | Tokens            | Partial     | Partial            |
-| AliCloud          | No          | No                 |
+| AliCloud          | Yes         | No                 |
 | AWS               | No          | No                 |
 | Azure             | No          | No                 |
 | Cloud Foundry     | No          | No                 |
