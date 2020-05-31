@@ -60,7 +60,8 @@ std::string Vault::Base64::decode(std::string const& encoded_string) {
   int i = 0;
   int j = 0;
   int in_ = 0;
-  unsigned char char_array_4[4], char_array_3[3];
+  unsigned char char_array_4[4] = {0};
+  unsigned char char_array_3[3] = {0};
   std::string ret;
 
   while (in_len-- && ( encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
