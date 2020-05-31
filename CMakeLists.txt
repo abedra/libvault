@@ -23,26 +23,28 @@ include_directories("${CMAKE_SOURCE_DIR}/lib")
 
 add_library(vault SHARED
     include/VaultClient.h
-    src/support/HttpConsumer.cpp
-    src/domain/VaultClient.cpp
-    src/support/HttpClient.cpp
-    src/engines/KeyValue.cpp
-    src/engines/Transit.cpp
-    src/auth/AppRoleStrategy.cpp
-    src/auth/WrappedSecretAppRoleStrategy.cpp
-    src/support/Base64.cpp
-    src/auth/LdapStrategy.cpp
-    src/domain/ConfigBuilder.cpp
+    src/auth/AliCloud.cpp
     src/auth/AppRole.cpp
-    src/system/Sys.cpp
+    src/auth/AppRoleStrategy.cpp
     src/system/auth/Auth.cpp
-    src/engines/Totp.cpp
+    src/auth/LdapStrategy.cpp
+    src/auth/WrappedSecretAppRoleStrategy.cpp
+    src/domain/VaultClient.cpp
+    src/domain/ConfigBuilder.cpp
+    src/engines/ActiveDirectory.cpp
+    src/engines/AliCloud.cpp
     src/engines/Cubbyhole.cpp
+    src/engines/Database.cpp
+    src/engines/KeyValue.cpp
     src/engines/Pki.cpp
     src/engines/RabbitMq.cpp
-    src/engines/Database.cpp
     src/engines/SSH.cpp
-    src/engines/ActiveDirectory.cpp)
+    src/engines/Totp.cpp
+    src/engines/Transit.cpp
+    src/support/Base64.cpp
+    src/support/HttpClient.cpp
+    src/support/HttpConsumer.cpp
+    src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
     VERSION ${PROJECT_VERSION}

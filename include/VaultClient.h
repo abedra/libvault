@@ -585,4 +585,41 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class AliCloud {
+    class Auth {
+    public:
+      explicit Auth(const Client &client) : client_(client) {}
+
+      std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> listRoles();
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> login(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+
+    };
+
+    class Secrets {
+    public:
+      explicit Secrets(const Client &client) : client_(client) {}
+
+      std::optional<std::string> readConfig();
+      std::optional<std::string> createConfig(const Parameters &parameters);
+      std::optional<std::string> listRoles();
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> generateCredentials(const Path &path);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+  };
 }
