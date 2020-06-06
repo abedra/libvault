@@ -1,3 +1,7 @@
+#pragma GCC diagnostic push
+#pragma ide diagnostic ignored "UnusedStructInspection"
+#pragma ide diagnostic ignored "cert-err58-cpp"
+#pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
 #pragma once
 
 #include <unordered_map>
@@ -140,9 +144,9 @@ namespace Vault {
   public:
     friend class ConfigBuilder;
 
-    bool getTls() { return tls_; }
-    bool getDebug() { return debug_; }
-    bool getVerify() { return verify_; }
+    [[nodiscard]] bool getTls() const { return tls_; }
+    [[nodiscard]] bool getDebug() const { return debug_; }
+    [[nodiscard]] bool getVerify() const { return verify_; }
     ConnectTimeout getConnectTimeout() { return connectTimeout_; }
     Host getHost() { return host_; }
     Port getPort() { return port_; }
@@ -382,7 +386,7 @@ namespace Vault {
 
   class Sys {
   public:
-    explicit Sys(const Client &client);
+    explicit Sys(const Client &client) : client_(client) {}
 
     std::optional<std::string> leader();
     std::optional<std::string> health();
@@ -638,3 +642,5 @@ namespace Vault {
     };
   };
 }
+
+#pragma GCC diagnostic pop

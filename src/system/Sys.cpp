@@ -1,8 +1,5 @@
 #include <iostream>
 #include "VaultClient.h"
-#include "json.hpp"
-
-Vault::Sys::Sys(const Vault::Client &client) : client_(client) { }
 
 std::optional<std::string> Vault::Sys::health() {
   return Vault::HttpConsumer::get(client_, getUrl(Vault::Path{"/health"}));
