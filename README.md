@@ -121,7 +121,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/leader                 | Yes         | Yes                |
 | /sys/auth                   | Yes         | Yes                |
 | /sys/wrapping               | Yes         | Yes                |
-| /sys/audit                  | No          | No                 |
+| /sys/audit                  | Yes         | No                 |
 | /sys/audit-hash             | No          | No                 |
 | /sys/capabilities           | No          | No                 |
 | /sys/capabilities-accessor  | No          | No                 |
