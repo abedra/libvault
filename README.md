@@ -122,7 +122,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/auth                   | Yes         | Yes                |
 | /sys/wrapping               | Yes         | Yes                |
 | /sys/audit                  | Yes         | No                 |
-| /sys/audit-hash             | No          | No                 |
+| /sys/audit-hash             | Yes         | No                 |
 | /sys/capabilities           | No          | No                 |
 | /sys/capabilities-accessor  | No          | No                 |
 | /sys/capabilities-self      | No          | No                 |

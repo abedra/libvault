@@ -395,6 +395,7 @@ namespace Vault {
     std::optional<std::string> unwrap(const Token &token);
     std::optional<std::string> lookup(const Token &token);
     std::optional<std::string> rewrap(const Token &token);
+    std::optional<std::string> auditHash(const Path &path, const Parameters &parameters);
 
     class Auth {
     public:
