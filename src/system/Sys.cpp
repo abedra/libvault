@@ -58,6 +58,18 @@ std::optional<std::string> Vault::Sys::auditHash(const Path &path, const Paramet
   return HttpConsumer::post(client_, getUrl(Path{"audit-hash/" + path}), parameters);
 }
 
+std::optional<std::string> Vault::Sys::capabilities(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"capabilities"}), parameters);
+}
+
+std::optional<std::string> Vault::Sys::capabilitiesAccessor(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"capabilities-accessor"}), parameters);
+}
+
+std::optional<std::string> Vault::Sys::capabilitiesSelf(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"capabilities-self"}), parameters);
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

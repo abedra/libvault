@@ -123,9 +123,9 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/wrapping               | Yes         | Yes                |
 | /sys/audit                  | Yes         | No                 |
 | /sys/audit-hash             | Yes         | No                 |
-| /sys/capabilities           | No          | No                 |
-| /sys/capabilities-accessor  | No          | No                 |
-| /sys/capabilities-self      | No          | No                 |
+| /sys/capabilities           | Yes         | No                 |
+| /sys/capabilities-accessor  | Yes         | No                 |
+| /sys/capabilities-self      | Yes         | No                 |
 | /sys/config/auditing        | No          | No                 |
 | /sys/config/control-group   | No          | No                 |
 | /sys/config/cors            | No          | No                 |
