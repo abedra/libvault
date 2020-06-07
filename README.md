@@ -131,7 +131,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/config/cors            | Yes         | No                 |
 | /sys/config/state           | Yes         | No                 |
 | /sys/config/ui              | Yes         | No                 |
-| /sys/control-group          | No          | No                 |
+| /sys/control-group          | Yes         | No                 |
 | /sys/generate-root          | No          | No                 |
 | /sys/host-info              | No          | No                 |
 | /sys/init                   | No          | No                 |

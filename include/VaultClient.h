@@ -451,12 +451,14 @@ namespace Vault {
     public:
       explicit ControlGroup(const Client &client) : client_(client) {}
 
-      std::optional<std::string> read(const Path &path);
-      std::optional<std::string> configure(const Path &path, const Parameters &parameters);
-      std::optional<std::string> del(const Path &path);
+      std::optional<std::string> read();
+      std::optional<std::string> configure(const Parameters &parameters);
+      std::optional<std::string> del();
+      std::optional<std::string> authorize(const Parameters &parameters);
+      std::optional<std::string> request(const Parameters &parameters);
 
     private:
-      Url getUrl();
+      Url getUrl(const Path &path);
 
       const Client &client_;
     };
