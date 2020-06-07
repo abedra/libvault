@@ -45,6 +45,7 @@ add_library(vault SHARED
     src/support/HttpClient.cpp
     src/support/HttpConsumer.cpp
     src/system/audit/Audit.cpp
+    src/system/auditing/Auditing.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
