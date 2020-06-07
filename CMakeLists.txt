@@ -47,6 +47,7 @@ add_library(vault SHARED
     src/system/audit/Audit.cpp
     src/system/auditing/Auditing.cpp
     src/system/control_group/ControlGroup.cpp
+    src/system/cors/Cors.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES

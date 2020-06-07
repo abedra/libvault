@@ -460,6 +460,20 @@ namespace Vault {
       const Client &client_;
     };
 
+    class Cors {
+    public:
+      explicit Cors(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read(const Path &path);
+      std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+      std::optional<std::string> del(const Path &path);
+
+    private:
+      Url getUrl();
+
+      const Client &client_;
+    };
+
   private:
     Url getUrl(const Path &path);
 
