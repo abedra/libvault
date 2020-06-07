@@ -127,7 +127,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/capabilities-accessor  | Yes         | No                 |
 | /sys/capabilities-self      | Yes         | No                 |
 | /sys/config/auditing        | Yes         | No                 |
-| /sys/config/control-group   | No          | No                 |
+| /sys/config/control-group   | Yes         | No                 |
 | /sys/config/cors            | No          | No                 |
 | /sys/config/state           | No          | No                 |
 | /sys/config/ui              | No          | No                 |
