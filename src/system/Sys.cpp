@@ -70,6 +70,10 @@ std::optional<std::string> Vault::Sys::capabilitiesSelf(const Parameters &parame
   return HttpConsumer::post(client_, getUrl(Path{"capabilities-self"}), parameters);
 }
 
+std::optional<std::string> Vault::Sys::state() {
+  return HttpConsumer::get(client_, getUrl(Path{"config/state/sanitized"}));
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

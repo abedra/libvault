@@ -399,6 +399,7 @@ namespace Vault {
     std::optional<std::string> capabilities(const Parameters &parameters);
     std::optional<std::string> capabilitiesAccessor(const Parameters &parameters);
     std::optional<std::string> capabilitiesSelf(const Parameters &parameters);
+    std::optional<std::string> state();
 
     class Auth {
     public:
@@ -470,6 +471,21 @@ namespace Vault {
 
     private:
       Url getUrl();
+
+      const Client &client_;
+    };
+
+    class UI {
+    public:
+      explicit UI(const Client &client) : client_(client) {}
+
+      std::optional<std::string> list();
+      std::optional<std::string> read(const Path &path);
+      std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+      std::optional<std::string> del(const Path &path);
+
+    private:
+      Url getUrl(const Path &path);
 
       const Client &client_;
     };
