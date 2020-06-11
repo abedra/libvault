@@ -1,3 +1,7 @@
+#pragma GCC diagnostic push
+#pragma ide diagnostic ignored "UnusedStructInspection"
+#pragma ide diagnostic ignored "cert-err58-cpp"
+#pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
 #pragma once
 
 #include <unordered_map>
@@ -140,9 +144,9 @@ namespace Vault {
   public:
     friend class ConfigBuilder;
 
-    bool getTls() { return tls_; }
-    bool getDebug() { return debug_; }
-    bool getVerify() { return verify_; }
+    [[nodiscard]] bool getTls() const { return tls_; }
+    [[nodiscard]] bool getDebug() const { return debug_; }
+    [[nodiscard]] bool getVerify() const { return verify_; }
     ConnectTimeout getConnectTimeout() { return connectTimeout_; }
     Host getHost() { return host_; }
     Port getPort() { return port_; }
@@ -227,6 +231,7 @@ namespace Vault {
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
+    static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters);
     static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> del(const Client &client, const Url &url);
     static std::optional<Vault::AuthenticationResponse> authenticate(const Client &client, const Url &url, const NoArgJsonProducer &jsonProducer);
@@ -381,7 +386,7 @@ namespace Vault {
 
   class Sys {
   public:
-    explicit Sys(const Client &client);
+    explicit Sys(const Client &client) : client_(client) {}
 
     std::optional<std::string> leader();
     std::optional<std::string> health();
@@ -390,6 +395,11 @@ namespace Vault {
     std::optional<std::string> unwrap(const Token &token);
     std::optional<std::string> lookup(const Token &token);
     std::optional<std::string> rewrap(const Token &token);
+    std::optional<std::string> auditHash(const Path &path, const Parameters &parameters);
+    std::optional<std::string> capabilities(const Parameters &parameters);
+    std::optional<std::string> capabilitiesAccessor(const Parameters &parameters);
+    std::optional<std::string> capabilitiesSelf(const Parameters &parameters);
+    std::optional<std::string> state();
 
     class Auth {
     public:
@@ -400,6 +410,81 @@ namespace Vault {
       std::optional<std::string> disable(const Path &path);
       std::optional<std::string> readTuning(const Path &path);
       std::optional<std::string> tune(const Path &path, const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class Audit {
+    public:
+      explicit Audit(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read();
+      std::optional<std::string> enable(const Path &path, const Parameters &parameters);
+      std::optional<std::string> disable(const Path &path);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class Auditing {
+    public:
+      explicit Auditing(const Client &client) : client_(client) {}
+
+      std::optional<std::string> list();
+      std::optional<std::string> read(const Path &path);
+      std::optional<std::string> create(const Path &path, const Parameters &parameters);
+      std::optional<std::string> update(const Path &path, const Parameters &parameters);
+      std::optional<std::string> del(const Path &path);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class ControlGroup {
+    public:
+      explicit ControlGroup(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read();
+      std::optional<std::string> configure(const Parameters &parameters);
+      std::optional<std::string> del();
+      std::optional<std::string> authorize(const Parameters &parameters);
+      std::optional<std::string> request(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class Cors {
+    public:
+      explicit Cors(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read(const Path &path);
+      std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+      std::optional<std::string> del(const Path &path);
+
+    private:
+      Url getUrl();
+
+      const Client &client_;
+    };
+
+    class UI {
+    public:
+      explicit UI(const Client &client) : client_(client) {}
+
+      std::optional<std::string> list();
+      std::optional<std::string> read(const Path &path);
+      std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+      std::optional<std::string> del(const Path &path);
 
     private:
       Url getUrl(const Path &path);
@@ -557,4 +642,71 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class ActiveDirectory {
+  public:
+    explicit ActiveDirectory(const Client &client) : client_(client) {}
+
+    std::optional<std::string> createConfig(const Parameters &parameters);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> deleteConfig();
+    std::optional<std::string> readRoles();
+    std::optional<std::string> readRole(const Path &path);
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteRole(const Path &path);
+    std::optional<std::string> readCredentials(const Path &path);
+    std::optional<std::string> readServiceAccounts();
+    std::optional<std::string> readServiceAccount(const Path &path);
+    std::optional<std::string> createServiceAccount(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteServiceAccount(const Path &path);
+    std::optional<std::string> checkout(const Path &path, const Parameters &parameters);
+    std::optional<std::string> checkin(const Path &path, const Parameters &parameters);
+    std::optional<std::string> manageCheckin(const Path &path, const Parameters &parameters);
+    std::optional<std::string> status(const Path &path);
+    std::optional<std::string> rotateRootCredentials();
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
+
+  class AliCloud {
+    class Auth {
+    public:
+      explicit Auth(const Client &client) : client_(client) {}
+
+      std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> listRoles();
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> login(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+
+    };
+
+    class Secrets {
+    public:
+      explicit Secrets(const Client &client) : client_(client) {}
+
+      std::optional<std::string> readConfig();
+      std::optional<std::string> createConfig(const Parameters &parameters);
+      std::optional<std::string> listRoles();
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> generateCredentials(const Path &path);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+  };
 }
+
+#pragma GCC diagnostic pop

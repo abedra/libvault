@@ -121,7 +121,6 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
                                   const Vault::CurlSetupCallback& setupCallback,
                                   const Vault::CurlHeaderCallback& curlHeaderCallback) const {
   CURL *curl;
-  CURLcode res = CURLE_SEND_ERROR;
   std::string buffer;
   long response_code = 0;
 
@@ -158,8 +157,7 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
 
     setupCallback(curl);
 
-    res = curl_easy_perform(curl);
-
+    CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
       errorCallback_(curl_easy_strerror(res));
 

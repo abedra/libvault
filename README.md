@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.17.0-4a8fff)](https://img.shields.io/badge/version-0.17.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.23.0-4a8fff)](https://img.shields.io/badge/version-0.23.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -86,8 +86,8 @@ The following tables show support for each of the secret backends, auth methods,
 | MySQL/MariaDB    | Yes         | No                 |
 | Oracle           | Yes         | No                 |
 | SSH              | Yes         | No                 |
-| Active Directory | No          | No                 |
-| Ali Cloud        | No          | No                 |
+| Active Directory | Yes         | No                 |
+| Ali Cloud        | Yes         | No                 |
 | AWS              | No          | No                 |
 | Azure            | No          | No                 |
 | Google Cloud     | No          | No                 |
@@ -101,7 +101,7 @@ The following tables show support for each of the secret backends, auth methods,
 | AppRole           | Yes         | Yes                |
 | LDAP              | Partial     | No                 |
 | Tokens            | Partial     | Partial            |
-| AliCloud          | No          | No                 |
+| AliCloud          | Yes         | No                 |
 | AWS               | No          | No                 |
 | Azure             | No          | No                 |
 | Cloud Foundry     | No          | No                 |
@@ -121,17 +121,17 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/leader                 | Yes         | Yes                |
 | /sys/auth                   | Yes         | Yes                |
 | /sys/wrapping               | Yes         | Yes                |
-| /sys/audit                  | No          | No                 |
-| /sys/audit-hash             | No          | No                 |
-| /sys/capabilities           | No          | No                 |
-| /sys/capabilities-accessor  | No          | No                 |
-| /sys/capabilities-self      | No          | No                 |
-| /sys/config/auditing        | No          | No                 |
-| /sys/config/control-group   | No          | No                 |
-| /sys/config/cors            | No          | No                 |
-| /sys/config/state           | No          | No                 |
-| /sys/config/ui              | No          | No                 |
-| /sys/control-group          | No          | No                 |
+| /sys/audit                  | Yes         | No                 |
+| /sys/audit-hash             | Yes         | No                 |
+| /sys/capabilities           | Yes         | No                 |
+| /sys/capabilities-accessor  | Yes         | No                 |
+| /sys/capabilities-self      | Yes         | No                 |
+| /sys/config/auditing        | Yes         | No                 |
+| /sys/config/control-group   | Yes         | No                 |
+| /sys/config/cors            | Yes         | No                 |
+| /sys/config/state           | Yes         | No                 |
+| /sys/config/ui              | Yes         | No                 |
+| /sys/control-group          | Yes         | No                 |
 | /sys/generate-root          | No          | No                 |
 | /sys/host-info              | No          | No                 |
 | /sys/init                   | No          | No                 |
