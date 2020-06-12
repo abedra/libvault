@@ -121,6 +121,7 @@ namespace Vault {
     explicit HttpClient(Config &config);
 
     HttpClient(Config &config, HttpErrorCallback errorCallback);
+    virtual ~HttpClient() {}
 
     [[nodiscard]] virtual std::optional<HttpResponse> get(const Url &url, const Token &token, const Namespace &ns) const;
     [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, const std::string& value) const;
@@ -193,6 +194,7 @@ namespace Vault {
 
   class AuthenticationStrategy {
   public:
+    virtual ~AuthenticationStrategy() {}
     virtual std::optional<AuthenticationResponse> authenticate(const Client &client) = 0;
   };
 
@@ -201,6 +203,7 @@ namespace Vault {
     Client(const Client &other, Token token);
     Client(Config &config, AuthenticationStrategy &authStrategy);
     Client(Config &config, AuthenticationStrategy &authStrategy, HttpErrorCallback httpErrorCallback);
+    virtual ~Client() {}
 
     [[nodiscard]] virtual bool is_authenticated() const { return !token_.empty(); }
     [[nodiscard]] virtual Url getUrl(const std::string &base, const Path &path) const;
