@@ -11,14 +11,16 @@ Vault::HttpClient::HttpClient(Vault::Config& config)
   : debug_(config.getDebug())
   , verify_(config.getVerify())
   , connectTimeout_(config.getConnectTimeout().value())
+  , caBundle_(config.getCaBundle())
   , errorCallback_([&](const std::string& err){})
 {}
 
-Vault::HttpClient::HttpClient(Vault::Config& config, HttpErrorCallback errorCallback) :
-  debug_(config.getDebug()),
-  verify_(config.getVerify()),
-  connectTimeout_(config.getConnectTimeout().value()),
-  errorCallback_(std::move(errorCallback))
+Vault::HttpClient::HttpClient(Vault::Config& config, HttpErrorCallback errorCallback)
+  : debug_(config.getDebug())
+  , verify_(config.getVerify())
+  , connectTimeout_(config.getConnectTimeout().value())
+  , caBundle_(config.getCaBundle())
+  , errorCallback_(std::move(errorCallback))
 {}
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
@@ -140,6 +142,9 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     chunk = curlHeaderCallback(chunk);
 
     if (verify_) {
+      if (!caBundle_.empty()) {
+        curl_easy_setopt(curl, CURLOPT_CAINFO, caBundle_.u8string().c_str());
+      }
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
     } else {
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);

@@ -35,6 +35,11 @@ Vault::ConfigBuilder& Vault::ConfigBuilder::withConnectTimeout(Vault::ConnectTim
   return *this;
 }
 
+Vault::ConfigBuilder& Vault::ConfigBuilder::withCaBundle(const std::filesystem::path &caBundle) {
+  config_.caBundle_ = caBundle;
+  return *this;
+}
+
 Vault::Config& Vault::ConfigBuilder::build() {
   return config_;
 }

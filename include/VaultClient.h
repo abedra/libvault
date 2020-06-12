@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 #include <curl/curl.h>
+#include <filesystem>
 #include <functional>
 #include <optional>
 #include <ostream>
@@ -136,6 +137,7 @@ namespace Vault {
     bool debug_;
     bool verify_;
     long connectTimeout_;
+    std::filesystem::path caBundle_;
     HttpErrorCallback errorCallback_;
 
     [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback) const;
@@ -152,6 +154,7 @@ namespace Vault {
     Host getHost() { return host_; }
     Port getPort() { return port_; }
     Namespace getNamespace() { return ns_; }
+    std::filesystem::path getCaBundle() { return caBundle_; }
 
   private:
     Config()
@@ -162,6 +165,7 @@ namespace Vault {
       , host_(Host{"localhost"})
       , port_(Port{"8200"})
       , ns_("")
+      , caBundle_()
       {}
 
     bool tls_;
@@ -171,6 +175,7 @@ namespace Vault {
     Host host_;
     Port port_;
     Namespace ns_;
+    std::filesystem::path caBundle_;
   };
 
   class ConfigBuilder {
@@ -186,6 +191,7 @@ namespace Vault {
     ConfigBuilder &withPort(Port port);
     ConfigBuilder &withNamespace(Namespace ns);
     ConfigBuilder &withConnectTimeout(ConnectTimeout timeout);
+    ConfigBuilder &withCaBundle(const std::filesystem::path &caBundle);
     Config &build();
 
   private:
@@ -215,6 +221,7 @@ namespace Vault {
     [[nodiscard]] virtual Namespace getNamespace() const { return namespace_; }
     [[nodiscard]] virtual const HttpClient &getHttpClient() const { return httpClient_; }
     [[nodiscard]] virtual AuthenticationStrategy &getAuthenticationStrategy() const { return authStrategy_; }
+    [[nodiscard]] virtual std::filesystem::path getCaBundle() const { return caBundle_; }
 
   private:
     bool debug_;
@@ -225,6 +232,7 @@ namespace Vault {
     Namespace namespace_;
     HttpClient httpClient_;
     AuthenticationStrategy &authStrategy_;
+    std::filesystem::path caBundle_;
   };
 
   class HttpConsumer {
