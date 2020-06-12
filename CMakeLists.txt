@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(vault VERSION 0.23.0 DESCRIPTION "Vault library for C++")
+project(vault VERSION 0.24.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,6 +9,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(ENABLE_TEST "Enable tests?" ON)
 option(ENABLE_INTEGRATION_TEST "Enable integration tests?" OFF)
+option(ENABLE_COVERAGE "Enable gcov code coverage" OFF)
 option(LINK_CURL "Link curl library for vault" OFF)
 
 find_package(CURL)
@@ -62,7 +63,8 @@ target_include_directories(vault PRIVATE src)
 if(LINK_CURL)
   target_link_libraries(vault curl)
 endif(LINK_CURL)
-if (CMAKE_BUILD_TYPE MATCHES Debug)
+
+if (ENABLE_COVERAGE)
   target_link_libraries(vault gcov)
 endif ()
 
