@@ -1,4 +1,4 @@
-distro: trusty
+distro: bionic
 sudo: true
 language: cpp
 compiler:
@@ -8,7 +8,7 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-7
+      - g++-8
 script:
   - git clone https://github.com/catchorg/Catch2.git
   - cd Catch2
@@ -16,4 +16,4 @@ script:
   - cmake --build build/
   - cd build && sudo make install
   - cd ../..
-  - CXX=/usr/bin/g++-7 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make && make test
+  - CXX=/usr/bin/g++-8 && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_INSTALL_DIR=. ../ && make && make test
