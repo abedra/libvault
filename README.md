@@ -4,13 +4,13 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.24.0-4a8fff)](https://img.shields.io/badge/version-0.24.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.25.0-4a8fff)](https://img.shields.io/badge/version-0.25.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
 ## C++ 17
 
-This project assumes a C++ 17 capable compiler. This includes GCC 7 or higher, and clang 3.8 or higher. Support for lower standards versions of C++ will not be accepted due to inconsistent implementations of optional.
+This project assumes a C++ 17 capable compiler. This includes GCC 8 or higher, and clang 3.8 or higher. Support for lower standards versions of C++ will not be accepted due to inconsistent implementations of optional.
 
 ## Dependencies
 
