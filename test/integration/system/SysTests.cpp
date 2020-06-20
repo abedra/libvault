@@ -27,7 +27,7 @@ TEST_CASE("Sys Functions")
 
   SECTION("health with supplied leader")
   {
-    auto response = sys.health(Vault::Path{"http://localhost:8200"});
+    auto response = sys.health(Vault::Url{"http://localhost:8200"});
 
     if (response) {
       auto keys = nlohmann::json::parse(response.value());
