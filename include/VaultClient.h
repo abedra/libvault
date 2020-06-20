@@ -540,6 +540,24 @@ namespace Vault {
       const Client &client_;
     };
 
+    class Leases {
+    public:
+      explicit Leases(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read(const Parameters &parameters);
+      std::optional<std::string> list(const Path &path);
+      std::optional<std::string> renew(const Parameters &parameters);
+      std::optional<std::string> revoke(const Parameters &parameters);
+      std::optional<std::string> revokeForce(const Path &path, const Parameters &parameters);
+      std::optional<std::string> revokePrefix(const Path &path, const Parameters &parameters);
+      std::optional<std::string> tidy(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
   private:
     Url getUrl(const Path &path);
 

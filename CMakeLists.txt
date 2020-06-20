@@ -52,6 +52,7 @@ add_library(vault SHARED
     src/system/config/UI.cpp
     src/system/counters/Counters.cpp
     src/system/init/Init.cpp
+    src/system/leases/Leases.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES

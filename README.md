@@ -139,7 +139,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/internal/specs/openapi | No          | No                 |
 | /sys/internal/ui/mounts     | Yes         | No                 |
 | /sys/key-status             | Yes         | No                 |
-| /sys/leases                 | No          | No                 |
+| /sys/leases                 | Yes         | No                 |
 | /sys/license                | No          | No                 |
 | /sys/metrics                | No          | No                 |
 | /sys/mfa                    | No          | No                 |
