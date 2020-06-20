@@ -86,6 +86,10 @@ std::optional<std::string> Vault::Sys::metrics() {
   return HttpConsumer::get(client_, getUrl(Path{"metrics"}));
 }
 
+std::optional<std::string> Vault::Sys::reloadPlugin(const Parameters &parameters) {
+  return HttpConsumer::put(client_, getUrl(Path{"plugins/reload/backend"}), parameters);
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

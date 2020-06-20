@@ -421,6 +421,8 @@ namespace Vault {
     std::optional<std::string> hostInfo();
     std::optional<std::string> keyStatus();
     std::optional<std::string> metrics();
+    std::optional<std::string> reloadPlugin(const Parameters &parameters);
+
 
     class Auth {
     public:

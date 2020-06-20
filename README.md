@@ -145,7 +145,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/mfa                    | No          | No                 |
 | /sys/mounts                 | Yes         | No                 |
 | /sys/namespaces             | No          | No*                |
-| /sys/plugins/reload/backend | No          | No                 |
+| /sys/plugins/reload/backend | Yes         | No                 |
 | /sys/plugins/catalog        | No          | No                 |
 | /sys/policy                 | No          | No                 |
 | /sys/pprof                  | No          | No                 |
