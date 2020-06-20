@@ -74,6 +74,46 @@ std::optional<std::string> Vault::Sys::state() {
   return HttpConsumer::get(client_, getUrl(Path{"config/state/sanitized"}));
 }
 
+std::optional<std::string> Vault::Sys::hostInfo() {
+  return HttpConsumer::get(client_, getUrl(Path{"host-info"}));
+}
+
+std::optional<std::string> Vault::Sys::keyStatus() {
+  return HttpConsumer::get(client_, getUrl(Path{"key-status"}));
+}
+
+std::optional<std::string> Vault::Sys::metrics() {
+  return HttpConsumer::get(client_, getUrl(Path{"metrics"}));
+}
+
+std::optional<std::string> Vault::Sys::reloadPlugin(const Parameters &parameters) {
+  return HttpConsumer::put(client_, getUrl(Path{"plugins/reload/backend"}), parameters);
+}
+
+std::optional<std::string> Vault::Sys::remount(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"remount"}), parameters);
+}
+
+std::optional<std::string> Vault::Sys::rotate() {
+  return HttpConsumer::put(client_, getUrl(Path{"rotate"}), Parameters{});
+}
+
+std::optional<std::string> Vault::Sys::seal() {
+  return HttpConsumer::put(client_, getUrl(Path{"seal"}), Parameters{});
+}
+
+std::optional<std::string> Vault::Sys::sealStatus() {
+  return HttpConsumer::get(client_, getUrl(Path{"seal-status"}));
+}
+
+std::optional<std::string> Vault::Sys::stepDown() {
+  return HttpConsumer::put(client_, getUrl(Path{"step-down"}), Parameters{});
+}
+
+std::optional<std::string> Vault::Sys::unseal(const Parameters &parameters) {
+  return HttpConsumer::put(client_, getUrl(Path{"unseal"}), parameters);
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

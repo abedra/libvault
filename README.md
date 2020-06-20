@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.25.0-4a8fff)](https://img.shields.io/badge/version-0.25.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.26.0-4a8fff)](https://img.shields.io/badge/version-0.26.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -92,9 +92,15 @@ The following tables show support for each of the secret backends, auth methods,
 | Azure            | No          | No                 |
 | Google Cloud     | No          | No                 |
 | Google Cloud KMS | No          | No                 |
-| KMIP             | No          | No                 |
+| KMIP             | No          | No*                |
 | Identities       | No          | No                 |
 | Nomad            | No          | No                 |
+| Consul           | No          | No                 |
+| MongoDB Atlas    | No          | No                 |
+| OpenLDAP         | No          | No                 |
+| Transform        | No          | No*                |
+
+\* Requires an enterprise license and cannot be integration tested
 
 | Auth Method       | Implemented | Integration Tested |
 |-------------------|-------------|--------------------|
@@ -108,12 +114,15 @@ The following tables show support for each of the secret backends, auth methods,
 | GitHub            | No          | No                 |
 | Google Cloud      | No          | No                 |
 | JWT/OIDC          | No          | No                 |
+| Kerberos          | No          | No                 |
 | Kubernetes        | No          | No                 |
 | OCI               | No          | No                 |
 | Okta              | No          | No                 |
 | RADIUS            | No          | No                 |
 | TLS Certificate   | No          | No                 |
 | Username/Password | No          | No                 |
+
+\* Requires an enterprise license and cannot be integration tested
 
 | System Backend              | Implemented | Integration Tested |
 |-----------------------------|-------------|--------------------|
@@ -132,35 +141,38 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/config/state           | Yes         | No                 |
 | /sys/config/ui              | Yes         | No                 |
 | /sys/control-group          | Yes         | No                 |
-| /sys/generate-root          | No          | No                 |
-| /sys/host-info              | No          | No                 |
-| /sys/init                   | No          | No                 |
-| /sys/internal/specs/openapi | No          | No                 |
-| /sys/internal/ui/mounts     | No          | No                 |
-| /sys/key-status             | No          | No                 |
-| /sys/leases                 | No          | No                 |
-| /sys/license                | No          | No                 |
-| /sys/metrics                | No          | No                 |
+| /sys/host-info              | Yes         | No                 |
+| /sys/init                   | Yes         | No                 |
+| /sys/internal/counters      | Yes         | No                 |
+| /sys/plugins/reload/backend | Yes         | No                 |
+| /sys/internal/ui/mounts     | Yes         | No                 |
+| /sys/key-status             | Yes         | No                 |
+| /sys/leases                 | Yes         | No                 |
+| /sys/license                | Yes         | No                 |
+| /sys/metrics                | Yes         | No                 |
+| /sys/mounts                 | Yes         | No                 |
+| /sys/remount                | Yes         | No                 |
+| /sys/rotate                 | Yes         | No                 |
+| /sys/seal                   | Yes         | No                 |
+| /sys/seal-status            | Yes         | No                 |
+| /sys/step-down              | Yes         | No                 |
+| /sys/unseal                 | Yes         | No                 |
 | /sys/mfa                    | No          | No                 |
-| /sys/mounts                 | No          | No                 |
-| /sys/namespaces             | No          | No                 |
-| /sys/plugins/reload/backend | No          | No                 |
+| /sys/namespaces             | No          | No*                |
+| /sys/generate-root          | No          | No                 |
+| /sys/internal/specs/openapi | No          | No                 |
 | /sys/plugins/catalog        | No          | No                 |
 | /sys/policy                 | No          | No                 |
 | /sys/pprof                  | No          | No                 |
 | /sys/raw                    | No          | No                 |
 | /sys/rekey                  | No          | No                 |
 | /sys/rekey-recovery-key     | No          | No                 |
-| /sys/remount                | No          | No                 |
 | /sys/replication            | No          | No                 |
-| /sys/rotate                 | No          | No                 |
-| /sys/seal                   | No          | No                 |
-| /sys/seal-status            | No          | No                 |
 | /sys/sealwrap/rewrap        | No          | No                 |
-| /sys/step-down              | No          | No                 |
 | /sys/storage                | No          | No                 |
 | /sys/tools                  | No          | No                 |
-| /sys/unseal                 | No          | No                 |
+
+\* Requires an enterprise license and cannot be integration tested
 
 ## Compile and Install
 

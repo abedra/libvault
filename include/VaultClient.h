@@ -418,6 +418,16 @@ namespace Vault {
     std::optional<std::string> capabilitiesAccessor(const Parameters &parameters);
     std::optional<std::string> capabilitiesSelf(const Parameters &parameters);
     std::optional<std::string> state();
+    std::optional<std::string> hostInfo();
+    std::optional<std::string> keyStatus();
+    std::optional<std::string> metrics();
+    std::optional<std::string> reloadPlugin(const Parameters &parameters);
+    std::optional<std::string> remount(const Parameters &parameters);
+    std::optional<std::string> rotate();
+    std::optional<std::string> seal();
+    std::optional<std::string> sealStatus();
+    std::optional<std::string> stepDown();
+    std::optional<std::string> unseal(const Parameters &parameters);
 
     class Auth {
     public:
@@ -509,6 +519,79 @@ namespace Vault {
 
       const Client &client_;
     };
+
+    class Init {
+    public:
+      explicit Init(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read();
+      std::optional<std::string> start(const Parameters &parameters);
+
+    private:
+      Url getUrl();
+
+      const Client &client_;
+    };
+
+    class Counters {
+    public:
+      explicit Counters(const Client &client) : client_(client) {}
+
+      std::optional<std::string> requests();
+      std::optional<std::string> entities();
+      std::optional<std::string> tokens();
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class Leases {
+    public:
+      explicit Leases(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read(const Parameters &parameters);
+      std::optional<std::string> list(const Path &path);
+      std::optional<std::string> renew(const Parameters &parameters);
+      std::optional<std::string> revoke(const Parameters &parameters);
+      std::optional<std::string> revokeForce(const Path &path, const Parameters &parameters);
+      std::optional<std::string> revokePrefix(const Path &path, const Parameters &parameters);
+      std::optional<std::string> tidy(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class License {
+    public:
+      explicit License(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read();
+      std::optional<std::string> install(const Parameters &parameters);
+
+    private:
+      Url getUrl();
+
+      const Client &client_;
+    };
+
+    class Mounts {
+    public:
+      explicit Mounts(const Client &client) : client_(client) {}
+
+      std::optional<std::string> readUi();
+      std::optional<std::string> read();
+      std::optional<std::string> enable(const Path &path, const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
 
   private:
     Url getUrl(const Path &path);
