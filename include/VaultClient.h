@@ -47,34 +47,34 @@ namespace Vault {
     T value_;
   };
 
-  #define TINY_STRING(Name)                       \
+  #define LIBVAULT_TINY_STRING(Name)              \
     struct Name##Detail {};                       \
     using Name = Tiny<Name##Detail, std::string>; \
 
-  #define TINY_LONG(Name)                  \
+  #define LIBVAULT_TINY_LONG(Name)         \
     struct Name##Detail {};                \
     using Name = Tiny<Name##Detail, long>; \
 
-  TINY_STRING(SecretId)
-  TINY_STRING(HttpResponseBodyString)
-  TINY_STRING(Url)
-  TINY_STRING(Path)
-  TINY_STRING(Token)
-  TINY_STRING(Namespace)
-  TINY_STRING(RoleId)
-  TINY_STRING(Host)
-  TINY_STRING(Port)
-  TINY_STRING(Algorithm)
-  TINY_STRING(SecretMount)
-  TINY_STRING(RootCertificateType)
-  TINY_STRING(KeyType)
+  LIBVAULT_TINY_STRING(SecretId)
+  LIBVAULT_TINY_STRING(HttpResponseBodyString)
+  LIBVAULT_TINY_STRING(Url)
+  LIBVAULT_TINY_STRING(Path)
+  LIBVAULT_TINY_STRING(Token)
+  LIBVAULT_TINY_STRING(Namespace)
+  LIBVAULT_TINY_STRING(RoleId)
+  LIBVAULT_TINY_STRING(Host)
+  LIBVAULT_TINY_STRING(Port)
+  LIBVAULT_TINY_STRING(Algorithm)
+  LIBVAULT_TINY_STRING(SecretMount)
+  LIBVAULT_TINY_STRING(RootCertificateType)
+  LIBVAULT_TINY_STRING(KeyType)
 
-  TINY_LONG(HttpResponseStatusCode)
-  TINY_LONG(ConnectTimeout)
-  TINY_LONG(TTL)
+  LIBVAULT_TINY_LONG(HttpResponseStatusCode)
+  LIBVAULT_TINY_LONG(ConnectTimeout)
+  LIBVAULT_TINY_LONG(TTL)
 
-  #undef TINY_STRING
-  #undef TINY_LONG
+  #undef LIBVAULT_TINY_STRING
+  #undef LIBVAULT_TINY_LONG
 
   namespace Algorithms {
     const static Vault::Algorithm SHA1 = Vault::Algorithm{"sha1"};
