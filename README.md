@@ -190,7 +190,9 @@ make
 The following custom options can be provided to CMake to control your build:
 
 * `ENABLE_TEST [ON|OFF]` - `[Default ON]` Standard unit tests (Requires the Catch2 testing library)
-* `ENABLE_INTEGRATION_TEST [ON|OFF]` - `[Default OFF]`Enable integration tests (Requires configured, running Vault)
+* `ENABLE_INTEGRATION_TEST [ON|OFF]` - `[Default OFF]` Enable integration tests (Requires configured, running Vault)
+* `ENABLE_COVERAGE [ON|OFF]` - `[Default OFF]` Enable gcov code coverage
+* `LINK_CURL [ON|OFF]` - `[Default OFF]` Link curl library when compiling
 
 ## Local Development
 
