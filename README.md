@@ -134,7 +134,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/control-group          | Yes         | No                 |
 | /sys/generate-root          | No          | No                 |
 | /sys/host-info              | Yes         | No                 |
-| /sys/init                   | No          | No                 |
+| /sys/init                   | Yes         | No                 |
 | /sys/internal/specs/openapi | No          | No                 |
 | /sys/internal/ui/mounts     | No          | No                 |
 | /sys/key-status             | No          | No                 |

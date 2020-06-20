@@ -106,7 +106,7 @@ if (ENABLE_TEST)
         test/integration/engines/CubbyholeTests.cpp
         test/integration/engines/PkiTests.cpp
         test/integration/engines/RabbitMqTests.cpp
-        test/integration/engines/DatabaseTests.cpp)
+        test/integration/engines/DatabaseTests.cpp src/system/init/Init.cpp)
 
     target_include_directories(libvault_integration_test PRIVATE include)
 

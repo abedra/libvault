@@ -511,6 +511,19 @@ namespace Vault {
       const Client &client_;
     };
 
+    class Init {
+    public:
+      explicit Init(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read();
+      std::optional<std::string> start(const Parameters &parameters);
+
+    private:
+      Url getUrl();
+
+      const Client &client_;
+    };
+
   private:
     Url getUrl(const Path &path);
 
