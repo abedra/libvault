@@ -161,7 +161,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/step-down              | Yes         | No                 |
 | /sys/storage                | No          | No                 |
 | /sys/tools                  | No          | No                 |
-| /sys/unseal                 | No          | No                 |
+| /sys/unseal                 | Yes         | No                 |
 
 \* Requires an enterprise license and cannot be integration tested
 

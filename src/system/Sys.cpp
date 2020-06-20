@@ -110,6 +110,10 @@ std::optional<std::string> Vault::Sys::stepDown() {
   return HttpConsumer::put(client_, getUrl(Path{"step-down"}), Parameters{});
 }
 
+std::optional<std::string> Vault::Sys::unseal(const Parameters &parameters) {
+  return HttpConsumer::put(client_, getUrl(Path{"unseal"}), parameters);
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

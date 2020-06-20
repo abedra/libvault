@@ -427,6 +427,7 @@ namespace Vault {
     std::optional<std::string> seal();
     std::optional<std::string> sealStatus();
     std::optional<std::string> stepDown();
+    std::optional<std::string> unseal(const Parameters &parameters);
 
     class Auth {
     public:
