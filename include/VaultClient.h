@@ -421,6 +421,7 @@ namespace Vault {
     std::optional<std::string> hostInfo();
     std::optional<std::string> mounts();
     std::optional<std::string> keyStatus();
+    std::optional<std::string> metrics();
 
     class Auth {
     public:

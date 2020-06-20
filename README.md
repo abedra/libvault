@@ -141,7 +141,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/key-status             | Yes         | No                 |
 | /sys/leases                 | Yes         | No                 |
 | /sys/license                | Yes         | No                 |
-| /sys/metrics                | No          | No                 |
+| /sys/metrics                | Yes         | No                 |
 | /sys/mfa                    | No          | No                 |
 | /sys/mounts                 | No          | No                 |
 | /sys/namespaces             | No          | No                 |
