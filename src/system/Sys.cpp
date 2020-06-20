@@ -74,6 +74,10 @@ std::optional<std::string> Vault::Sys::state() {
   return HttpConsumer::get(client_, getUrl(Path{"config/state/sanitized"}));
 }
 
+std::optional<std::string> Vault::Sys::hostInfo() {
+  return HttpConsumer::get(client_, getUrl(Path{"host-info"}));
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

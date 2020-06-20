@@ -133,7 +133,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/config/ui              | Yes         | No                 |
 | /sys/control-group          | Yes         | No                 |
 | /sys/generate-root          | No          | No                 |
-| /sys/host-info              | No          | No                 |
+| /sys/host-info              | Yes         | No                 |
 | /sys/init                   | No          | No                 |
 | /sys/internal/specs/openapi | No          | No                 |
 | /sys/internal/ui/mounts     | No          | No                 |

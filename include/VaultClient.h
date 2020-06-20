@@ -418,6 +418,7 @@ namespace Vault {
     std::optional<std::string> capabilitiesAccessor(const Parameters &parameters);
     std::optional<std::string> capabilitiesSelf(const Parameters &parameters);
     std::optional<std::string> state();
+    std::optional<std::string> hostInfo();
 
     class Auth {
     public:
