@@ -102,6 +102,10 @@ std::optional<std::string> Vault::Sys::seal() {
   return HttpConsumer::put(client_, getUrl(Path{"seal"}), Parameters{});
 }
 
+std::optional<std::string> Vault::Sys::sealStatus() {
+  return HttpConsumer::get(client_, getUrl(Path{"seal-status"}));
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

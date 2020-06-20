@@ -156,7 +156,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/replication            | No          | No                 |
 | /sys/rotate                 | Yes         | No                 |
 | /sys/seal                   | Yes         | No                 |
-| /sys/seal-status            | No          | No                 |
+| /sys/seal-status            | Yes         | No                 |
 | /sys/sealwrap/rewrap        | No          | No                 |
 | /sys/step-down              | No          | No                 |
 | /sys/storage                | No          | No                 |
