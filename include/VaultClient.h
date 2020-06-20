@@ -424,6 +424,7 @@ namespace Vault {
     std::optional<std::string> reloadPlugin(const Parameters &parameters);
     std::optional<std::string> remount(const Parameters &parameters);
     std::optional<std::string> rotate();
+    std::optional<std::string> seal();
 
     class Auth {
     public:

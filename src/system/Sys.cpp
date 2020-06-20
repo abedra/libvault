@@ -98,6 +98,10 @@ std::optional<std::string> Vault::Sys::rotate() {
   return HttpConsumer::put(client_, getUrl(Path{"rotate"}), Parameters{});
 }
 
+std::optional<std::string> Vault::Sys::seal() {
+  return HttpConsumer::put(client_, getUrl(Path{"seal"}), Parameters{});
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }
