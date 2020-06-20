@@ -12,7 +12,7 @@ std::optional<std::string> Vault::Sys::Mounts::enable(const Path &path, const Pa
   return HttpConsumer::post(client_, getUrl(Path{"mounts/" + path}), parameters);
 }
 
-Vault::Url Vault::Sys::getUrl(const Path &path) {
+Vault::Url Vault::Sys::Mounts::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }
 
