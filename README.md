@@ -158,7 +158,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/seal                   | Yes         | No                 |
 | /sys/seal-status            | Yes         | No                 |
 | /sys/sealwrap/rewrap        | No          | No                 |
-| /sys/step-down              | No          | No                 |
+| /sys/step-down              | Yes         | No                 |
 | /sys/storage                | No          | No                 |
 | /sys/tools                  | No          | No                 |
 | /sys/unseal                 | No          | No                 |

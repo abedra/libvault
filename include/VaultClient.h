@@ -426,6 +426,7 @@ namespace Vault {
     std::optional<std::string> rotate();
     std::optional<std::string> seal();
     std::optional<std::string> sealStatus();
+    std::optional<std::string> stepDown();
 
     class Auth {
     public:
