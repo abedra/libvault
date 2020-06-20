@@ -94,6 +94,10 @@ std::optional<std::string> Vault::Sys::remount(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"remount"}), parameters);
 }
 
+std::optional<std::string> Vault::Sys::rotate() {
+  return HttpConsumer::put(client_, getUrl(Path{"rotate"}), Parameters{});
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }
