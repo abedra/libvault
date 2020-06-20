@@ -419,7 +419,6 @@ namespace Vault {
     std::optional<std::string> capabilitiesSelf(const Parameters &parameters);
     std::optional<std::string> state();
     std::optional<std::string> hostInfo();
-    std::optional<std::string> mounts();
     std::optional<std::string> keyStatus();
     std::optional<std::string> metrics();
 
@@ -571,6 +570,21 @@ namespace Vault {
 
       const Client &client_;
     };
+
+    class Mounts {
+    public:
+      explicit Mounts(const Client &client) : client_(client) {}
+
+      std::optional<std::string> readUi();
+      std::optional<std::string> read();
+      std::optional<std::string> enable(const Path &path, const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
 
   private:
     Url getUrl(const Path &path);

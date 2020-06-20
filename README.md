@@ -143,8 +143,8 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/license                | Yes         | No                 |
 | /sys/metrics                | Yes         | No                 |
 | /sys/mfa                    | No          | No                 |
-| /sys/mounts                 | No          | No                 |
-| /sys/namespaces             | No          | No                 |
+| /sys/mounts                 | Yes         | No                 |
+| /sys/namespaces             | No          | No*                |
 | /sys/plugins/reload/backend | No          | No                 |
 | /sys/plugins/catalog        | No          | No                 |
 | /sys/policy                 | No          | No                 |
@@ -162,6 +162,8 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/storage                | No          | No                 |
 | /sys/tools                  | No          | No                 |
 | /sys/unseal                 | No          | No                 |
+
+\* Requires an enterprise license and cannot be integration tested
 
 ## Compile and Install
 

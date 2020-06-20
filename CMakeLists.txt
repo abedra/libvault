@@ -54,6 +54,7 @@ add_library(vault SHARED
     src/system/init/Init.cpp
     src/system/leases/Leases.cpp
     src/system/license/License.cpp
+    src/system/mounts/Mounts.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
