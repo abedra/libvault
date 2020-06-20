@@ -10,63 +10,67 @@
 #include <optional>
 #include <ostream>
 #include <string>
+#include <sstream>
 #include <utility>
 #include <vector>
 
 namespace Vault {
-  struct TinyString {
-    TinyString() = default;
+  template<typename Name, typename T>
+  struct Tiny {
+    Tiny() noexcept(std::is_nothrow_constructible_v<T>) = default;
+    explicit Tiny(const T &value) noexcept(std::is_nothrow_copy_constructible_v<T>) : value_(value) {}
+    explicit Tiny(T &&value) noexcept(std::is_nothrow_move_constructible_v<T>) : value_(std::move(value)) {}
 
-    explicit TinyString(std::string value) : value_(std::move(value)) {}
+    friend std::ostream &operator<<(std::ostream &os, const Tiny &object) { return os << object.value(); }
+    friend std::string operator+(const Tiny &tiny, const Tiny &other) { return tiny.value() + tiny.value(); }
 
-    friend std::ostream &operator<<(std::ostream &os, const TinyString &object) { return os << object.value(); }
-    friend std::string operator+(const std::string &string, const TinyString &tiny) { return string + tiny.value(); }
-    friend std::string operator+(const TinyString &tiny, const std::string &string) { return tiny.value() + string; }
-    friend std::string operator+(const char *string, const TinyString &tiny) { return string + tiny.value(); }
-    friend std::string operator+(const TinyString &tiny, const char *string) { return tiny.value() + string; }
-    friend std::string operator+(const TinyString &tiny, const TinyString &other) { return tiny.value() + tiny.value(); }
+    friend std::string operator+(const Tiny &tiny, const char *string) { return tiny.toString() + string; }
+    friend std::string operator+(const char *string, const Tiny &tiny) { return string + tiny.toString(); }
+    friend std::string operator+(const Tiny &tiny, const std::string &string) { return tiny.toString() + string; }
+    friend std::string operator+(const std::string &string, const Tiny &tiny) { return string + tiny.toString(); }
 
-    [[nodiscard]] bool empty() const { return value_.empty(); }
-    [[nodiscard]] const char *c_str() const { return value_.c_str(); }
-    [[nodiscard]] const std::string &value() const { return value_; }
+    explicit operator T& () const noexcept {
+      return value();
+    }
 
-  protected:
-    std::string value_;
-  };
+    [[nodiscard]] std::string toString() const {
+      std::ostringstream ss;
+      ss << value();
+      return ss.str();
+    }
 
-  typedef TinyString SecretId;
-  typedef TinyString HttpResponseBodyString;
-  typedef TinyString Url;
-  typedef TinyString Path;
-  typedef TinyString Token;
-  typedef TinyString Namespace;
-  typedef TinyString RoleId;
-  typedef TinyString Host;
-  typedef TinyString Port;
-  typedef TinyString Algorithm;
-  typedef TinyString SecretMount;
-  typedef TinyString RootCertificateType;
-  typedef TinyString KeyType;
-
-  struct TinyLong {
-    TinyLong() = default;
-    explicit TinyLong(const long value) : value_(value) {}
-
-    friend long operator+(const long addend, const TinyLong other) { return addend + other.value_; }
-    friend long operator+(const TinyLong other, const long addend) { return other.value_ + addend; }
-    friend long operator+(const TinyLong current, const TinyLong other) { return current.value_ + other.value_; }
-
-    friend std::string operator+(const char *other, const TinyLong current) { return other + std::to_string(current.value_); }
-
-    [[nodiscard]] long value() const { return value_; }
+    [[nodiscard]] bool empty() const noexcept { return value_.empty(); }
+    [[nodiscard]] const T &value() const noexcept { return value_; }
 
   protected:
-    long value_;
+    T value_;
   };
 
-  typedef TinyLong HttpResponseStatusCode;
-  typedef TinyLong ConnectTimeout;
-  typedef TinyLong TTL;
+  #define TINY_STRING(Name)                       \
+    struct Name##Detail {};                       \
+    using Name = Tiny<Name##Detail, std::string>; \
+
+  #define TINY_LONG(Name)                  \
+    struct Name##Detail {};                \
+    using Name = Tiny<Name##Detail, long>; \
+
+  TINY_STRING(SecretId);
+  TINY_STRING(HttpResponseBodyString);
+  TINY_STRING(Url);
+  TINY_STRING(Path);
+  TINY_STRING(Token);
+  TINY_STRING(Namespace);
+  TINY_STRING(RoleId);
+  TINY_STRING(Host);
+  TINY_STRING(Port);
+  TINY_STRING(Algorithm);
+  TINY_STRING(SecretMount);
+  TINY_STRING(RootCertificateType);
+  TINY_STRING(KeyType);
+
+  TINY_LONG(HttpResponseStatusCode);
+  TINY_LONG(ConnectTimeout);
+  TINY_LONG(TTL);
 
   namespace Algorithms {
     const static Vault::Algorithm SHA1 = Vault::Algorithm{"sha1"};

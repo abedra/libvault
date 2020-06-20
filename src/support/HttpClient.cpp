@@ -147,7 +147,7 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
 
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout_);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_URL, url.toString().c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
 
