@@ -524,6 +524,20 @@ namespace Vault {
       const Client &client_;
     };
 
+    class Counters {
+    public:
+      explicit Counters(const Client &client) : client_(client) {}
+
+      std::optional<std::string> requests();
+      std::optional<std::string> entities();
+      std::optional<std::string> tokens();
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
   private:
     Url getUrl(const Path &path);
 

@@ -50,6 +50,8 @@ add_library(vault SHARED
     src/system/config/ControlGroup.cpp
     src/system/config/Cors.cpp
     src/system/config/UI.cpp
+    src/system/counters/Counters.cpp
+    src/system/init/Init.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
@@ -106,7 +108,7 @@ if (ENABLE_TEST)
         test/integration/engines/CubbyholeTests.cpp
         test/integration/engines/PkiTests.cpp
         test/integration/engines/RabbitMqTests.cpp
-        test/integration/engines/DatabaseTests.cpp src/system/init/Init.cpp)
+        test/integration/engines/DatabaseTests.cpp)
 
     target_include_directories(libvault_integration_test PRIVATE include)
 
