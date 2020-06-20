@@ -54,23 +54,23 @@ namespace Vault {
     struct Name##Detail {};                \
     using Name = Tiny<Name##Detail, long>; \
 
-  TINY_STRING(SecretId);
-  TINY_STRING(HttpResponseBodyString);
-  TINY_STRING(Url);
-  TINY_STRING(Path);
-  TINY_STRING(Token);
-  TINY_STRING(Namespace);
-  TINY_STRING(RoleId);
-  TINY_STRING(Host);
-  TINY_STRING(Port);
-  TINY_STRING(Algorithm);
-  TINY_STRING(SecretMount);
-  TINY_STRING(RootCertificateType);
-  TINY_STRING(KeyType);
+  TINY_STRING(SecretId)
+  TINY_STRING(HttpResponseBodyString)
+  TINY_STRING(Url)
+  TINY_STRING(Path)
+  TINY_STRING(Token)
+  TINY_STRING(Namespace)
+  TINY_STRING(RoleId)
+  TINY_STRING(Host)
+  TINY_STRING(Port)
+  TINY_STRING(Algorithm)
+  TINY_STRING(SecretMount)
+  TINY_STRING(RootCertificateType)
+  TINY_STRING(KeyType)
 
-  TINY_LONG(HttpResponseStatusCode);
-  TINY_LONG(ConnectTimeout);
-  TINY_LONG(TTL);
+  TINY_LONG(HttpResponseStatusCode)
+  TINY_LONG(ConnectTimeout)
+  TINY_LONG(TTL)
 
   #undef TINY_STRING
   #undef TINY_LONG
@@ -128,7 +128,7 @@ namespace Vault {
     explicit HttpClient(Config &config);
 
     HttpClient(Config &config, HttpErrorCallback errorCallback);
-    virtual ~HttpClient() {}
+    virtual ~HttpClient() = default;
 
     [[nodiscard]] virtual std::optional<HttpResponse> get(const Url &url, const Token &token, const Namespace &ns) const;
     [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, const std::string& value) const;
@@ -201,7 +201,7 @@ namespace Vault {
 
   class AuthenticationStrategy {
   public:
-    virtual ~AuthenticationStrategy() {}
+    virtual ~AuthenticationStrategy() = default;
     virtual std::optional<AuthenticationResponse> authenticate(const Client &client) = 0;
   };
 
@@ -210,7 +210,7 @@ namespace Vault {
     Client(const Client &other, Token token);
     Client(Config &config, AuthenticationStrategy &authStrategy);
     Client(Config &config, AuthenticationStrategy &authStrategy, HttpErrorCallback httpErrorCallback);
-    virtual ~Client() {}
+    virtual ~Client() = default;
 
     [[nodiscard]] virtual bool is_authenticated() const { return !token_.empty(); }
     [[nodiscard]] virtual Url getUrl(const std::string &base, const Path &path) const;
