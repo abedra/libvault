@@ -78,6 +78,10 @@ std::optional<std::string> Vault::Sys::hostInfo() {
   return HttpConsumer::get(client_, getUrl(Path{"host-info"}));
 }
 
+std::optional<std::string> Vault::Sys::mounts() {
+  return HttpConsumer::get(client_, getUrl(Path{"internal/ui/mounts"}));
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }
