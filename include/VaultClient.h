@@ -422,7 +422,7 @@ namespace Vault {
     std::optional<std::string> keyStatus();
     std::optional<std::string> metrics();
     std::optional<std::string> reloadPlugin(const Parameters &parameters);
-
+    std::optional<std::string> remount(const Parameters &parameters);
 
     class Auth {
     public:

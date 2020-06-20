@@ -152,7 +152,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/raw                    | No          | No                 |
 | /sys/rekey                  | No          | No                 |
 | /sys/rekey-recovery-key     | No          | No                 |
-| /sys/remount                | No          | No                 |
+| /sys/remount                | Yes         | No                 |
 | /sys/replication            | No          | No                 |
 | /sys/rotate                 | No          | No                 |
 | /sys/seal                   | No          | No                 |

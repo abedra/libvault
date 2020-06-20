@@ -90,6 +90,10 @@ std::optional<std::string> Vault::Sys::reloadPlugin(const Parameters &parameters
   return HttpConsumer::put(client_, getUrl(Path{"plugins/reload/backend"}), parameters);
 }
 
+std::optional<std::string> Vault::Sys::remount(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"remount"}), parameters);
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }
