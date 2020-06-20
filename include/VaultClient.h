@@ -72,6 +72,9 @@ namespace Vault {
   TINY_LONG(ConnectTimeout);
   TINY_LONG(TTL);
 
+  #undef TINY_STRING
+  #undef TINY_LONG
+
   namespace Algorithms {
     const static Vault::Algorithm SHA1 = Vault::Algorithm{"sha1"};
     const static Vault::Algorithm SHA2_224 = Vault::Algorithm{"sha2-224"};
