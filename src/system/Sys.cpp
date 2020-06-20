@@ -82,6 +82,10 @@ std::optional<std::string> Vault::Sys::mounts() {
   return HttpConsumer::get(client_, getUrl(Path{"internal/ui/mounts"}));
 }
 
+std::optional<std::string> Vault::Sys::keyStatus() {
+  return HttpConsumer::get(client_, getUrl(Path{"key-status"}));
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }
