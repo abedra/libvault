@@ -51,6 +51,7 @@ add_library(vault SHARED
     src/system/config/Cors.cpp
     src/system/config/UI.cpp
     src/system/counters/Counters.cpp
+    src/system/generate_root/GenerateRoot.cpp
     src/system/init/Init.cpp
     src/system/leases/Leases.cpp
     src/system/license/License.cpp

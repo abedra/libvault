@@ -159,7 +159,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/unseal                 | Yes         | No                 |
 | /sys/mfa                    | Yes         | No                 |
 | /sys/namespaces             | Yes         | No*                |
-| /sys/generate-root          | No          | No                 |
+| /sys/generate-root          | Yes         | No                 |
 | /sys/internal/specs/openapi | No          | No                 |
 | /sys/plugins/catalog        | No          | No                 |
 | /sys/policy                 | No          | No                 |
