@@ -114,6 +114,10 @@ std::optional<std::string> Vault::Sys::unseal(const Parameters &parameters) {
   return HttpConsumer::put(client_, getUrl(Path{"unseal"}), parameters);
 }
 
+std::optional<std::string> Vault::Sys::openApi() {
+  return HttpConsumer::get(client_, getUrl(Path{"internal/specs/openapi"}));
+}
+
 Vault::Url Vault::Sys::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/", path);
 }

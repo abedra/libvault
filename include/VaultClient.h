@@ -428,6 +428,7 @@ namespace Vault {
     std::optional<std::string> sealStatus();
     std::optional<std::string> stepDown();
     std::optional<std::string> unseal(const Parameters &parameters);
+    std::optional<std::string> openApi();
 
     class Auth {
     public:
@@ -680,6 +681,22 @@ namespace Vault {
       std::optional<std::string> read(const Path &path);
       std::optional<std::string> create(const Path &path, const Parameters &parameters);
       std::optional<std::string> del(const Path &path);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class Plugins {
+    public:
+      explicit Plugins(const Client &client) : client_(client) {}
+
+      std::optional<std::string> list();
+      std::optional<std::string> list(const Path &path);
+      std::optional<std::string> reg(const Path& type, const Path &name, const Parameters &parameters);
+      std::optional<std::string> read(const Path &type, const Path &name);
+      std::optional<std::string> del(const Path &type, const Path &name);
 
     private:
       Url getUrl(const Path &path);
