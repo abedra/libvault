@@ -505,6 +505,21 @@ namespace Vault {
       const Client &client_;
     };
 
+    class GenerateRoot {
+    public:
+      explicit GenerateRoot(const Client &client) : client_(client) {}
+
+      std::optional<std::string> read();
+      std::optional<std::string> start(const Parameters &parameters);
+      std::optional<std::string> cancel();
+      std::optional<std::string> update(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
     class UI {
     public:
       explicit UI(const Client &client) : client_(client) {}
