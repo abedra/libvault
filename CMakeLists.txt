@@ -62,6 +62,7 @@ add_library(vault SHARED
     src/system/mfa/Totp.cpp
     src/system/mounts/Mounts.cpp
     src/system/namespaces/Namespaces.cpp
+    src/system/plugins/Plugins.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES

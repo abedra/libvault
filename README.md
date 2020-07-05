@@ -160,8 +160,8 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/mfa                    | Yes         | No                 |
 | /sys/namespaces             | Yes         | No*                |
 | /sys/generate-root          | Yes         | No                 |
-| /sys/internal/specs/openapi | No          | No                 |
-| /sys/plugins/catalog        | No          | No                 |
+| /sys/internal/specs/openapi | Yes         | No                 |
+| /sys/plugins/catalog        | Yes         | No                 |
 | /sys/policy                 | No          | No                 |
 | /sys/pprof                  | No          | No                 |
 | /sys/raw                    | No          | No                 |
