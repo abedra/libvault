@@ -60,6 +60,7 @@ add_library(vault SHARED
     src/system/mfa/PingId.cpp
     src/system/mfa/Totp.cpp
     src/system/mounts/Mounts.cpp
+    src/system/namespaces/Namespaces.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
