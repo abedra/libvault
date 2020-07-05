@@ -592,6 +592,70 @@ namespace Vault {
       const Client &client_;
     };
 
+    class Mfa {
+      static std::optional<std::string> configure(const Client &client, const Url &url, const Parameters &parameters);
+      static std::optional<std::string> read(const Client &client, const Url &url);
+      static std::optional<std::string> del(const Client &client, const Url &url);
+
+      class Duo {
+      public:
+        explicit Duo(const Client &client) : client_(client) {}
+
+        std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+        std::optional<std::string> read(const Path &path);
+        std::optional<std::string> del(const Path &path, const Parameters &parameters);
+
+      private:
+        Url getUrl(const Path &path);
+
+        const Client &client_;
+      };
+
+      class Okta {
+      public:
+        explicit Okta(const Client &client) : client_(client) {}
+
+        std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+        std::optional<std::string> read(const Path &path);
+        std::optional<std::string> del(const Path &path, const Parameters &parameters);
+
+      private:
+        Url getUrl(const Path &path);
+
+        const Client &client_;
+      };
+
+      class PingId {
+      public:
+        explicit PingId(const Client &client) : client_(client) {}
+
+        std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+        std::optional<std::string> read(const Path &path);
+        std::optional<std::string> del(const Path &path, const Parameters &parameters);
+
+      private:
+        Url getUrl(const Path &path);
+
+        const Client &client_;
+      };
+
+      class Totp {
+      public:
+        explicit Totp(const Client &client) : client_(client) {}
+
+        std::optional<std::string> configure(const Path &path, const Parameters &parameters);
+        std::optional<std::string> read(const Path &path);
+        std::optional<std::string> del(const Path &path, const Parameters &parameters);
+        std::optional<std::string> generate(const Path &path);
+        std::optional<std::string> adminGenerate(const Path &path, const Parameters &parameters);
+        std::optional<std::string> adminDestroy(const Path &path, const Parameters &parameters);
+
+      private:
+        Url getUrl(const Path &path);
+
+        const Client &client_;
+      };
+    };
 
   private:
     Url getUrl(const Path &path);
