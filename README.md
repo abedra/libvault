@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.26.0-4a8fff)](https://img.shields.io/badge/version-0.26.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.27.0-4a8fff)](https://img.shields.io/badge/version-0.27.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -157,7 +157,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/seal-status            | Yes         | No                 |
 | /sys/step-down              | Yes         | No                 |
 | /sys/unseal                 | Yes         | No                 |
-| /sys/mfa                    | No          | No                 |
+| /sys/mfa                    | Yes         | No                 |
 | /sys/namespaces             | No          | No*                |
 | /sys/generate-root          | No          | No                 |
 | /sys/internal/specs/openapi | No          | No                 |

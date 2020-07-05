@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(vault VERSION 0.26.0 DESCRIPTION "Vault library for C++")
+project(vault VERSION 0.27.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -54,6 +54,11 @@ add_library(vault SHARED
     src/system/init/Init.cpp
     src/system/leases/Leases.cpp
     src/system/license/License.cpp
+    src/system/mfa/Duo.cpp
+    src/system/mfa/Mfa.cpp
+    src/system/mfa/Okta.cpp
+    src/system/mfa/PingId.cpp
+    src/system/mfa/Totp.cpp
     src/system/mounts/Mounts.cpp
     src/system/Sys.cpp)
 
