@@ -162,7 +162,8 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/generate-root          | Yes         | No                 |
 | /sys/internal/specs/openapi | Yes         | No                 |
 | /sys/plugins/catalog        | Yes         | No                 |
-| /sys/policy                 | No          | No                 |
+| /sys/policy                 | Yes         | No                 |
+| /sys/policies               | No          | No                 |
 | /sys/pprof                  | No          | No                 |
 | /sys/raw                    | No          | No                 |
 | /sys/rekey                  | No          | No                 |
