@@ -167,11 +167,11 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/pprof                  | Yes         | No                 |
 | /sys/raw                    | Yes         | No                 |
 | /sys/sealwrap/rewrap        | Yes         | No                 |
+| /sys/tools                  | Yes         | No                 |
 | /sys/rekey                  | No          | No                 |
 | /sys/rekey-recovery-key     | No          | No                 |
 | /sys/replication            | No          | No                 |
 | /sys/storage                | No          | No                 |
-| /sys/tools                  | No          | No                 |
 
 \* Requires an enterprise license and cannot be integration tested
 

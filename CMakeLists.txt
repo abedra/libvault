@@ -71,6 +71,7 @@ add_library(vault SHARED
     src/system/pprof/Pprof.cpp
     src/system/raw/Raw.cpp
     src/system/sealwrap/Sealwrap.cpp
+    src/system/tools/Tools.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
