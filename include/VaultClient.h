@@ -824,6 +824,19 @@ namespace Vault {
       const Client &client_;
     };
 
+    class Tools {
+    public:
+      explicit Tools(const Client &client) : client_(client) {}
+
+      std::optional<std::string> random(const Path &path, const Parameters &parameters);
+      std::optional<std::string> hash(const Algorithm &algorithm, const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
   private:
     Url getUrl(const Path &path);
 
