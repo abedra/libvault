@@ -163,7 +163,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/internal/specs/openapi | Yes         | No                 |
 | /sys/plugins/catalog        | Yes         | No                 |
 | /sys/policy                 | Yes         | No                 |
-| /sys/policies               | No          | No                 |
+| /sys/policies               | Yes         | No*                |
 | /sys/pprof                  | No          | No                 |
 | /sys/raw                    | No          | No                 |
 | /sys/rekey                  | No          | No                 |
