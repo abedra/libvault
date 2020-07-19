@@ -777,6 +777,23 @@ namespace Vault {
       };
     };
 
+    class Pprof {
+    public:
+      explicit Pprof(const Client &client) : client_(client) {}
+
+      std::optional<std::string> index();
+      std::optional<std::string> cmdline();
+      std::optional<std::string> goroutine();
+      std::optional<std::string> heap();
+      std::optional<std::string> profile();
+      std::optional<std::string> symbol();
+      std::optional<std::string> trace();
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
 
   private:
     Url getUrl(const Path &path);

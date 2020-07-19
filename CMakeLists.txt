@@ -68,6 +68,7 @@ add_library(vault SHARED
     src/system/policies/ACL.cpp
     src/system/policies/EGP.cpp
     src/system/policies/RGP.cpp
+    src/system/pprof/Pprof.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
