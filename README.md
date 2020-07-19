@@ -165,7 +165,7 @@ The following tables show support for each of the secret backends, auth methods,
 | /sys/policy                 | Yes         | No                 |
 | /sys/policies               | Yes         | No*                |
 | /sys/pprof                  | Yes         | No                 |
-| /sys/raw                    | No          | No                 |
+| /sys/raw                    | Yes         | No                 |
 | /sys/rekey                  | No          | No                 |
 | /sys/rekey-recovery-key     | No          | No                 |
 | /sys/replication            | No          | No                 |
