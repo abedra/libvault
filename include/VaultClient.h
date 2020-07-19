@@ -720,6 +720,64 @@ namespace Vault {
       const Client &client_;
     };
 
+    class Policies {
+    public:
+      static std::optional<std::string> list(const Client &client, const Url &url);
+      static std::optional<std::string> read(const Client &client, const Url &url);
+      static std::optional<std::string> create(const Client &client, const Url &url, const Parameters &parameters);
+      static std::optional<std::string> update(const Client &client, const Url &url, const Parameters &parameters);
+      static std::optional<std::string> del(const Client &client, const Url &url);
+
+      class ACL {
+      public:
+        explicit ACL(const Client &client) : client_(client) {}
+
+        std::optional<std::string> list();
+        std::optional<std::string> read(const Path &path);
+        std::optional<std::string> create(const Path &path, const Parameters &parameters);
+        std::optional<std::string> update(const Path &path, const Parameters &parameters);
+        std::optional<std::string> del(const Path &path);
+
+      private:
+        Url getUrl(const Path &path);
+
+        const Client &client_;
+      };
+
+      class RGP {
+      public:
+        explicit RGP(const Client &client) : client_(client) {}
+
+        std::optional<std::string> list();
+        std::optional<std::string> read(const Path &path);
+        std::optional<std::string> create(const Path &path, const Parameters &parameters);
+        std::optional<std::string> update(const Path &path, const Parameters &parameters);
+        std::optional<std::string> del(const Path &path);
+
+      private:
+        Url getUrl(const Path &path);
+
+        const Client &client_;
+      };
+
+      class EGP {
+      public:
+        explicit EGP(const Client &client) : client_(client) {}
+
+        std::optional<std::string> list();
+        std::optional<std::string> read(const Path &path);
+        std::optional<std::string> create(const Path &path, const Parameters &parameters);
+        std::optional<std::string> update(const Path &path, const Parameters &parameters);
+        std::optional<std::string> del(const Path &path);
+
+      private:
+        Url getUrl(const Path &path);
+
+        const Client &client_;
+      };
+    };
+
+
   private:
     Url getUrl(const Path &path);
 

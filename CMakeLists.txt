@@ -64,6 +64,10 @@ add_library(vault SHARED
     src/system/namespaces/Namespaces.cpp
     src/system/plugins/Plugins.cpp
     src/system/policy/Policy.cpp
+    src/system/policies/Policies.cpp
+    src/system/policies/ACL.cpp
+    src/system/policies/EGP.cpp
+    src/system/policies/RGP.cpp
     src/system/Sys.cpp)
 
 set_target_properties(vault PROPERTIES
