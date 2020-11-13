@@ -7,7 +7,6 @@ int main(void)
     std::cout << err << std::endl;
   };
 
-
   Vault::AppRoleStrategy authStrategy{
     Vault::RoleId{"<role_id>"},
     Vault::SecretId{"<secret_id>"}
@@ -15,9 +14,9 @@ int main(void)
 
   Vault::Config config = Vault::ConfigBuilder().build();
   Vault::Client vaultClient{config, authStrategy, httpErrorCallback};
-  Vault::KeyValue kv{vaultClient, Vault::KeyValue::Version::v1};
-  Vault::Path mount{"/test"};
-  Vault::KeyValue kv2{vaultClient, mount};
+  Vault::SecretMount mount{"/test"};
+  Vault::KeyValue kv{vaultClient, mount};
+  Vault::Path key{"hello"};
   Vault::Parameters parameters(
     {
       {"foo","world"},
@@ -26,11 +25,7 @@ int main(void)
     }
   );
 
-  Vault::Path key{"hello"};
-
   kv.create(key, parameters);
-  kv2.create(key, parameters);
 
   std::cout << kv.read(key).value() << std::endl;
-  std::cout << kv2.read(key).value() << std::endl;
 }
