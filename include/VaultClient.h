@@ -1074,6 +1074,24 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class Azure {
+  public:
+    explicit Azure(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfiguration();
+    std::optional<std::string> deleteConfiguration();
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> listRoles();
+    std::optional<std::string> generateCredentials(const Path &path);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop

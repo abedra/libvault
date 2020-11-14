@@ -84,7 +84,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Active Directory | Yes         | No                 |
 | Ali Cloud        | Yes         | No                 |
 | AWS              | Yes         | No                 |
-| Azure            | No          | No                 |
+| Azure            | Yes         | No                 |
 | Google Cloud     | No          | No                 |
 | Google Cloud KMS | No          | No                 |
 | KMIP             | No          | No*                |
