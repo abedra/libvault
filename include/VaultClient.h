@@ -1052,6 +1052,28 @@ namespace Vault {
       const Client &client_;
     };
   };
+
+  class AWS {
+  public:
+    explicit AWS(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configureRoot(const Parameters &parameters);
+    std::optional<std::string> readRoot();
+    std::optional<std::string> rotateRoot();
+    std::optional<std::string> configureLease(const Parameters &parameters);
+    std::optional<std::string> readLease();
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readRole(const Path &path);
+    std::optional<std::string> listRoles();
+    std::optional<std::string> deleteRole(const Path &path);
+    std::optional<std::string> generateCredentials(const Path &path);
+    std::optional<std::string> generateStsCredentials(const Path &path);
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop
