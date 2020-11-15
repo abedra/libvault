@@ -36,6 +36,7 @@ add_library(vault SHARED
     src/engines/AliCloud.cpp
     src/engines/AWS.cpp
     src/engines/Azure.cpp
+    src/engines/Consul.cpp
     src/engines/Cubbyhole.cpp
     src/engines/Database.cpp
     src/engines/KeyValue.cpp

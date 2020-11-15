@@ -85,12 +85,12 @@ The following tables show support for each of the secret backends, auth methods,
 | Ali Cloud        | Yes         | No                 |
 | AWS              | Yes         | No                 |
 | Azure            | Yes         | No                 |
+| Consul           | Yes         | No                 |
 | Google Cloud     | No          | No                 |
 | Google Cloud KMS | No          | No                 |
 | KMIP             | No          | No*                |
 | Identities       | No          | No                 |
 | Nomad            | No          | No                 |
-| Consul           | No          | No                 |
 | MongoDB Atlas    | No          | No                 |
 | OpenLDAP         | No          | No                 |
 | Transform        | No          | No*                |
