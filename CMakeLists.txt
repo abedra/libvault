@@ -39,6 +39,7 @@ add_library(vault SHARED
     src/engines/Consul.cpp
     src/engines/Cubbyhole.cpp
     src/engines/Database.cpp
+    src/engines/GoogleCloud.cpp
     src/engines/KeyValue.cpp
     src/engines/Pki.cpp
     src/engines/RabbitMq.cpp

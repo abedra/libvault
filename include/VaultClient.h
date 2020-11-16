@@ -1110,6 +1110,30 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class GoogleCloud {
+  public:
+    explicit GoogleCloud(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> rotateRoot();
+    std::optional<std::string> readConfig();
+    std::optional<std::string> createRoleset(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateRoleset(const Path &path, const Parameters &parameters);
+    std::optional<std::string> rotateRolesetAccount(const Path &path);
+    std::optional<std::string> rotateRolesetAccountKey(const Path &path);
+    std::optional<std::string> readRoleset(const Path &path);
+    std::optional<std::string> listRolesets();
+    std::optional<std::string> deleteRoleset(const Path &path);
+    std::optional<std::string> generateSecretToken(const Path &path);
+    std::optional<std::string> generateSecretKey(const Path &path);
+
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop
