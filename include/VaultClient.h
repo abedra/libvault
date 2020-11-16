@@ -1128,6 +1128,35 @@ namespace Vault {
     std::optional<std::string> generateSecretToken(const Path &path);
     std::optional<std::string> generateSecretKey(const Path &path);
 
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
+
+  class GoogleCloudKms {
+  public:
+    explicit GoogleCloudKms(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfiguration();
+    std::optional<std::string> deleteConfiguration();
+    std::optional<std::string> decrypt(const Path &path, const Parameters &parameters);
+    std::optional<std::string> encrypt(const Path &path, const Parameters &parameters);
+    std::optional<std::string> reencrypt(const Path &path, const Parameters &parameters);
+    std::optional<std::string> sign(const Path &path, const Parameters &parameters);
+    std::optional<std::string> verify(const Path &path, const Parameters &parameters);
+    std::optional<std::string> listKeys();
+    std::optional<std::string> createKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteKey(const Path &path);
+    std::optional<std::string> readKey(const Path &path);
+    std::optional<std::string> readKeyConfiguration(const Path &path);
+    std::optional<std::string> updateKeyConfiguration(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deregisterKey(const Path &path);
+    std::optional<std::string> registerKey(const Path &path, const Parameters &parameters);
+    std::optional<std::string> rotateKey(const Path &path);
+    std::optional<std::string> trimKeyVersions(const Path &path);
 
   private:
     Url getUrl(const Path &path);
