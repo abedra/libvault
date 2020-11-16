@@ -88,7 +88,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Consul           | Yes         | No                 |
 | Google Cloud     | Yes         | No                 |
 | Google Cloud KMS | Yes         | No                 |
-| KMIP             | No          | No*                |
+| KMIP             | Yes         | No*                |
 | Identities       | No          | No                 |
 | Nomad            | No          | No                 |
 | MongoDB Atlas    | No          | No                 |

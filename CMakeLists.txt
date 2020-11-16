@@ -42,6 +42,7 @@ add_library(vault SHARED
     src/engines/GoogleCloud.cpp
     src/engines/GoogleCloudKms.cpp
     src/engines/KeyValue.cpp
+    src/engines/Kmip.cpp
     src/engines/Pki.cpp
     src/engines/RabbitMq.cpp
     src/engines/SSH.cpp

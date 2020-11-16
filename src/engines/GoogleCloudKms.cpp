@@ -80,4 +80,3 @@ std::optional<std::string> Vault::GoogleCloudKms::trimKeyVersions(const Path &pa
 Vault::Url Vault::GoogleCloudKms::getUrl(const Path &path) {
   return client_.getUrl("/v1/gcpkms/", path);
 }
-

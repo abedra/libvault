@@ -1163,6 +1163,32 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class Kmip {
+  public:
+    explicit Kmip(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> readCa();
+    std::optional<std::string> writeScope(const Path &path, const Parameters &parameters);
+    std::optional<std::string> listScopes();
+    std::optional<std::string> deleteScope(const Path &path);
+    std::optional<std::string> writeRole(const Path &scope, const Path &role, const Parameters &parameters);
+    std::optional<std::string> readRole(const Path &scope, const Path &role);
+    std::optional<std::string> listRoles(const Path &path);
+    std::optional<std::string> deleteRole(const Path &scope, const Path &role);
+    std::optional<std::string> generateCredential(const Path &scope, const Path &role, const Parameters &parameters);
+    std::optional<std::string> signCsr(const Path &scope, const Path &role, const Parameters &parameters);
+    std::optional<std::string> lookupCredential(const Path &scope, const Path &role);
+    std::optional<std::string> listCredentialSerialNumbers(const Path &scope, const Path &role);
+    std::optional<std::string> revokeCredential(const Path &scope, const Path &role, const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop
