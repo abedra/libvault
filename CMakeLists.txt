@@ -41,6 +41,7 @@ add_library(vault SHARED
     src/engines/Database.cpp
     src/engines/GoogleCloud.cpp
     src/engines/GoogleCloudKms.cpp
+    src/engines/identity/Entity.cpp
     src/engines/KeyValue.cpp
     src/engines/Kmip.cpp
     src/engines/MongoDBAtlas.cpp
