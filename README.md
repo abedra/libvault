@@ -90,9 +90,9 @@ The following tables show support for each of the secret backends, auth methods,
 | Google Cloud KMS | Yes         | No                 |
 | KMIP             | Yes         | No*                |
 | Nomad            | Yes         | No                 |
+| OpenLDAP         | Yes         | No                 |
 | Identities       | No          | No                 |
 | MongoDB Atlas    | No          | No                 |
-| OpenLDAP         | No          | No                 |
 | Transform        | No          | No*                |
 
 \* Requires an enterprise license and cannot be integration tested

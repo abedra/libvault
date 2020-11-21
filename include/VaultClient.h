@@ -1211,6 +1211,27 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class OpenLDAP {
+  public:
+    explicit OpenLDAP(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfiguration();
+    std::optional<std::string> deleteConfiguration();
+    std::optional<std::string> listStaticRoles();
+    std::optional<std::string> readStaticRole(const Path &path);
+    std::optional<std::string> createStaticRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteStaticRole(const Path &path);
+    std::optional<std::string> getStaticRolePassword(const Path &path);
+    std::optional<std::string> rotateStaticRolePassword(const Path &path);
+    std::optional<std::string> rotateRootPassword();
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop
