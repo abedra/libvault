@@ -44,6 +44,7 @@ add_library(vault SHARED
     src/engines/identity/Entity.cpp
     src/engines/identity/EntityAlias.cpp
     src/engines/identity/Group.cpp
+    src/engines/identity/GroupAlias.cpp
     src/engines/KeyValue.cpp
     src/engines/Kmip.cpp
     src/engines/MongoDBAtlas.cpp

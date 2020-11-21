@@ -1362,6 +1362,22 @@ namespace Vault {
 
       const Client &client_;
     };
+
+    class GroupAlias {
+    public:
+      explicit GroupAlias(const Client &client) : client_(client) {}
+
+      std::optional<std::string> create(const Parameters &parameters);
+      std::optional<std::string> readById(const Path &path);
+      std::optional<std::string> updateById(const Path &path, const Parameters &parameters);
+      std::optional<std::string> deleteById(const Path &path);
+      std::optional<std::string> listById();
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
   }
 }
 
