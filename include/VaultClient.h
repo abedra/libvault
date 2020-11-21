@@ -1405,6 +1405,19 @@ namespace Vault {
 
       const Client &client_;
     };
+
+    class Lookup {
+    public:
+      explicit Lookup(const Client &client) : client_(client) {}
+
+      std::optional<std::string> lookupEntity(const Parameters &parameters);
+      std::optional<std::string> lookupGroup(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
   }
 }
 

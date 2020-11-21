@@ -89,7 +89,7 @@ The following tables show support for each of the secret backends, auth methods,
 | KMIP             | Yes         | No*                |
 | Key/Value V1     | Yes         | Partial            |
 | Key/Value V2     | Yes         | Partial            |
-| Identity         | No          | No                 |
+| Identity         | Yes         | No                 |
 | MongoDB Atlas    | Yes         | No                 |
 | Nomad            | Yes         | No                 |
 | OpenLDAP         | Yes         | No                 |
