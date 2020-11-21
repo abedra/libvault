@@ -1,5 +1,5 @@
 # libvault
-[![Build Status](https://travis-ci.org/abedra/libvault.svg?branch=master)](https://travis-ci.org/abedra/libvault)
+![CMake](https://github.com/abedra/libvault/workflows/CMake/badge.svg)
 <a href="https://lgtm.com/projects/g/abedra/libvault/">
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
