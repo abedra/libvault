@@ -4,6 +4,8 @@ on: [push]
 
 env:
   BUILD_TYPE: Release
+  CC: gcc-8
+  CXX: g++-8
 
 jobs:
   build:
