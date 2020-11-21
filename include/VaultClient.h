@@ -1378,6 +1378,33 @@ namespace Vault {
 
       const Client &client_;
     };
+
+    class IdentityTokens {
+    public:
+      explicit IdentityTokens(const Client &client) : client_(client)  {}
+
+      std::optional<std::string> configure(const Parameters &parameters);
+      std::optional<std::string> readConfigurations();
+      std::optional<std::string> createNamedKey(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readNamedKey(const Path &path);
+      std::optional<std::string> deleteNamedKey(const Path &path);
+      std::optional<std::string> listNamedKeys();
+      std::optional<std::string> rotateNamedKey(const Path &path, const Parameters &parameters);
+      std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> listRoles();
+      std::optional<std::string> generateSignedIdToken(const Path &path);
+      std::optional<std::string> introspectSignedIdToken(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readWellKnownConfigurations();
+      std::optional<std::string> readActivePublicKeys();
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
   }
 }
 
