@@ -89,8 +89,8 @@ The following tables show support for each of the secret backends, auth methods,
 | Google Cloud     | Yes         | No                 |
 | Google Cloud KMS | Yes         | No                 |
 | KMIP             | Yes         | No*                |
+| Nomad            | Yes         | No                 |
 | Identities       | No          | No                 |
-| Nomad            | No          | No                 |
 | MongoDB Atlas    | No          | No                 |
 | OpenLDAP         | No          | No                 |
 | Transform        | No          | No*                |
