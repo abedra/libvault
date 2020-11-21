@@ -1341,6 +1341,27 @@ namespace Vault {
 
       const Client &client_;
     };
+
+    class Group {
+    public:
+      explicit Group(const Client &client) : client_(client) {}
+
+      std::optional<std::string> create(const Parameters &parameters);
+      std::optional<std::string> readById(const Path &path);
+      std::optional<std::string> updateById(const Path &path, const Parameters &parameters);
+      std::optional<std::string> deleteById(const Path &path);
+      std::optional<std::string> listById();
+      std::optional<std::string> createByName(const Path &path, const Parameters &parameters);
+      std::optional<std::string> updateByName(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readByName(const Path &path);
+      std::optional<std::string> deleteByName(const Path &path);
+      std::optional<std::string> listByName(const Path &path);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
   }
 }
 

@@ -43,6 +43,7 @@ add_library(vault SHARED
     src/engines/GoogleCloudKms.cpp
     src/engines/identity/Entity.cpp
     src/engines/identity/EntityAlias.cpp
+    src/engines/identity/Group.cpp
     src/engines/KeyValue.cpp
     src/engines/Kmip.cpp
     src/engines/MongoDBAtlas.cpp
