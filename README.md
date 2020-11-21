@@ -65,35 +65,40 @@ The following tables show support for each of the secret backends, auth methods,
 
 | Secret Backend   | Implemented | Integration Tested |
 |------------------|-------------|--------------------|
-| TOTP             | Yes         | Yes                |
-| Cubbyhole        | Yes         | Yes                |
-| Key/Value V1     | Yes         | Partial            |
-| Key/Value V2     | Yes         | Partial            |
-| RabbitMQ         | Yes         | Partial            |
-| Transit          | Yes         | Partial            |
-| PKI              | Yes         | Partial            |
-| PostgreSQL       | Yes         | Partial            |
-| Cassandra        | Yes         | No                 |
-| Elasticsearch    | Yes         | No                 |
-| Influxdb         | Yes         | No                 |
-| HanaDB           | Yes         | No                 |
-| MSSQL            | Yes         | No                 |
-| MySQL/MariaDB    | Yes         | No                 |
-| Oracle           | Yes         | No                 |
-| SSH              | Yes         | No                 |
 | Active Directory | Yes         | No                 |
 | Ali Cloud        | Yes         | No                 |
 | AWS              | Yes         | No                 |
 | Azure            | Yes         | No                 |
 | Consul           | Yes         | No                 |
+| Cubbyhole        | Yes         | Yes                |
+| Cassandra        | Yes         | No                 |
+| Couchbase        | Yes         | No                 |
+| Elasticsearch    | Yes         | No                 |
+| Influxdb         | Yes         | No                 |
+| HanaDB           | Yes         | No                 |
+| MongoDB          | Yes         | No                 |
+| MongoDB Atlas    | Yes         | No                 |
+| MSSQL            | Yes         | No                 |
+| MySQL/MariaDB    | Yes         | No                 |
+| Oracle           | Yes         | No                 |
+| PostgreSQL       | Yes         | Partial            |
+| Redshift         | Yes         | No                 |
 | Google Cloud     | Yes         | No                 |
 | Google Cloud KMS | Yes         | No                 |
+| Key Management*  | Yes         | No*                |
 | KMIP             | Yes         | No*                |
+| Key/Value V1     | Yes         | Partial            |
+| Key/Value V2     | Yes         | Partial            |
+| Identity         | No          | No                 |
+| MongoDB Atlas    | No          | No                 |
 | Nomad            | Yes         | No                 |
 | OpenLDAP         | Yes         | No                 |
-| Identities       | No          | No                 |
-| MongoDB Atlas    | No          | No                 |
+| PKI              | Yes         | Partial            |
+| RabbitMQ         | Yes         | Partial            |
+| SSH              | Yes         | No                 |
+| TOTP             | Yes         | Yes                |
 | Transform        | No          | No*                |
+| Transit          | Yes         | Partial            |
 
 \* Requires an enterprise license and cannot be integration tested
 
