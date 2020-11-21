@@ -43,6 +43,7 @@ add_library(vault SHARED
     src/engines/GoogleCloudKms.cpp
     src/engines/KeyValue.cpp
     src/engines/Kmip.cpp
+    src/engines/MongoDBAtlas.cpp
     src/engines/Nomad.cpp
     src/engines/OpenLDAP.cpp
     src/engines/Pki.cpp
