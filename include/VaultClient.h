@@ -1,4 +1,6 @@
 #pragma GCC diagnostic push
+#pragma ide diagnostic ignored "OCUnusedStructInspection"
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 #pragma ide diagnostic ignored "UnusedStructInspection"
 #pragma ide diagnostic ignored "cert-err58-cpp"
 #pragma ide diagnostic ignored "UnusedGlobalDeclarationInspection"
@@ -1317,6 +1319,22 @@ namespace Vault {
       std::optional<std::string> deleteByName(const Path &path);
       std::optional<std::string> listByName(const Path &path);
       std::optional<std::string> merge(const Parameters &parameters);
+
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class EntityAlias {
+    public:
+      explicit EntityAlias(const Client &client) : client_(client) {}
+
+      std::optional<std::string> create(const Parameters &parameters);
+      std::optional<std::string> readById(const Path &path);
+      std::optional<std::string> updateById(const Path &path, const Parameters &parameters);
+      std::optional<std::string> deleteById(const Path &path);
+      std::optional<std::string> listById();
 
     private:
       Url getUrl(const Path &path);
