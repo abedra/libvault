@@ -49,6 +49,7 @@ add_library(vault SHARED
     src/engines/RabbitMq.cpp
     src/engines/SSH.cpp
     src/engines/Totp.cpp
+    src/engines/Transform.cpp
     src/engines/Transit.cpp
     src/support/Base64.cpp
     src/support/HttpClient.cpp

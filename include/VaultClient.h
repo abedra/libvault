@@ -1232,6 +1232,55 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class Transform {
+  public:
+    explicit Transform(const Client &client) : client_(client) {}
+
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readRole(const Path &path);
+    std::optional<std::string> listRoles();
+    std::optional<std::string> deleteRole(const Path &path);
+    std::optional<std::string> createTransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateTransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> createFPETransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateFPETransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> createMaskingTransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateMaskingTransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> createTokenizationTransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateTokenizationTransformation(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readTransformation(const Path &path);
+    std::optional<std::string> listTransformations();
+    std::optional<std::string> deleteTransformation(const Path &path);
+    std::optional<std::string> createTemplate(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateTemplate(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readTemplate(const Path &path);
+    std::optional<std::string> listTemplates();
+    std::optional<std::string> deleteTemplate(const Path &path);
+    std::optional<std::string> createAlphabet(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateAlphabet(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readAlphabet(const Path &path);
+    std::optional<std::string> listAlphabets();
+    std::optional<std::string> deleteAlphabet(const Path &path);
+    std::optional<std::string> createTokenizationStore(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateTokenizationStore(const Path &path, const Parameters &parameters);
+    std::optional<std::string> createStoreSchema(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateStoreSchema(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readStore(const Path &path);
+    std::optional<std::string> listStores();
+    std::optional<std::string> deleteStore(const Path &path);
+    std::optional<std::string> encode(const Path &path, const Parameters &parameters);
+    std::optional<std::string> decode(const Path &path, const Parameters &parameters);
+    std::optional<std::string> validateToken(const Path &path, const Parameters &parameters);
+    std::optional<std::string> checkTokenization(const Path &path, const Parameters &parameters);
+    std::optional<std::string> retrieveTokenMetadata(const Path &path, const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop

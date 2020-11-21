@@ -97,7 +97,7 @@ The following tables show support for each of the secret backends, auth methods,
 | RabbitMQ         | Yes         | Partial            |
 | SSH              | Yes         | No                 |
 | TOTP             | Yes         | Yes                |
-| Transform        | No          | No*                |
+| Transform        | Yes         | No*                |
 | Transit          | Yes         | Partial            |
 
 \* Requires an enterprise license and cannot be integration tested
