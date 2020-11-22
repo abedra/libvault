@@ -1547,6 +1547,26 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class JwtOidc {
+  public:
+    explicit JwtOidc(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readRole(const Path &path);
+    std::optional<std::string> listRoles();
+    std::optional<std::string> deleteRole(const Path &path);
+    std::optional<std::string> oidcAuthorizationUrlRequest(const Parameters &parameters);
+    std::optional<std::string> oidcCallback();
+    std::optional<std::string> jwtLogin(const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop
