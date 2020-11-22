@@ -1507,6 +1507,24 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class GitHub {
+  public:
+    explicit GitHub(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> mapGithubTeams(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readTeamMapping(const Path &path);
+    std::optional<std::string> mapGithubUsers(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readUserMapping(const Path &path);
+    std::optional<std::string> login(const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop

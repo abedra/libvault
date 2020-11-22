@@ -110,8 +110,8 @@ The following tables show support for each of the secret backends, auth methods,
 | AliCloud          | Yes         | No                 |
 | AWS               | Yes         | No                 |
 | Azure             | Yes         | No                 |
-| Cloud Foundry     | No          | No                 |
-| GitHub            | No          | No                 |
+| Cloud Foundry     | Yes         | No                 |
+| GitHub            | Yes         | No                 |
 | Google Cloud      | No          | No                 |
 | JWT/OIDC          | No          | No                 |
 | Kerberos          | No          | No                 |
