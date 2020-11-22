@@ -1567,6 +1567,27 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class Kerberos {
+  public:
+    explicit Kerberos(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> configureLdap(const Parameters &parameters);
+    std::optional<std::string> readLdapConfig();
+    std::optional<std::string> listGroups();
+    std::optional<std::string> readGroup(const Path &path);
+    std::optional<std::string> createGroup(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateGroup(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteGroup(const Path &path);
+    std::optional<std::string> login(const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop

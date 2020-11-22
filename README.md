@@ -114,7 +114,7 @@ The following tables show support for each of the secret backends, auth methods,
 | GitHub            | Yes         | No                 |
 | Google Cloud      | Yes         | No                 |
 | JWT/OIDC          | Yes         | No                 |
-| Kerberos          | No          | No                 |
+| Kerberos          | Yes         | No                 |
 | Kubernetes        | No          | No                 |
 | OCI               | No          | No                 |
 | Okta              | No          | No                 |

@@ -33,6 +33,7 @@ add_library(vault SHARED
     src/auth/GitHub.cpp
     src/auth/GoogleCloud.cpp
     src/auth/JwtOidc.cpp
+    src/auth/Kerberos.cpp
     src/auth/LdapStrategy.cpp
     src/auth/WrappedSecretAppRoleStrategy.cpp
     src/domain/VaultClient.cpp
