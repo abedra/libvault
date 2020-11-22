@@ -65,8 +65,8 @@ jobs:
         version: ['7', '8', '9', '10', '11']
     
     env:
-      CC: gcc-${{ matrix.version }}
-      CXX: g++-${{ matrix.version }}
+      CC: clang-${{ matrix.version }}
+      CXX: clang-${{ matrix.version }}
     
     steps:
     - uses: actions/checkout@v2
