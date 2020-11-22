@@ -4,13 +4,20 @@ on: [push]
 
 env:
   BUILD_TYPE: Release
-  CC: gcc-8
-  CXX: g++-8
 
 jobs:
-  build:
+  gcc-build:
+    name: GCC ${{ matrix.version }}
     runs-on: ubuntu-latest
-
+    
+    strategy:
+      matrix:
+        version: ['8', '9', '10']
+    
+    env:
+      CC: gcc-${{ matrix.version }}
+      CCX: g++-${{ matrix.version }}
+    
     steps:
     - uses: actions/checkout@v2
 
