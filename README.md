@@ -109,7 +109,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Tokens            | Partial     | Partial            |
 | AliCloud          | Yes         | No                 |
 | AWS               | Yes         | No                 |
-| Azure             | No          | No                 |
+| Azure             | Yes         | No                 |
 | Cloud Foundry     | No          | No                 |
 | GitHub            | No          | No                 |
 | Google Cloud      | No          | No                 |

@@ -28,6 +28,7 @@ add_library(vault SHARED
     src/auth/AppRole.cpp
     src/auth/AppRoleStrategy.cpp
     src/auth/AWS.cpp
+    src/auth/Azure.cpp
     src/auth/LdapStrategy.cpp
     src/auth/WrappedSecretAppRoleStrategy.cpp
     src/domain/VaultClient.cpp
