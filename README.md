@@ -112,7 +112,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Azure             | Yes         | No                 |
 | Cloud Foundry     | Yes         | No                 |
 | GitHub            | Yes         | No                 |
-| Google Cloud      | No          | No                 |
+| Google Cloud      | Yes         | No                 |
 | JWT/OIDC          | No          | No                 |
 | Kerberos          | No          | No                 |
 | Kubernetes        | No          | No                 |
