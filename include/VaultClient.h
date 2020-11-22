@@ -1056,25 +1056,73 @@ namespace Vault {
   };
 
   class AWS {
-  public:
-    explicit AWS(const Client &client) : client_(client) {}
+    class Auth {
+    public:
+      explicit Auth(const Client &client) : client_(client) {}
 
-    std::optional<std::string> configureRoot(const Parameters &parameters);
-    std::optional<std::string> readRoot();
-    std::optional<std::string> rotateRoot();
-    std::optional<std::string> configureLease(const Parameters &parameters);
-    std::optional<std::string> readLease();
-    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
-    std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
-    std::optional<std::string> readRole(const Path &path);
-    std::optional<std::string> listRoles();
-    std::optional<std::string> deleteRole(const Path &path);
-    std::optional<std::string> generateCredentials(const Path &path);
-    std::optional<std::string> generateStsCredentials(const Path &path);
-  private:
-    Url getUrl(const Path &path);
+      std::optional<std::string> configure(const Parameters &parameters);
+      std::optional<std::string> readConfig();
+      std::optional<std::string> deleteConfig();
+      std::optional<std::string> rotateRoot();
+      std::optional<std::string> configureIdentity(const Parameters &parameters);
+      std::optional<std::string> readIdentityConfiguration();
+      std::optional<std::string> createCertificateConfiguration(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readCertificateConfiguration(const Path &path);
+      std::optional<std::string> deleteCertificateConfiguration(const Path &path);
+      std::optional<std::string> listCertificateConfigurations();
+      std::optional<std::string> createSTSRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readSTSRole(const Path &path);
+      std::optional<std::string> listSTSRoles();
+      std::optional<std::string> deleteSTSRole(const Path &path);
+      std::optional<std::string> configureIdentityWhitelistTidy(const Parameters &parameters);
+      std::optional<std::string> readIdentityWhitelistTidy();
+      std::optional<std::string> deleteIdentityWhitelistTidy();
+      std::optional<std::string> configureRoleTagBlacklistTidy(const Parameters &parameters);
+      std::optional<std::string> readRoleTagBlacklistTidy();
+      std::optional<std::string> deleteRoleTagBlacklistTidy();
+      std::optional<std::string> crateRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> listRoles();
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> createRoleTags(const Path &path, const Parameters &parameters);
+      std::optional<std::string> login(const Parameters &parameters);
+      std::optional<std::string> blacklistRoleTag(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readRoleTagBlacklist(const Path &path);
+      std::optional<std::string> listBlacklistTags();
+      std::optional<std::string> deleteBlacklistTags(const Path &path);
+      std::optional<std::string> tidyBlacklistTags(const Parameters &parameters);
+      std::optional<std::string> readIdentityWhitelist(const Path &path);
+      std::optional<std::string> listIdentityWhitelist();
+      std::optional<std::string> deleteIdentityWhitelist(const Path &path);
+      std::optional<std::string> tidyIdentityWhitelist(const Parameters &parameters);
 
-    const Client &client_;
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
+
+    class Secrets {
+    public:
+      explicit Secrets(const Client &client) : client_(client) {}
+
+      std::optional<std::string> configureRoot(const Parameters &parameters);
+      std::optional<std::string> readRoot();
+      std::optional<std::string> rotateRoot();
+      std::optional<std::string> configureLease(const Parameters &parameters);
+      std::optional<std::string> readLease();
+      std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
+      std::optional<std::string> readRole(const Path &path);
+      std::optional<std::string> listRoles();
+      std::optional<std::string> deleteRole(const Path &path);
+      std::optional<std::string> generateCredentials(const Path &path);
+      std::optional<std::string> generateStsCredentials(const Path &path);
+    private:
+      Url getUrl(const Path &path);
+
+      const Client &client_;
+    };
   };
 
   class Azure {

@@ -108,7 +108,7 @@ The following tables show support for each of the secret backends, auth methods,
 | LDAP              | Partial     | No                 |
 | Tokens            | Partial     | Partial            |
 | AliCloud          | Yes         | No                 |
-| AWS               | No          | No                 |
+| AWS               | Yes         | No                 |
 | Azure             | No          | No                 |
 | Cloud Foundry     | No          | No                 |
 | GitHub            | No          | No                 |
