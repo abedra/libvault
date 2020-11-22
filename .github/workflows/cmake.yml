@@ -73,6 +73,16 @@ jobs:
 
     - name: Install dependencies
       run: sudo apt-get install libcurl4-openssl-dev
+    
+    - name: Install compiler
+      run: |
+          curl -L https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-${{ matrix.version }} main"
+          sudo apt-get update
+          sudo apt-get install -y clang-${{ matrix.version }} libstdc++-7-dev libbsd-dev uuid-dev
+          curl -O -L https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
+          tar xf cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz
+          echo "cmake-${CMAKE_VERSION}-Linux-x86_64/bin" >> $GITHUB_PATH
 
     - name: Install Catch2
       run: |
