@@ -36,6 +36,7 @@ add_library(vault SHARED
     src/auth/Kerberos.cpp
     src/auth/Kubernetes.cpp
     src/auth/LdapStrategy.cpp
+    src/auth/OCI.cpp
     src/auth/WrappedSecretAppRoleStrategy.cpp
     src/domain/VaultClient.cpp
     src/domain/ConfigBuilder.cpp
