@@ -1624,6 +1624,28 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class Okta {
+  public:
+    explicit Okta(const Client &client) : client_(client) {}
+
+    std::optional<std::string> configure(const Parameters &parameters);
+    std::optional<std::string> readConfig();
+    std::optional<std::string> listUsers();
+    std::optional<std::string> registerUser(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readUser(const Path &path);
+    std::optional<std::string> deleteUser(const Path &path);
+    std::optional<std::string> listGroups();
+    std::optional<std::string> registerGroup(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readGroup(const Path &path);
+    std::optional<std::string> deleteGroup(const Path &path);
+    std::optional<std::string> login(const Path &path, const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop

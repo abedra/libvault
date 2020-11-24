@@ -117,7 +117,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Kerberos          | Yes         | No                 |
 | Kubernetes        | Yes         | No                 |
 | OCI               | Yes         | No                 |
-| Okta              | No          | No                 |
+| Okta              | Yes         | No                 |
 | RADIUS            | No          | No                 |
 | TLS Certificate   | No          | No                 |
 | Username/Password | No          | No                 |
