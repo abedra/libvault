@@ -104,10 +104,8 @@ The following tables show support for each of the secret backends, auth methods,
 
 | Auth Method       | Implemented | Integration Tested |
 |-------------------|-------------|--------------------|
-| AppRole           | Yes         | Yes                |
-| LDAP              | Partial     | No                 |
-| Tokens            | Partial     | Partial            |
 | AliCloud          | Yes         | No                 |
+| AppRole           | Yes         | Yes                |
 | AWS               | Yes         | No                 |
 | Azure             | Yes         | No                 |
 | Cloud Foundry     | Yes         | No                 |
@@ -116,10 +114,12 @@ The following tables show support for each of the secret backends, auth methods,
 | JWT/OIDC          | Yes         | No                 |
 | Kerberos          | Yes         | No                 |
 | Kubernetes        | Yes         | No                 |
+| LDAP              | Partial     | No                 |
 | OCI               | Yes         | No                 |
 | Okta              | Yes         | No                 |
 | RADIUS            | No          | No                 |
 | TLS Certificate   | No          | No                 |
+| Tokens            | Partial     | Partial            |
 | Username/Password | No          | No                 |
 
 \* Requires an enterprise license and cannot be integration tested
