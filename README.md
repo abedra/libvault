@@ -120,7 +120,7 @@ The following tables show support for each of the secret backends, auth methods,
 | RADIUS            | Yes         | No                 |
 | TLS Certificate   | Yes         | No                 |
 | Tokens            | Partial     | Partial            |
-| Username/Password | No          | No                 |
+| Username/Password | Yes         | No                 |
 
 \* Requires an enterprise license and cannot be integration tested
 

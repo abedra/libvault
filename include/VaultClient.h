@@ -1683,6 +1683,25 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class UserPass {
+  public:
+    explicit UserPass(const Client &client) : client_(client)  {}
+
+    std::optional<std::string> createUser(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updateUser(const Path &path, const Parameters &parameters);
+    std::optional<std::string> readUser(const Path &path);
+    std::optional<std::string> deleteUser(const Path &path);
+    std::optional<std::string> updatePassword(const Path &path, const Parameters &parameters);
+    std::optional<std::string> updatePolicy(const Path &path, const Parameters &parameters);
+    std::optional<std::string> listUsers();
+    std::optional<std::string> login(const Path &path, const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop
