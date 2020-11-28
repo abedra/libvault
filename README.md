@@ -117,7 +117,7 @@ The following tables show support for each of the secret backends, auth methods,
 | LDAP              | Partial     | No                 |
 | OCI               | Yes         | No                 |
 | Okta              | Yes         | No                 |
-| RADIUS            | No          | No                 |
+| RADIUS            | Yes         | No                 |
 | TLS Certificate   | No          | No                 |
 | Tokens            | Partial     | Partial            |
 | Username/Password | No          | No                 |

@@ -47,4 +47,3 @@ std::optional<std::string> Vault::Okta::login(const Path  &path, const Parameter
 Vault::Url Vault::Okta::getUrl(const Path &path) {
   return client_.getUrl("/v1/auth/okta/", path);
 }
-

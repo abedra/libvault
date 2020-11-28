@@ -38,6 +38,7 @@ add_library(vault SHARED
     src/auth/LdapStrategy.cpp
     src/auth/OCI.cpp
     src/auth/Okta.cpp
+    src/auth/Radius.cpp
     src/auth/WrappedSecretAppRoleStrategy.cpp
     src/domain/VaultClient.cpp
     src/domain/ConfigBuilder.cpp
