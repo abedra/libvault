@@ -114,7 +114,7 @@ The following tables show support for each of the secret backends, auth methods,
 | JWT/OIDC          | Yes         | No                 |
 | Kerberos          | Yes         | No                 |
 | Kubernetes        | Yes         | No                 |
-| LDAP              | Partial     | No                 |
+| LDAP              | Yes         | No                 |
 | OCI               | Yes         | No                 |
 | Okta              | Yes         | No                 |
 | RADIUS            | Yes         | No                 |

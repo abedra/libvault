@@ -26,7 +26,6 @@ add_library(vault SHARED
     include/VaultClient.h
     src/auth/AliCloud.cpp
     src/auth/AppRole.cpp
-    src/auth/AppRoleStrategy.cpp
     src/auth/AWS.cpp
     src/auth/Azure.cpp
     src/auth/CloudFoundry.cpp
@@ -35,13 +34,15 @@ add_library(vault SHARED
     src/auth/JwtOidc.cpp
     src/auth/Kerberos.cpp
     src/auth/Kubernetes.cpp
-    src/auth/LdapStrategy.cpp
+    src/auth/Ldap.cpp
     src/auth/OCI.cpp
     src/auth/Okta.cpp
     src/auth/Radius.cpp
     src/auth/Tls.cpp
     src/auth/UserPass.cpp
-    src/auth/WrappedSecretAppRoleStrategy.cpp
+    src/auth/strategies/AppRoleStrategy.cpp
+    src/auth/strategies/LdapStrategy.cpp
+    src/auth/strategies/WrappedSecretAppRoleStrategy.cpp
     src/domain/VaultClient.cpp
     src/domain/ConfigBuilder.cpp
     src/engines/ActiveDirectory.cpp

@@ -1,4 +1,3 @@
-#include <utility>
 #include "json.hpp"
 #include "VaultClient.h"
 
