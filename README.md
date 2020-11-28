@@ -118,7 +118,7 @@ The following tables show support for each of the secret backends, auth methods,
 | OCI               | Yes         | No                 |
 | Okta              | Yes         | No                 |
 | RADIUS            | Yes         | No                 |
-| TLS Certificate   | No          | No                 |
+| TLS Certificate   | Yes         | No                 |
 | Tokens            | Partial     | Partial            |
 | Username/Password | No          | No                 |
 
