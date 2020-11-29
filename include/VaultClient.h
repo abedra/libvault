@@ -622,12 +622,16 @@ namespace Vault {
     public:
       explicit Mounts(const Client &client) : client_(client) {}
 
-      std::optional<std::string> readUi();
-      std::optional<std::string> read();
-      std::optional<std::string> enable(const Path &path, const Parameters &parameters);
+      [[nodiscard]] std::optional<std::string> list() const;
+      [[nodiscard]] std::optional<std::string> readUi() const;
+      [[nodiscard]] std::optional<std::string> read() const;
+      [[nodiscard]] std::optional<std::string> enable(const Path &path, const Parameters &parameters) const;
+      [[nodiscard]] std::optional<std::string> disable(const Path &path) const;
+      [[nodiscard]] std::optional<std::string> readConfiguration(const Path &path) const;
+      [[nodiscard]] std::optional<std::string> tuneConfiguration(const Path &path, const Parameters &parameters) const;
 
     private:
-      Url getUrl(const Path &path);
+      [[nodiscard]] Url getUrl(const Path &path) const;
 
       const Client &client_;
     };
@@ -732,14 +736,14 @@ namespace Vault {
     public:
       explicit Policy(const Client &client) : client_(client) {}
 
-      std::optional<std::string> list();
-      std::optional<std::string> read(const Path &path);
-      std::optional<std::string> create(const Path &path, const Parameters &parameters);
-      std::optional<std::string> update(const Path &path, const Parameters &parameters);
-      std::optional<std::string> del(const Path &path);
+      [[nodiscard]] std::optional<std::string> list() const;
+      [[nodiscard]] std::optional<std::string> read(const Path &path) const;
+      [[nodiscard]] std::optional<std::string> create(const Path &path, const Parameters &parameters) const;
+      [[nodiscard]] std::optional<std::string> update(const Path &path, const Parameters &parameters) const;
+      [[nodiscard]] std::optional<std::string> del(const Path &path) const;
 
     private:
-      Url getUrl(const Path &path);
+      [[nodiscard]] Url getUrl(const Path &path) const;
 
       const Client &client_;
     };
