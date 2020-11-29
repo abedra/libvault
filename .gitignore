@@ -4,7 +4,7 @@ CMakeCache.txt
 CMakeFiles
 ./Makefile
 cmake_install.cmake
-example/example
+example
 build
 *.o
 data
@@ -12,3 +12,4 @@ bin
 operator.txt
 .env
 venv
+*.gch

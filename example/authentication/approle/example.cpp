@@ -2,87 +2,60 @@
 #include "../../../lib/json.hpp"
 #include "VaultClient.h"
 
-Vault::Client getRootClient() {
-  auto rootTokenEnv = std::getenv("VAULT_SINGLE_TOKEN");
-
-  if (!rootTokenEnv) {
-    std::cout << "The VAULT_ROOT_TOKEN environment variable must be set" << std::endl;
-  }
-
-  Vault::TokenStrategy tokenStrategy{Vault::Token{rootTokenEnv}};
-
+Vault::Client getRootClient(const Vault::Token &rootToken) {
+  Vault::TokenStrategy tokenStrategy{rootToken};
   Vault::Config config = Vault::ConfigBuilder()
-      .withDebug(false)
       .withTlsEnabled(false)
       .build();
-
-  Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
-    std::cout << err << std::endl;
-  };
-
-  return Vault::Client{config, tokenStrategy, httpErrorCallback};
+  return Vault::Client{config, tokenStrategy};
 }
 
 Vault::Client getAppRoleClient(const Vault::RoleId &roleId, const Vault::SecretId &secretId) {
   Vault::AppRoleStrategy authStrategy{roleId, secretId};
-
   Vault::Config config = Vault::ConfigBuilder()
-      .withDebug(false)
       .withTlsEnabled(false)
       .build();
-
-  Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
-    std::cout << err << std::endl;
-  };
-
-  return Vault::Client{config, authStrategy, httpErrorCallback};
+  return Vault::Client{config, authStrategy};
 }
 
-void enableAppRole(const Vault::Client &client) {
+std::optional<std::string> enableAppRole(const Vault::Sys::Auth &authAdmin) {
   std::cout << "Enabling AppRole" << std::endl;
-
-  Vault::Sys::Auth authAdmin{client};
-  authAdmin.enable(Vault::Path{"approle"}, Vault::Parameters{{"type", "approle"}});
+  return authAdmin.enable(Vault::Path{"approle"}, Vault::Parameters{{"type", "approle"}});
 }
 
-void disableAppRole(const Vault::Client &client) {
+std::optional<std::string> disableAppRole(const Vault::Sys::Auth &authAdmin) {
   std::cout << "Disabling AppRole" << std::endl;
-
-  Vault::Sys::Auth authAdmin{client};
-  authAdmin.disable(Vault::Path{"approle"});
+  return authAdmin.disable(Vault::Path{"approle"});
 }
 
-void createRole(const Vault::Client &client) {
+std::optional<std::string> createRole(const Vault::AppRole &appRoleAdmin) {
   std::cout << "Creating role 'example'" << std::endl;
-
-  auto appRoleAdmin = Vault::AppRole{client};
-  appRoleAdmin.create(Vault::Path{"example"}, Vault::Parameters{});
+  return appRoleAdmin.create(Vault::Path{"example"}, Vault::Parameters{});
 }
 
-Vault::RoleId getRoleId(const Vault::Client &client) {
+std::optional<std::string> deleteRole(const Vault::AppRole &appRoleAdmin) {
+  std::cout << "Deleting role 'example'" << std::endl;
+  return appRoleAdmin.del(Vault::Path{"example"});
+}
+
+Vault::RoleId getRoleId(const Vault::AppRole &appRoleAdmin) {
   std::cout << "Fetching role id for 'example'" << std::endl;
 
-  auto appRoleAdmin = Vault::AppRole{client};
   auto response = appRoleAdmin.getRoleId(Vault::Path{"example"});
-
   if (response) {
-    std::string roleId = nlohmann::json::parse(response.value())["data"]["role_id"];
-    return Vault::RoleId{roleId};
+    return Vault::RoleId{nlohmann::json::parse(response.value())["data"]["role_id"]};
   } else {
     std::cout << "Could not get role id" << std::endl;
     exit(-1);
   }
 }
 
-Vault::SecretId getSecretId(const Vault::Client &client) {
+Vault::SecretId getSecretId(const Vault::AppRole &appRoleAdmin) {
   std::cout << "Fetching secret id for 'example'" << std::endl;
 
-  auto appRoleAdmin = Vault::AppRole{client};
   auto response = appRoleAdmin.generateSecretId(Vault::Path{"example"}, Vault::Parameters{});
-
   if (response) {
-    std::string secretId = nlohmann::json::parse(response.value())["data"]["secret_id"];
-    return Vault::SecretId{secretId};
+    return Vault::SecretId{nlohmann::json::parse(response.value())["data"]["secret_id"]};
   } else {
     std::cout << "Could not get role id" << std::endl;
     exit(-1);
@@ -90,11 +63,23 @@ Vault::SecretId getSecretId(const Vault::Client &client) {
 }
 
 int main(void) {
-  auto rootClient = getRootClient();
-  enableAppRole(rootClient);
-  createRole(rootClient);
-  auto roleId = getRoleId(rootClient);
-  auto secretId = getSecretId(rootClient);
+  auto rootTokenEnv = std::getenv("VAULT_ROOT_TOKEN");
+
+  if (!rootTokenEnv) {
+    std::cout << "The VAULT_ROOT_TOKEN environment variable must be set" << std::endl;
+    exit(-1);
+  }
+
+  auto rootToken = Vault::Token{rootTokenEnv};
+  auto rootClient = getRootClient(rootToken);
+  auto authAdmin = Vault::Sys::Auth{rootClient};
+  auto appRoleAdmin = Vault::AppRole{rootClient};
+
+  enableAppRole(authAdmin);
+  createRole(appRoleAdmin);
+
+  auto roleId = getRoleId(appRoleAdmin);
+  auto secretId = getSecretId(appRoleAdmin);
   auto appRoleClient = getAppRoleClient(roleId, secretId);
 
   if (appRoleClient.is_authenticated()) {
@@ -103,5 +88,6 @@ int main(void) {
     std::cout << "Unable to authenticate" << std::endl;
   }
 
-  disableAppRole(rootClient);
+  deleteRole(appRoleAdmin);
+  disableAppRole(authAdmin);
 }
