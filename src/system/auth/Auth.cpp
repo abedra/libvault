@@ -21,5 +21,5 @@ std::optional<std::string> Vault::Sys::Auth::tune(const Path &path, const Parame
 }
 
 Vault::Url Vault::Sys::Auth::getUrl(const Vault::Path &path) {
-  return client_.getUrl("/v1/sys/auth", path);
+  return client_.getUrl("/v1/sys/auth/", path);
 }

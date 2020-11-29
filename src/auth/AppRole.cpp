@@ -137,5 +137,5 @@ Vault::AppRole::tidy(const Vault::Path &roleName) {
 }
 
 Vault::Url Vault::AppRole::getUrl(const Vault::Path& path) {
-  return client_.getUrl("/v1/auth/approle/role", path);
+  return client_.getUrl("/v1/auth/approle/role/", path);
 }
