@@ -6,7 +6,7 @@ Vault::AppRole::AppRole(const Client& vaultClient)
   {}
 
 std::optional<std::string> Vault::AppRole::list() {
-  return Vault::HttpConsumer::list(client_, getUrl(Vault::Path{"/"}));
+  return Vault::HttpConsumer::list(client_, getUrl(Vault::Path{}));
 }
 
 std::optional<std::string>
