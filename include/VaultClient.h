@@ -399,30 +399,29 @@ namespace Vault {
 
   class AppRole {
   public:
-    explicit AppRole(const Client &client);
+    explicit AppRole(const Client &client) : client_(client) {}
 
-    std::optional<std::string> list();
-    std::optional<std::string> create(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> update(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> read(const Path &roleName);
-    std::optional<std::string> del(const Path &roleName);
-    std::optional<std::string> getRoleId(const Path &roleName);
-    std::optional<std::string> updateRoleId(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> getRoleProperty(const Path &roleName, const Path &propertyName);
-    std::optional<std::string> updateRoleProperty(const Path &roleName, const Path &propertyName, const Parameters &parameters);
-    std::optional<std::string> deleteRoleProperty(const Path &roleName, const Path &propertyName);
-
-    std::optional<std::string> generateSecretId(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> listSecretAccessors(const Path &roleName);
-    std::optional<std::string> readSecretId(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> destroySecretId(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> readSecretIdAccessor(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> destroySecretIdAccessor(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> customSecretId(const Path &roleName, const Parameters &parameters);
-    std::optional<std::string> tidy(const Path &roleName);
+    [[nodiscard]] std::optional<std::string> list() const;
+    [[nodiscard]] std::optional<std::string> create(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> update(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> read(const Path &roleName) const;
+    [[nodiscard]] std::optional<std::string> del(const Path &roleName) const;
+    [[nodiscard]] std::optional<std::string> getRoleId(const Path &roleName) const;
+    [[nodiscard]] std::optional<std::string> updateRoleId(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> getRoleProperty(const Path &roleName, const Path &propertyName) const;
+    [[nodiscard]] std::optional<std::string> updateRoleProperty(const Path &roleName, const Path &propertyName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> deleteRoleProperty(const Path &roleName, const Path &propertyName) const;
+    [[nodiscard]] std::optional<std::string> generateSecretId(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> listSecretAccessors(const Path &roleName) const;
+    [[nodiscard]] std::optional<std::string> readSecretId(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> destroySecretId(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readSecretIdAccessor(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> destroySecretIdAccessor(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> customSecretId(const Path &roleName, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> tidy(const Path &roleName) const;
 
   private:
-    Vault::Url getUrl(const Path &path);
+    [[nodiscard]] Url getUrl(const Path &path) const;
 
     const Client &client_;
   };
@@ -459,14 +458,14 @@ namespace Vault {
     public:
       explicit Auth(const Client &client) : client_(client) {}
 
-      std::optional<std::string> list();
-      std::optional<std::string> enable(const Path &path, const Parameters &parameters);
-      std::optional<std::string> disable(const Path &path);
-      std::optional<std::string> readTuning(const Path &path);
-      std::optional<std::string> tune(const Path &path, const Parameters &parameters);
+      [[nodiscard]] std::optional<std::string> list() const;
+      [[nodiscard]] std::optional<std::string> enable(const Path &path, const Parameters &parameters) const;
+      [[nodiscard]] std::optional<std::string> disable(const Path &path) const;
+      [[nodiscard]] std::optional<std::string> readTuning(const Path &path) const;
+      [[nodiscard]] std::optional<std::string> tune(const Path &path, const Parameters &parameters) const;
 
     private:
-      Url getUrl(const Path &path);
+      [[nodiscard]] Url getUrl(const Path &path) const;
 
       const Client &client_;
     };
