@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv(dotenv_path=Path('..') / '..' / '.env')
+load_dotenv(dotenv_path=Path('../..') / '..' / '.env')
 
 role_id = os.getenv("APPROLE_ROLE_ID")
 secret_id = os.getenv("APPROLE_SECRET_ID")

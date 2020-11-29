@@ -9,3 +9,6 @@ example: example.o
 .PHONY: clean
 clean:
 	rm -f example.o example
+
+vault:
+	docker run -p 8200:8200 vault
