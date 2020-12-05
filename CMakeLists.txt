@@ -42,6 +42,7 @@ add_library(vault SHARED
     src/auth/UserPass.cpp
     src/auth/strategies/AppRoleStrategy.cpp
     src/auth/strategies/LdapStrategy.cpp
+    src/auth/strategies/TlsStrategy.cpp
     src/auth/strategies/WrappedSecretAppRoleStrategy.cpp
     src/domain/VaultClient.cpp
     src/domain/ConfigBuilder.cpp

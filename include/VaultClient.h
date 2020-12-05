@@ -57,22 +57,23 @@ namespace Vault {
     struct Name##Detail {};                \
     using Name = Tiny<Name##Detail, long>; \
 
-  LIBVAULT_TINY_STRING(SecretId)
-  LIBVAULT_TINY_STRING(HttpResponseBodyString)
-  LIBVAULT_TINY_STRING(Url)
-  LIBVAULT_TINY_STRING(Path)
-  LIBVAULT_TINY_STRING(Token)
-  LIBVAULT_TINY_STRING(Namespace)
-  LIBVAULT_TINY_STRING(RoleId)
-  LIBVAULT_TINY_STRING(Host)
-  LIBVAULT_TINY_STRING(Port)
   LIBVAULT_TINY_STRING(Algorithm)
-  LIBVAULT_TINY_STRING(SecretMount)
-  LIBVAULT_TINY_STRING(RootCertificateType)
+  LIBVAULT_TINY_STRING(Certificate)
+  LIBVAULT_TINY_STRING(Host)
+  LIBVAULT_TINY_STRING(HttpResponseBodyString)
   LIBVAULT_TINY_STRING(KeyType)
+  LIBVAULT_TINY_STRING(Namespace)
+  LIBVAULT_TINY_STRING(Path)
+  LIBVAULT_TINY_STRING(Port)
+  LIBVAULT_TINY_STRING(RoleId)
+  LIBVAULT_TINY_STRING(RootCertificateType)
+  LIBVAULT_TINY_STRING(SecretId)
+  LIBVAULT_TINY_STRING(SecretMount)
+  LIBVAULT_TINY_STRING(Token)
+  LIBVAULT_TINY_STRING(Url)
 
-  LIBVAULT_TINY_LONG(HttpResponseStatusCode)
   LIBVAULT_TINY_LONG(ConnectTimeout)
+  LIBVAULT_TINY_LONG(HttpResponseStatusCode)
   LIBVAULT_TINY_LONG(TTL)
 
   #undef LIBVAULT_TINY_STRING
@@ -135,6 +136,7 @@ namespace Vault {
 
     [[nodiscard]] virtual std::optional<HttpResponse> get(const Url &url, const Token &token, const Namespace &ns) const;
     [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, const std::string& value) const;
+    [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Certificate &cert, const Certificate &key, const Namespace &ns) const;
     [[nodiscard]] virtual std::optional<HttpResponse> post(const Url &url, const Token &token, const Namespace &ns, const std::string& value, const CurlHeaderCallback& headerCallback) const;
     [[nodiscard]] virtual std::optional<HttpResponse> put(const Url &url, const Token &token, const Namespace &ns, const std::string& value) const;
     [[nodiscard]] virtual std::optional<HttpResponse> del(const Url &url, const Token &token, const Namespace &ns) const;
@@ -255,6 +257,7 @@ namespace Vault {
     static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> del(const Client &client, const Url &url);
     static std::optional<Vault::AuthenticationResponse> authenticate(const Client &client, const Url &url, const NoArgJsonProducer &jsonProducer);
+    static std::optional<Vault::AuthenticationResponse> authenticate(const Client &client, const Url &url, const Certificate &cert, const Certificate &key);
   };
 
   class TokenStrategy : public AuthenticationStrategy {
@@ -304,6 +307,19 @@ namespace Vault {
 
     std::string username_;
     std::string password_;
+  };
+
+  class TlsStrategy : public AuthenticationStrategy {
+  public:
+    explicit TlsStrategy(const Certificate &cert, const Certificate &key) : cert_(cert), key_(key) {}
+
+    std::optional<AuthenticationResponse> authenticate(const Client &client) override;
+
+  private:
+    static Url getUrl(const Client &client);
+
+    const Certificate &cert_;
+    const Certificate &key_;
   };
 
   class Ldap {
@@ -907,38 +923,38 @@ namespace Vault {
   public:
     explicit Pki(const Client &client) : client_(client) {}
 
-    std::optional<std::string> readCACertificate();
-    std::optional<std::string> readCACertificateChain();
-    std::optional<std::string> generateRoot(const RootCertificateType &rootCertificateType, const Parameters &parameters);
-    std::optional<std::string> deleteRoot();
-    std::optional<std::string> setUrls(const Parameters &parameters);
-    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
-    std::optional<std::string> updateRole(const Path &path, const Parameters &parameters);
-    std::optional<std::string> readRole(const Path &path);
-    std::optional<std::string> listRoles();
-    std::optional<std::string> deleteRole(const Path &path);
-    std::optional<std::string> issue(const Path &path, const Parameters &parameters);
-    std::optional<std::string> listCertificates();
-    std::optional<std::string> readCertificate(const Path &path);
-    std::optional<std::string> configureCA(const Parameters &parameters);
-    std::optional<std::string> readCrlConfiguration();
-    std::optional<std::string> setCrlConfiguration(const Parameters &parameters);
-    std::optional<std::string> readURLs();
-    std::optional<std::string> setURLs(const Parameters &parameters);
-    std::optional<std::string> readCRL();
-    std::optional<std::string> rotateCrl();
-    std::optional<std::string> generateIntermediate(const KeyType &keyType, const Parameters &parameters);
-    std::optional<std::string> signIntermediate(const Parameters &parameters);
-    std::optional<std::string> setSignedIntermediate(const Parameters &parameters);
-    std::optional<std::string> signSelfIssued(const Parameters &parameters);
-    std::optional<std::string> sign(const Path &path, const Parameters &parameters);
-    std::optional<std::string> signVerbatim(const Path &path, const Parameters &parameters);
-    std::optional<std::string> generateCertificate(const Path &path, const Parameters &parameters);
-    std::optional<std::string> tidy(const Parameters &parameters);
-    std::optional<std::string> revokeCertificate(const Parameters &parameters);
+    [[nodiscard]] std::optional<std::string> readCACertificate() const;
+    [[nodiscard]] std::optional<std::string> readCACertificateChain() const;
+    [[nodiscard]] std::optional<std::string> generateRoot(const RootCertificateType &rootCertificateType, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> deleteRoot() const;
+    [[nodiscard]] std::optional<std::string> setUrls(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> createRole(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> updateRole(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> listRoles() const;
+    [[nodiscard]] std::optional<std::string> deleteRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> issue(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> listCertificates() const;
+    [[nodiscard]] std::optional<std::string> readCertificate(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> configureCA(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readCrlConfiguration() const;
+    [[nodiscard]] std::optional<std::string> setCrlConfiguration(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readURLs() const;
+    [[nodiscard]] std::optional<std::string> setURLs(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readCRL() const;
+    [[nodiscard]] std::optional<std::string> rotateCrl() const;
+    [[nodiscard]] std::optional<std::string> generateIntermediate(const KeyType &keyType, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> signIntermediate(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> setSignedIntermediate(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> signSelfIssued(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> sign(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> signVerbatim(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> generateCertificate(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> tidy(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> revokeCertificate(const Parameters &parameters) const;
 
   private:
-    Url getUrl(const Path &path);
+    [[nodiscard]] Url getUrl(const Path &path) const;
 
     const Client &client_;
   };
@@ -1694,18 +1710,18 @@ namespace Vault {
   public:
     explicit Tls(const Client &client) : client_(client) {}
 
-    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
-    std::optional<std::string> readRole(const Path &path);
-    std::optional<std::string> listRoles();
-    std::optional<std::string> deleteRole(const Path &path);
-    std::optional<std::string> createCrl(const Path &path, const Parameters &parameters);
-    std::optional<std::string> readCrl(const Path &path);
-    std::optional<std::string> deleteCrl(const Path &path);
-    std::optional<std::string> configure(const Parameters &parameters);
-    std::optional<std::string> login(const Parameters &parameters);
+    [[nodiscard]] std::optional<std::string> createRole(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> listRoles() const;
+    [[nodiscard]] std::optional<std::string> deleteRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> createCrl(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readCrl(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> deleteCrl(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> configure(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> login(const Parameters &parameters) const;
 
   private:
-    Url getUrl(const Path &path);
+    [[nodiscard]] Url getUrl(const Path &path) const;
 
     const Client &client_;
   };

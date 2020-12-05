@@ -74,6 +74,26 @@ Vault::HttpClient::post(const Vault::Url& url,
 }
 
 std::optional<Vault::HttpResponse>
+Vault::HttpClient::post(const Vault::Url& url,
+                        const Vault::Certificate &cert,
+                        const Vault::Certificate &key,
+                        const Vault::Namespace& ns) const {
+  return executeRequest(
+      url,
+      Token{},
+      ns,
+      [&](CURL *curl) {
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "");
+        curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "PEM");
+        curl_easy_setopt(curl, CURLOPT_SSLCERT, cert.value().c_str());
+        curl_easy_setopt(curl, CURLOPT_SSLKEY, key.value().c_str());
+      },
+      [&](curl_slist *chunk){ return chunk; }
+  );
+}
+
+std::optional<Vault::HttpResponse>
 Vault::HttpClient::put(const Vault::Url& url,
                        const Vault::Token& token,
                        const Vault::Namespace& ns,
