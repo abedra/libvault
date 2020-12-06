@@ -311,15 +311,15 @@ namespace Vault {
 
   class TlsStrategy : public AuthenticationStrategy {
   public:
-    explicit TlsStrategy(const Certificate &cert, const Certificate &key) : cert_(cert), key_(key) {}
+    explicit TlsStrategy(Certificate cert, Certificate key) : cert_(std::move(cert)), key_(std::move(key)) {}
 
     std::optional<AuthenticationResponse> authenticate(const Client &client) override;
 
   private:
     static Url getUrl(const Client &client);
 
-    const Certificate &cert_;
-    const Certificate &key_;
+    Certificate cert_;
+    Certificate key_;
   };
 
   class Ldap {
