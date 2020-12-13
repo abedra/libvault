@@ -1,0 +1,9 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "example",
+    "username": "vault:dbuser",
+    "password": "vault:dbpass"
+  }
+}
