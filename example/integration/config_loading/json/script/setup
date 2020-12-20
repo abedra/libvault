@@ -1,0 +1,16 @@
+#!/bin/sh
+
+export VAULT_ADDR=http://127.0.0.1:8200
+VAULT=../../../../bin/vault
+
+$VAULT policy write example config/example.hcl
+$VAULT auth enable approle
+$VAULT write auth/approle/role/client policies="example"
+ROLE_ID=$($VAULT read auth/approle/role/client/role-id | grep role_id | awk '{print $2}')
+SECRET_ID=$($VAULT write -f auth/approle/role/client/secret-id | grep -m1 secret_id | awk '{print $2}')
+$VAULT kv put secret/database vault:dbuser=postgres vault:dbpass=postgres
+
+rm -f .env
+
+echo "export APPROLE_ROLE_ID=$ROLE_ID" >> .env
+echo "export APPROLE_SECRET_ID=$SECRET_ID" >> .env
