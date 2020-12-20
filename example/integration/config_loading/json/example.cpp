@@ -18,8 +18,10 @@ struct Database {
     auto databaseSecrets = kv.read(Vault::Path{"database"});
     if (databaseSecrets) {
       std::unordered_map<std::string, std::string> secrets = nlohmann::json::parse(databaseSecrets.value())["data"]["data"];
-      this->username = secrets.at(this->username);
-      this->password = secrets.at(this->password);
+      auto maybeUsername = secrets.find(this->username);
+      auto maybePassword = secrets.find(this->password);
+      this->username = maybeUsername == secrets.end() ? this->username : maybeUsername->second;
+      this->password = maybePassword == secrets.end() ? this->password : maybePassword->second;
 
       return *this;
     } else {
