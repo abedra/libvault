@@ -1,8 +1,8 @@
 {
   "database": {
-    "host": "localhost",
+    "host": "127.0.0.1",
     "port": 5432,
-    "name": "example",
+    "name": "postgres",
     "username": "vault:dbuser",
     "password": "vault:dbpass"
   }

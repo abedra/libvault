@@ -1,6 +1,8 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <pqxx/pqxx>
+
 #include "../../../../lib/json.hpp"
 #include "VaultClient.h"
 
@@ -24,6 +26,16 @@ struct Database {
       return *this;
     }
   }
+
+  std::string connectionString() {
+    std::stringstream ss;
+    ss << "hostaddr=" << host << " "
+       << "port=" << port << " "
+       << "user=" << username<< " "
+       << "password=" << password << " "
+       << "dbname=" << name;
+    return ss.str();
+  }
 };
 
 void from_json(const nlohmann::json &j, Database &database) {
@@ -41,6 +53,10 @@ Database getDatabaseConfiguration(const std::filesystem::path &path) {
   return nlohmann::json::parse(unparsedJson)["database"];
 }
 
+pqxx::connection getConnection(Database &database) {
+  return pqxx::connection{database.connectionString()};
+}
+
 int main(void) {
   char *roleId = std::getenv("APPROLE_ROLE_ID");
   char *secretId = std::getenv("APPROLE_SECRET_ID");
@@ -50,14 +66,24 @@ int main(void) {
   }
   Vault::AppRoleStrategy appRoleStrategy{Vault::RoleId{roleId}, Vault::SecretId{secretId}};
   Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
-  Vault::Client client = Vault::Client{config, appRoleStrategy};
+  Vault::Client vaultClient = Vault::Client{config, appRoleStrategy};
 
-  if (client.is_authenticated()) {
-    std::cout << "Authenticated to Vault" << std::endl;
+  if (vaultClient.is_authenticated()) {
     Database databaseConfig = getDatabaseConfiguration(std::filesystem::path{"config.json"});
-    std::cout << databaseConfig.username << " : " << databaseConfig.password << std::endl;
-    Database databaseConfigWithSecrets = databaseConfig.withSecrets(client);
-    std::cout << databaseConfigWithSecrets.username << " : " << databaseConfigWithSecrets.password << std::endl;
+    std::cout << "From Config" << std::endl;
+    std::cout << databaseConfig.username << " : " << databaseConfig.password << std::endl << std::endl;
+
+    Database databaseConfigWithSecrets = databaseConfig.withSecrets(vaultClient);
+    std::cout << "With Secrets" << std::endl;
+    std::cout << databaseConfigWithSecrets.username << " : " << databaseConfigWithSecrets.password << std::endl << std::endl;
+
+    auto conn = getConnection(databaseConfigWithSecrets);
+    if (conn.is_open()) {
+      std::cout << "Connected to database" << std::endl;
+      conn.disconnect();
+    } else {
+      std::cout << "Could not connect to database" << std::endl;
+    }
   } else {
     std::cout << "Unable to authenticate to Vault" << std::endl;
   }
