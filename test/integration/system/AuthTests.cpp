@@ -13,9 +13,9 @@ TEST_CASE("Auth Functions") {
   SECTION("list") {
     auto first = auth.list();
     Vault::Parameters parameters{{"type", "userpass"}, {"description", "userpass"}};
-    auth.enable(Vault::Path{"/userpass"}, parameters);
+    auth.enable(Vault::Path{"userpass"}, parameters);
     auto userPass = auth.list();
-    auth.disable(Vault::Path{"/userpass"});
+    auth.disable(Vault::Path{"userpass"});
     auto disabledUserPass = auth.list();
 
     if (first && userPass && disabledUserPass) {
@@ -32,8 +32,8 @@ TEST_CASE("Auth Functions") {
 
   SECTION("readTuning") {
     Vault::Parameters parameters{{"max_lease_ttl", "5000"}};
-    auth.tune(Vault::Path{"/approle"}, parameters);
-    auto response = auth.readTuning(Vault::Path{"/approle"});
+    auth.tune(Vault::Path{"approle"}, parameters);
+    auto response = auth.readTuning(Vault::Path{"approle"});
 
     if (response) {
       auto data = nlohmann::json::parse(response.value())["data"];
