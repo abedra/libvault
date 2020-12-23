@@ -5,7 +5,7 @@
 
 Vault::Client getRootClient(const Vault::Token &rootToken) {
   Vault::TokenStrategy tokenStrategy{rootToken};
-  Vault::Config config = Vault::ConfigBuilder().withTlsEnabled(false).build();
+  Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
 
   return Vault::Client{config, tokenStrategy};
 }
