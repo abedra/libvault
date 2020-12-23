@@ -13,6 +13,6 @@ std::optional<std::string> Vault::Sys::Audit::disable(const Path &path) {
 }
 
 Vault::Url Vault::Sys::Audit::getUrl(const Vault::Path &path) {
-  return client_.getUrl("/v1/sys/audit/", path);
+  return client_.getUrl("/v1/sys/audit", path.empty() ? path : Path{"/" + path});
 }
 
