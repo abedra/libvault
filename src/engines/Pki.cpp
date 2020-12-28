@@ -1,5 +1,15 @@
 #include "VaultClient.h"
 
+Vault::Pki::Pki(const Vault::Client& client)
+  : client_(client)
+  , mount_("pki")
+  {}
+
+Vault::Pki::Pki(const Vault::Client& client, Vault::SecretMount mount)
+  : client_(client)
+  , mount_(std::move(mount))
+  {}
+
 std::optional<std::string> Vault::Pki::readCACertificate() const {
   return HttpConsumer::get(client_, getUrl(Path{"ca/pem"}));
 }
@@ -117,5 +127,5 @@ std::optional<std::string> Vault::Pki::revokeCertificate(const Parameters &param
 }
 
 Vault::Url Vault::Pki::getUrl(const Path &path) const {
-  return client_.getUrl("/v1/pki/", path);
+  return client_.getUrl("/v1/" + mount_ + "/", path);
 }

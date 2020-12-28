@@ -921,7 +921,9 @@ namespace Vault {
 
   class Pki {
   public:
-    explicit Pki(const Client &client) : client_(client) {}
+    explicit Pki(const Client &client);
+
+    Pki(const Client &client, Vault::SecretMount mount);
 
     [[nodiscard]] std::optional<std::string> readCACertificate() const;
     [[nodiscard]] std::optional<std::string> readCACertificateChain() const;
@@ -957,6 +959,7 @@ namespace Vault {
     [[nodiscard]] Url getUrl(const Path &path) const;
 
     const Client &client_;
+    Vault::SecretMount mount_;
   };
 
   class RabbitMq {
