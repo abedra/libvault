@@ -60,7 +60,6 @@ TEST_CASE("KeyValue Functions") {
       if (response) {
         auto config = nlohmann::json::parse(response.value())["data"];
 
-        CHECK(config.size() == 2);
         CHECK(config["cas_required"] == false);
         CHECK(config["max_versions"] == 10);
       } else {

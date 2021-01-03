@@ -68,10 +68,6 @@ std::optional<std::string> Vault::Pki::readURLs() const {
   return HttpConsumer::get(client_, getUrl(Path{"config/urls"}));
 }
 
-std::optional<std::string> Vault::Pki::setURLs(const Parameters &parameters) const {
-  return HttpConsumer::post(client_, getUrl(Path{"config/urls"}), parameters);
-}
-
 std::optional<std::string> Vault::Pki::readCRL() const {
   return HttpConsumer::get(client_, getUrl(Path{"crl/pem"}));
 }
@@ -117,5 +113,5 @@ std::optional<std::string> Vault::Pki::revokeCertificate(const Parameters &param
 }
 
 Vault::Url Vault::Pki::getUrl(const Path &path) const {
-  return client_.getUrl("/v1/pki/", path);
+  return client_.getUrl("/v1/" + secretMount_, path.empty() ? path : Path{"/" + path});
 }
