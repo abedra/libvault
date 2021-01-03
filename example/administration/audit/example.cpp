@@ -13,9 +13,12 @@ int main(void) {
 
   if (rootClient.is_authenticated()) {
     Vault::Sys::Audit auditAdmin{rootClient};
+    auditAdmin.enable(Vault::Path{"file"}, Vault::Parameters{{"type", "file"}}, Vault::Parameters{{"file_path", "/vault/logs/audit.log"}});
+
     auto response = auditAdmin.read();
     if (response) {
       std::cout << response.value() << std::endl;
+      auditAdmin.disable(Vault::Path{"file"});
     } else {
       std::cout << "Failure" << std::endl;
     }

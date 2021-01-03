@@ -103,7 +103,7 @@ Vault::HttpClient::put(const Vault::Url& url,
     token,
     ns,
     [&](CURL *curl) {
-      curl_easy_setopt(curl, CURLOPT_PUT, 1L);
+      curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
     },
     [&](curl_slist *chunk){ return chunk; }

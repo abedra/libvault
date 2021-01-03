@@ -254,6 +254,7 @@ namespace Vault {
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
     static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters);
+    static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters, const Parameters &options);
     static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> del(const Client &client, const Url &url);
     static std::optional<Vault::AuthenticationResponse> authenticate(const Client &client, const Url &url, const NoArgJsonProducer &jsonProducer);
@@ -491,7 +492,7 @@ namespace Vault {
       explicit Audit(const Client &client) : client_(client) {}
 
       std::optional<std::string> read();
-      std::optional<std::string> enable(const Path &path, const Parameters &parameters);
+      std::optional<std::string> enable(const Path &path, const Parameters &parameters, const Parameters &options);
       std::optional<std::string> disable(const Path &path);
 
     private:
