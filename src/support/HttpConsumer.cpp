@@ -132,7 +132,7 @@ Vault::HttpConsumer::put(const Vault::Client& client,
     json[key] = value;
   }
 
-  auto response = client.getHttpClient().post(
+  auto response = client.getHttpClient().put(
       url,
       client.getToken(),
       client.getNamespace(),
