@@ -475,10 +475,10 @@ namespace Vault {
       explicit Auth(const Client &client) : client_(client) {}
 
       [[nodiscard]] std::optional<std::string> list() const;
-      [[nodiscard]] std::optional<std::string> enable(const Path &path, const Parameters &parameters) const;
-      [[nodiscard]] std::optional<std::string> disable(const Path &path) const;
+      std::optional<std::string> enable(const Path &path, const Parameters &parameters) const;
+      std::optional<std::string> disable(const Path &path) const;
       [[nodiscard]] std::optional<std::string> readTuning(const Path &path) const;
-      [[nodiscard]] std::optional<std::string> tune(const Path &path, const Parameters &parameters) const;
+      std::optional<std::string> tune(const Path &path, const Parameters &parameters) const;
 
     private:
       [[nodiscard]] Url getUrl(const Path &path) const;

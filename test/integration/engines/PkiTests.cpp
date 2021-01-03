@@ -21,7 +21,11 @@ TEST_CASE("Pki")
     {"max_ttl", "72h"}
   });
 
-  pki.generateRoot(Vault::RootCertificateTypes::INTERNAL, rootCertificateParameters);
+  auto generateRootResponse = pki.generateRoot(Vault::RootCertificateTypes::INTERNAL, rootCertificateParameters);
+  if (!generateRootResponse) {
+    REQUIRE(false);
+  }
+
   pki.setUrls(urlParameters);
   pki.createRole(Vault::Path{"example-dot-com"}, roleParameters);
 
@@ -60,7 +64,7 @@ TEST_CASE("Pki")
 
     if (response) {
       auto data = nlohmann::json::parse(response.value())["data"];
-      CHECK(data["keys"].size() > 0);
+      CHECK(!data["keys"].empty());
     } else {
       CHECK(false);
     }
