@@ -101,6 +101,40 @@ std::optional<std::string>
 Vault::HttpConsumer::post(const Vault::Client &client,
                           const Vault::Url &url,
                           const Parameters &parameters,
+                          const Parameters &options,
+                          const Parameters &config) {
+  if (!client.is_authenticated()) {
+    return std::nullopt;
+  }
+
+  nlohmann::json json = nlohmann::json::object();
+  for (auto&&[key, value] : parameters) {
+    json[key] = value;
+  }
+
+  for (auto&&[key, value] : options) {
+    json["options"][key] = value;
+  }
+
+  for (auto&&[key, value] : config) {
+    json["config"][key] = value;
+  }
+
+  auto response = client.getHttpClient().post(
+      url,
+      client.getToken(),
+      client.getNamespace(),
+      json.dump());
+
+  return HttpClient::is_success(response)
+         ? std::optional<std::string>(response.value().body.value())
+         : std::nullopt;
+}
+
+std::optional<std::string>
+Vault::HttpConsumer::post(const Vault::Client &client,
+                          const Vault::Url &url,
+                          const Parameters &parameters,
                           const JsonProducer &jsonProducer) {
   if (!client.is_authenticated()) {
     return std::nullopt;

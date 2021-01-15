@@ -251,6 +251,7 @@ namespace Vault {
     static std::optional<std::string> get(const Client &client, const Url &url);
     static std::optional<std::string> list(const Client &client, const Url &url);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters);
+    static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters, const Parameters &options, const Parameters &config);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
     static std::optional<std::string> put(const Client &client, const Url &url, const Parameters &parameters);
@@ -642,10 +643,10 @@ namespace Vault {
       [[nodiscard]] std::optional<std::string> list() const;
       [[nodiscard]] std::optional<std::string> readUi() const;
       [[nodiscard]] std::optional<std::string> read() const;
-      [[nodiscard]] std::optional<std::string> enable(const Path &path, const Parameters &parameters) const;
-      [[nodiscard]] std::optional<std::string> disable(const Path &path) const;
+      std::optional<std::string> enable(const Path &path, const Parameters &parameters, const Parameters &options, const Parameters &config) const;
+      std::optional<std::string> disable(const Path &path) const;
       [[nodiscard]] std::optional<std::string> readConfiguration(const Path &path) const;
-      [[nodiscard]] std::optional<std::string> tuneConfiguration(const Path &path, const Parameters &parameters) const;
+      std::optional<std::string> tuneConfiguration(const Path &path, const Parameters &parameters) const;
 
     private:
       [[nodiscard]] Url getUrl(const Path &path) const;

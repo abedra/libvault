@@ -66,7 +66,7 @@ Vault::SecretId getSecretId(const Vault::AppRole &appRoleAdmin) {
 }
 
 std::optional<std::string> enableKeyValue(const Vault::Sys::Mounts &mountAdmin) {
-  return mountAdmin.enable(Vault::Path{}, Vault::Parameters{});
+  return mountAdmin.enable(Vault::Path{}, Vault::Parameters{}, Vault::Parameters{}, Vault::Parameters{});
 }
 
 std::optional<std::string> disableKeyValue(const Vault::Sys::Mounts &mountAdmin) {

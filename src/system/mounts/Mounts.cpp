@@ -12,8 +12,11 @@ std::optional<std::string> Vault::Sys::Mounts::read() const {
   return HttpConsumer::get(client_, getUrl(Path{"mounts"}));
 }
 
-std::optional<std::string> Vault::Sys::Mounts::enable(const Path &path, const Parameters &parameters) const {
-  return HttpConsumer::post(client_, getUrl(Path{"mounts/" + path}), parameters);
+std::optional<std::string> Vault::Sys::Mounts::enable(const Path &path,
+                                                      const Parameters &parameters,
+                                                      const Parameters &options,
+                                                      const Parameters &config) const {
+  return HttpConsumer::post(client_, getUrl(Path{"mounts/" + path}), parameters, options, config);
 }
 
 std::optional<std::string> Vault::Sys::Mounts::disable(const Path &path) const {
