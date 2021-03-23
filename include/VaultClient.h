@@ -113,6 +113,7 @@ namespace Vault {
   class Client;
 
   using Parameters = std::unordered_map<std::string, std::string>;
+  using JsonParameters = nlohmann::json;
   using HttpErrorCallback = std::function<void(std::string)>;
   using CurlSetupCallback = std::function<void(CURL *curl)>;
   using CurlHeaderCallback = std::function<curl_slist*(curl_slist *chunk)>;
@@ -251,6 +252,7 @@ namespace Vault {
     static std::optional<std::string> get(const Client &client, const Url &url);
     static std::optional<std::string> list(const Client &client, const Url &url);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters);
+    static std::optional<std::string> post(const Client &client, const Url &url, const JsonParameters& parameters);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters, const Parameters &options, const Parameters &config);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
