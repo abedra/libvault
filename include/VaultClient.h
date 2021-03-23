@@ -8,6 +8,7 @@
 
 #include <unordered_map>
 #include <curl/curl.h>
+#include <json.hpp>
 #include <filesystem>
 #include <functional>
 #include <optional>
@@ -1743,6 +1744,38 @@ namespace Vault {
     std::optional<std::string> updatePolicy(const Path &path, const Parameters &parameters);
     std::optional<std::string> listUsers();
     std::optional<std::string> login(const Path &path, const Parameters &parameters);
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
+
+  class Tokens {
+  public:
+    explicit Tokens(const Client &client) : client_(client)  {}
+
+//    std::optional<std::string> listAccessors();
+    std::optional<std::string> createToken(const JsonParameters &parameters);
+
+//    std::optional<std::string> lookupToken();
+//    std::optional<std::string> lookupTokenSelf();
+//    std::optional<std::string> lookupTokenAccessor();
+//
+//    std::optional<std::string> renewToken();
+//    std::optional<std::string> renewTokenSelf();
+//    std::optional<std::string> renewTokenAccessor();
+//
+//    std::optional<std::string> revokeToken();
+//    std::optional<std::string> revokeTokenSelf();
+//    std::optional<std::string> revokeTokenAccessor();
+//    std::optional<std::string> revokeTokenAndOrphanChildren();
+//
+//    std::optional<std::string> readTokenRole();
+//    std::optional<std::string> listTokenRoles();
+//    std::optional<std::string> createTokenRole();
+//    std::optional<std::string> deleteTokenRole();
+//    std::optional<std::string> tidyTokens();
 
   private:
     Url getUrl(const Path &path);

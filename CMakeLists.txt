@@ -4,7 +4,7 @@ project(vault VERSION 0.38.0 DESCRIPTION "Vault library for C++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS_DEBUG --coverage)
+#set(CMAKE_CXX_FLAGS_DEBUG --coverage)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(ENABLE_TEST "Enable tests?" ON)
@@ -103,7 +103,8 @@ add_library(vault SHARED
     src/system/raw/Raw.cpp
     src/system/sealwrap/Sealwrap.cpp
     src/system/tools/Tools.cpp
-    src/system/Sys.cpp)
+    src/system/Sys.cpp
+    src/auth/Tokens.cpp)
 
 set_target_properties(vault PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -159,7 +160,8 @@ if (ENABLE_TEST)
         test/integration/engines/CubbyholeTests.cpp
         test/integration/engines/PkiTests.cpp
         test/integration/engines/RabbitMqTests.cpp
-        test/integration/engines/DatabaseTests.cpp)
+        test/integration/engines/DatabaseTests.cpp
+        test/integration/TokensTests.cpp)
 
     target_include_directories(libvault_integration_test PRIVATE include)
 
