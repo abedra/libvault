@@ -47,6 +47,15 @@ TEST_CASE("Token Authentication Tests")
       CHECK(data["creation_ttl"] == SECONDS_IN_ONE_HOUR);
     }
 
+    SECTION("RenewTokenSelf") {
+      Vault::Tokens new_token{new_root};
+      Vault::JsonParameters params {{"increment", "2h"}};
+      auto renew_response = new_token.renewTokenSelf(params);
+      REQUIRE(renew_response.has_value());
+      auto new_ttl = nlohmann::json::parse(renew_response.value())["auth"]["lease_duration"];
+      CHECK(new_ttl == 2 * SECONDS_IN_ONE_HOUR);
+    }
+
     SECTION("RevokeTokenSelf") {
       // Get accessor
       Vault::Tokens new_token{new_root};
@@ -74,5 +83,10 @@ TEST_CASE("Token Authentication Tests")
     REQUIRE(response.has_value());
     std::vector<std::string> accessor_list = nlohmann::json::parse(response.value())["data"]["keys"];
     CHECK(std::find(accessor_list.begin(), accessor_list.end(), accessor) != accessor_list.end());
+  }
+
+  SECTION("TidyTokens") {
+    auto response = token.tidyTokens();
+    CHECK(response.has_value());
   }
 }

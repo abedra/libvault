@@ -1763,7 +1763,7 @@ namespace Vault {
 //    std::optional<std::string> lookupTokenAccessor();
 //
 //    std::optional<std::string> renewToken();
-//    std::optional<std::string> renewTokenSelf();
+    std::optional<std::string> renewTokenSelf(const JsonParameters &parameters);
 //    std::optional<std::string> renewTokenAccessor();
 //
 //    std::optional<std::string> revokeToken();
@@ -1776,7 +1776,7 @@ namespace Vault {
 //    std::optional<std::string> createTokenRole();
 //    std::optional<std::string> deleteTokenRole();
 
-//    std::optional<std::string> tidyTokens();
+    std::optional<std::string> tidyTokens();
 
   private:
     Url getUrl(const Path &path);

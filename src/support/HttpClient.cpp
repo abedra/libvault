@@ -24,7 +24,8 @@ Vault::HttpClient::HttpClient(Vault::Config& config, HttpErrorCallback errorCall
 {}
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
-  return response && response.value().statusCode.value() == 200;
+  return response &&
+    (response.value().statusCode.value() == 200 || response.value().statusCode.value() == 202);
 }
 
 std::optional<Vault::HttpResponse>

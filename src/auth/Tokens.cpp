@@ -22,4 +22,12 @@ std::optional<std::string> Tokens::revokeTokenSelf() {
   return HttpConsumer::post(client_, getUrl(Path{"revoke-self"}), Vault::Parameters{});
 }
 
+std::optional<std::string> Tokens::renewTokenSelf(const JsonParameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"renew-self"}), parameters);
+}
+
+std::optional<std::string> Tokens::tidyTokens() {
+  return HttpConsumer::post(client_, getUrl(Path{"tidy"}), Vault::Parameters{});
+}
+
 }  // namespace Vault
