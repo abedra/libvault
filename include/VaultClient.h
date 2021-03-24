@@ -1757,25 +1757,20 @@ namespace Vault {
 
     std::optional<std::string> listAccessors();  // requires sudo
     std::optional<std::string> createToken(const JsonParameters &parameters);
-
-//    std::optional<std::string> lookupToken();
+    std::optional<std::string> lookupToken(const Parameters &parameters);
     std::optional<std::string> lookupTokenSelf();
-//    std::optional<std::string> lookupTokenAccessor();
-//
-//    std::optional<std::string> renewToken();
+    std::optional<std::string> lookupTokenAccessor(const Parameters &parameters);
+    std::optional<std::string> renewToken(const Parameters &parameters);
     std::optional<std::string> renewTokenSelf(const JsonParameters &parameters);
-//    std::optional<std::string> renewTokenAccessor();
-//
-//    std::optional<std::string> revokeToken();
+    std::optional<std::string> renewTokenAccessor(const Parameters &parameters);
+    std::optional<std::string> revokeToken(const Parameters &parameters);
     std::optional<std::string> revokeTokenSelf();
-//    std::optional<std::string> revokeTokenAccessor();
-//    std::optional<std::string> revokeTokenAndOrphanChildren();
-//
-//    std::optional<std::string> readTokenRole();
-//    std::optional<std::string> listTokenRoles();
-//    std::optional<std::string> createTokenRole();
-//    std::optional<std::string> deleteTokenRole();
-
+    std::optional<std::string> revokeTokenAccessor(const Parameters &parameters);
+    std::optional<std::string> revokeTokenAndOrphanChildren(const Parameters &parameters);
+    std::optional<std::string> readTokenRole(const Path &path);
+    std::optional<std::string> listTokenRoles();
+    std::optional<std::string> createTokenRole(const Path &path, const JsonParameters &parameters);
+    std::optional<std::string> deleteTokenRole(const Path &path);
     std::optional<std::string> tidyTokens();
 
   private:

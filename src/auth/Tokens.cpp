@@ -10,10 +10,6 @@ std::optional<std::string>  Tokens::lookupTokenSelf() {
   return HttpConsumer::get(client_, getUrl(Path{"lookup-self"}));
 }
 
-Url Tokens::getUrl(const Path &path) {
-  return client_.getUrl("/v1/auth/token/", path);
-}
-
 std::optional<std::string> Tokens::listAccessors() {
   return HttpConsumer::list(client_, getUrl(Path{"accessors"}));
 }
@@ -28,6 +24,54 @@ std::optional<std::string> Tokens::renewTokenSelf(const JsonParameters &paramete
 
 std::optional<std::string> Tokens::tidyTokens() {
   return HttpConsumer::post(client_, getUrl(Path{"tidy"}), Vault::Parameters{});
+}
+
+std::optional<std::string> Tokens::readTokenRole(const Path &path) {
+  return HttpConsumer::get(client_, getUrl(Path{"roles/" + path}));
+}
+
+std::optional<std::string> Tokens::listTokenRoles() {
+  return HttpConsumer::list(client_, getUrl(Path{"roles"}));
+}
+
+std::optional<std::string> Tokens::createTokenRole(const Path &path, const JsonParameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"roles/" + path}), parameters);
+}
+
+std::optional<std::string> Tokens::deleteTokenRole(const Path &path) {
+  return HttpConsumer::del(client_,getUrl(Path{"roles/" + path}));
+}
+
+std::optional<std::string> Tokens::lookupToken(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"lookup"}), parameters);
+}
+
+std::optional<std::string> Tokens::renewToken(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"renew"}), parameters);
+}
+
+std::optional<std::string> Tokens::revokeToken(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"revoke"}), parameters);
+}
+
+std::optional<std::string> Tokens::lookupTokenAccessor(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"lookup-accessor"}), parameters);
+}
+
+std::optional<std::string> Tokens::renewTokenAccessor(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"renew-accessor"}), parameters);
+}
+
+std::optional<std::string> Tokens::revokeTokenAccessor(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"revoke-accessor"}), parameters);
+}
+
+std::optional<std::string> Tokens::revokeTokenAndOrphanChildren(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"revoke-orphan"}), parameters);
+}
+
+Url Tokens::getUrl(const Path &path) {
+  return client_.getUrl("/v1/auth/token/", path);
 }
 
 }  // namespace Vault
