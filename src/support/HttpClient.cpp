@@ -1,8 +1,6 @@
 #include <utility>
 #include "VaultClient.h"
 
-#define TOKEN_TIDY_SUCCESS 202
-
 static size_t
 writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
   ((std::string *) userp)->append((char *) contents, size * nmemb);
@@ -27,7 +25,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config, HttpErrorCallback errorCall
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
   return response &&
-    (response.value().statusCode.value() == 200 || response.value().statusCode.value() == TOKEN_TIDY_SUCCESS);
+    (response.value().statusCode.value() >= 200 && response.value().statusCode.value() < 300);
 }
 
 std::optional<Vault::HttpResponse>
