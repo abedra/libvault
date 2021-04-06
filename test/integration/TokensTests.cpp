@@ -202,4 +202,28 @@ TEST_CASE("Token Authentication Tests")
     auto response = token.tidyTokens();
     CHECK(response.has_value());
   }
+
+  SECTION("WrappedTokenCreation") {
+    Vault::JsonParameters params{{"ttl",       "1h"},
+                                 {"renewable", true}};
+    params["meta"] = nlohmann::json{{"user", "armon"}};
+
+    Vault::TTL ttl{60};
+    auto response = token.createWrappedToken(params, ttl);
+    CHECK(response.has_value());
+    auto wrapped_token = nlohmann::json::parse(response.value())["wrap_info"]["token"];
+
+    // create client with wrapping token
+    Vault::Token new_token{wrapped_token};
+    Vault::Client new_root{root, new_token};
+    Vault::Sys sys{new_root};
+
+    // Check token health
+    auto resp = sys.lookup(new_root.getToken());
+    CHECK(resp.has_value());
+
+    // Receive token
+    resp = sys.unwrap(new_root.getToken());
+    CHECK(resp.has_value());
+  }
 }

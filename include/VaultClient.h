@@ -253,7 +253,7 @@ namespace Vault {
     static std::optional<std::string> get(const Client &client, const Url &url);
     static std::optional<std::string> list(const Client &client, const Url &url);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters);
-    static std::optional<std::string> post(const Client &client, const Url &url, const JsonParameters& parameters);
+    static std::optional<std::string> post(const Client &client, const Url &url, const JsonParameters& parameters, const CurlHeaderCallback &headerCallback = [](curl_slist * in){return in;});
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters, const Parameters &options, const Parameters &config);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
@@ -1757,6 +1757,7 @@ namespace Vault {
 
     std::optional<std::string> listAccessors();  // requires sudo
     std::optional<std::string> createToken(const JsonParameters &parameters);
+    std::optional<std::string> createWrappedToken(const JsonParameters &parameters, const TTL& ttl);
     std::optional<std::string> lookupToken(const Parameters &parameters);
     std::optional<std::string> lookupTokenSelf();
     std::optional<std::string> lookupTokenAccessor(const Parameters &parameters);

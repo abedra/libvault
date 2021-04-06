@@ -269,7 +269,10 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
 }
 
 std::optional<std::string>
-Vault::HttpConsumer::post(const Vault::Client &client, const Vault::Url &url, const Vault::JsonParameters &parameters) {
+Vault::HttpConsumer::post(const Vault::Client &client,
+                          const Vault::Url &url,
+                          const Vault::JsonParameters &parameters,
+                          const CurlHeaderCallback &headerCallback) {
   if (!client.is_authenticated()) {
     return std::nullopt;
   }
@@ -278,7 +281,8 @@ Vault::HttpConsumer::post(const Vault::Client &client, const Vault::Url &url, co
           url,
           client.getToken(),
           client.getNamespace(),
-          parameters.dump());
+          parameters.dump(),
+          headerCallback);
 
   return HttpClient::is_success(response)
          ? std::optional<std::string>(response.value().body.value())

@@ -74,4 +74,15 @@ Url Tokens::getUrl(const Path &path) {
   return client_.getUrl("/v1/auth/token/", path);
 }
 
+std::optional<std::string> Tokens::createWrappedToken(const JsonParameters &parameters, const TTL& ttl) {
+  return  HttpConsumer::post(
+          client_,
+          getUrl(Path{"create"}),
+          parameters,
+          [&](curl_slist *chunk) {
+            return curl_slist_append(chunk, ("X-Vault-Wrap-TTL: " + ttl).c_str());
+          }
+  );
+}
+
 }  // namespace Vault
