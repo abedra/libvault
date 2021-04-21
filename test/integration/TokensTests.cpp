@@ -16,9 +16,8 @@ TEST_CASE("Token Authentication Tests")
   SECTION("Create Token and Check Self Functions")
   {
     // Create new token
-    Vault::JsonParameters params{{"ttl",       "1h"},
-                                 {"renewable", true}};
-    params["meta"] = nlohmann::json{{"user", "armon"}};
+    Vault::Parameters params{{"ttl",       "1h"},
+                                 {"renewable", "true"}};
 
     auto response = token.createToken(params);
     REQUIRE(response.has_value());
@@ -48,7 +47,7 @@ TEST_CASE("Token Authentication Tests")
     }
 
     SECTION("RenewTokenSelf") {
-      Vault::JsonParameters renew_params {{"increment", "2h"}};
+      Vault::Parameters renew_params {{"increment", "2h"}};
       auto renew_response = new_tokens.renewTokenSelf(renew_params);
       REQUIRE(renew_response.has_value());
       auto new_ttl = nlohmann::json::parse(renew_response.value())["auth"]["lease_duration"];
@@ -73,8 +72,8 @@ TEST_CASE("Token Authentication Tests")
   SECTION("Create Token and Check Accessor Based Functions")
   {
     // Create new token
-    Vault::JsonParameters params{{"ttl",       "1h"},
-                                 {"renewable", true}};
+    Vault::Parameters params{{"ttl",       "1h"},
+                                 {"renewable", "true"}};
     auto response = token.createToken(params);
     REQUIRE(response.has_value());
     std::string token_accessor = nlohmann::json::parse(response.value())["auth"]["accessor"];
@@ -105,8 +104,8 @@ TEST_CASE("Token Authentication Tests")
   SECTION("Create Token and Check Token Based Functions")
   {
     // Create new token
-    Vault::JsonParameters params{{"ttl",       "1h"},
-                                 {"renewable", true}};
+    Vault::Parameters params{{"ttl",       "1h"},
+                                 {"renewable", "true"}};
     auto response = token.createToken(params);
     REQUIRE(response.has_value());
     std::string new_token = nlohmann::json::parse(response.value())["auth"]["client_token"];
@@ -135,7 +134,7 @@ TEST_CASE("Token Authentication Tests")
   }
 
   SECTION("Revoke Token and Orphan Children") {
-    Vault::JsonParameters params{{"ttl", "1h"}};
+    Vault::Parameters params{{"ttl", "1h"}};
 
     // Create a new token and a client based on it
     auto create_response = token.createToken(params);
@@ -204,9 +203,8 @@ TEST_CASE("Token Authentication Tests")
   }
 
   SECTION("WrappedTokenCreation") {
-    Vault::JsonParameters params{{"ttl",       "1h"},
-                                 {"renewable", true}};
-    params["meta"] = nlohmann::json{{"user", "armon"}};
+    Vault::Parameters params{{"ttl", "1h"},
+                                 {"renewable", "true"}};
 
     Vault::TTL ttl{60};
     auto response = token.createWrappedToken(params, ttl);

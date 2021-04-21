@@ -8,7 +8,6 @@
 
 #include <unordered_map>
 #include <curl/curl.h>
-#include <json.hpp>
 #include <filesystem>
 #include <functional>
 #include <optional>
@@ -114,7 +113,6 @@ namespace Vault {
   class Client;
 
   using Parameters = std::unordered_map<std::string, std::string>;
-  using JsonParameters = nlohmann::json;
   using HttpErrorCallback = std::function<void(std::string)>;
   using CurlSetupCallback = std::function<void(CURL *curl)>;
   using CurlHeaderCallback = std::function<curl_slist*(curl_slist *chunk)>;
@@ -253,7 +251,6 @@ namespace Vault {
     static std::optional<std::string> get(const Client &client, const Url &url);
     static std::optional<std::string> list(const Client &client, const Url &url);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters);
-    static std::optional<std::string> post(const Client &client, const Url &url, const JsonParameters& parameters, const CurlHeaderCallback &headerCallback = [](curl_slist * in){return in;});
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters& parameters, const Parameters &options, const Parameters &config);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const JsonProducer &jsonProducer);
     static std::optional<std::string> post(const Client &client, const Url &url, const Parameters &parameters, const CurlHeaderCallback &headerCallback);
@@ -1756,13 +1753,13 @@ namespace Vault {
     explicit Tokens(const Client &client) : client_(client)  {}
 
     std::optional<std::string> listAccessors();  // requires sudo
-    std::optional<std::string> createToken(const JsonParameters &parameters);
-    std::optional<std::string> createWrappedToken(const JsonParameters &parameters, const TTL& ttl);
+    std::optional<std::string> createToken(const Parameters &parameters);
+    std::optional<std::string> createWrappedToken(const Parameters &parameters, const TTL& ttl);
     std::optional<std::string> lookupToken(const Parameters &parameters);
     std::optional<std::string> lookupTokenSelf();
     std::optional<std::string> lookupTokenAccessor(const Parameters &parameters);
     std::optional<std::string> renewToken(const Parameters &parameters);
-    std::optional<std::string> renewTokenSelf(const JsonParameters &parameters);
+    std::optional<std::string> renewTokenSelf(const Parameters &parameters);
     std::optional<std::string> renewTokenAccessor(const Parameters &parameters);
     std::optional<std::string> revokeToken(const Parameters &parameters);
     std::optional<std::string> revokeTokenSelf();
@@ -1770,7 +1767,7 @@ namespace Vault {
     std::optional<std::string> revokeTokenAndOrphanChildren(const Parameters &parameters);
     std::optional<std::string> readTokenRole(const Path &path);
     std::optional<std::string> listTokenRoles();
-    std::optional<std::string> createTokenRole(const Path &path, const JsonParameters &parameters);
+    std::optional<std::string> createTokenRole(const Path &path, const Parameters &parameters);
     std::optional<std::string> deleteTokenRole(const Path &path);
     std::optional<std::string> tidyTokens();
 

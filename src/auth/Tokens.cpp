@@ -2,7 +2,7 @@
 
 namespace Vault {
 
-std::optional<std::string>  Tokens::createToken(const JsonParameters &parameters) {
+std::optional<std::string>  Tokens::createToken(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"create"}), parameters);
 }
 
@@ -18,7 +18,7 @@ std::optional<std::string> Tokens::revokeTokenSelf() {
   return HttpConsumer::post(client_, getUrl(Path{"revoke-self"}), Vault::Parameters{});
 }
 
-std::optional<std::string> Tokens::renewTokenSelf(const JsonParameters &parameters) {
+std::optional<std::string> Tokens::renewTokenSelf(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"renew-self"}), parameters);
 }
 
@@ -34,7 +34,7 @@ std::optional<std::string> Tokens::listTokenRoles() {
   return HttpConsumer::list(client_, getUrl(Path{"roles"}));
 }
 
-std::optional<std::string> Tokens::createTokenRole(const Path &path, const JsonParameters &parameters) {
+std::optional<std::string> Tokens::createTokenRole(const Path &path, const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"roles/" + path}), parameters);
 }
 
@@ -74,7 +74,7 @@ Url Tokens::getUrl(const Path &path) {
   return client_.getUrl("/v1/auth/token/", path);
 }
 
-std::optional<std::string> Tokens::createWrappedToken(const JsonParameters &parameters, const TTL& ttl) {
+std::optional<std::string> Tokens::createWrappedToken(const Parameters &parameters, const TTL& ttl) {
   return  HttpConsumer::post(
           client_,
           getUrl(Path{"create"}),
