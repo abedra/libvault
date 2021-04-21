@@ -1747,6 +1747,35 @@ namespace Vault {
 
     const Client &client_;
   };
+
+  class Tokens {
+  public:
+    explicit Tokens(const Client &client) : client_(client)  {}
+
+    std::optional<std::string> listAccessors();  // requires sudo
+    std::optional<std::string> createToken(const Parameters &parameters);
+    std::optional<std::string> createWrappedToken(const Parameters &parameters, const TTL& ttl);
+    std::optional<std::string> lookupToken(const Parameters &parameters);
+    std::optional<std::string> lookupTokenSelf();
+    std::optional<std::string> lookupTokenAccessor(const Parameters &parameters);
+    std::optional<std::string> renewToken(const Parameters &parameters);
+    std::optional<std::string> renewTokenSelf(const Parameters &parameters);
+    std::optional<std::string> renewTokenAccessor(const Parameters &parameters);
+    std::optional<std::string> revokeToken(const Parameters &parameters);
+    std::optional<std::string> revokeTokenSelf();
+    std::optional<std::string> revokeTokenAccessor(const Parameters &parameters);
+    std::optional<std::string> revokeTokenAndOrphanChildren(const Parameters &parameters);
+    std::optional<std::string> readTokenRole(const Path &path);
+    std::optional<std::string> listTokenRoles();
+    std::optional<std::string> createTokenRole(const Path &path, const Parameters &parameters);
+    std::optional<std::string> deleteTokenRole(const Path &path);
+    std::optional<std::string> tidyTokens();
+
+  private:
+    Url getUrl(const Path &path);
+
+    const Client &client_;
+  };
 }
 
 #pragma GCC diagnostic pop
