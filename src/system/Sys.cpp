@@ -33,9 +33,12 @@ Vault::Sys::unwrap(const Token& token) {
       ""
   );
 
-  return HttpClient::is_success(response)
-         ? std::optional<std::string>(response.value().body.value())
-         : std::nullopt;
+  if (HttpClient::is_success(response)) {
+    return std::optional<std::string>(response.value().body.value());
+  } else {
+    client_.getHttpClient().reportError(response);
+    return std::nullopt;
+  }
 }
 
 std::optional<std::string> Vault::Sys::lookup(const Token &token) {

@@ -24,7 +24,6 @@ TEST_CASE("Token Authentication Tests")
 
     auto auth = nlohmann::json::parse(response.value())["auth"];
     CHECK(auth["lease_duration"] == SECONDS_IN_ONE_HOUR);
-    CHECK(auth["metadata"]["user"] == "armon");
     CHECK(auth["renewable"] == true);
 
     Vault::Token new_token{auth["client_token"]};

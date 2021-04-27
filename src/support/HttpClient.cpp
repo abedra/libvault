@@ -1,5 +1,6 @@
 #include <utility>
 #include "VaultClient.h"
+#include "json.hpp"
 
 static size_t
 writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
@@ -202,4 +203,12 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     Vault::HttpResponseStatusCode{response_code},
     Vault::HttpResponseBodyString{buffer}
   });
+}
+
+void
+Vault::HttpClient::reportError(std::optional<HttpResponse> response) const {
+    nlohmann::json j;
+    j["Status code"] = response.value().statusCode.value();
+    j["Response"] = response.value().body.value();
+    errorCallback_(j.dump());
 }

@@ -143,6 +143,7 @@ namespace Vault {
     [[nodiscard]] virtual std::optional<HttpResponse> list(const Url &url, const Token &token, const Namespace &ns) const;
 
     static bool is_success(std::optional<HttpResponse> response);
+    void reportError(std::optional<HttpResponse> response) const;
 
   private:
     bool debug_;
