@@ -18,13 +18,14 @@ Vault::Client::Client(Vault::Config& config, AuthenticationStrategy& authStrateg
 
 Vault::Client::Client(Vault::Config& config,
                       AuthenticationStrategy& authStrategy,
-                      HttpErrorCallback httpErrorCallback)
+                      HttpErrorCallback httpErrorCallback,
+                      ResponseErrorCallback responseErrorCallback)
   : host_(config.getHost())
   , port_(config.getPort())
   , namespace_(config.getNamespace())
   , tls_(config.getTls())
   , authStrategy_(authStrategy)
-  , httpClient_(HttpClient(config, std::move(httpErrorCallback)))
+  , httpClient_(HttpClient(config, std::move(httpErrorCallback), std::move(responseErrorCallback)))
   , debug_(config.getDebug())
   , caBundle_(config.getCaBundle())
 {

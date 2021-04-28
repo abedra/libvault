@@ -114,6 +114,7 @@ namespace Vault {
 
   using Parameters = std::unordered_map<std::string, std::string>;
   using HttpErrorCallback = std::function<void(std::string)>;
+  using ResponseErrorCallback = std::function<void(std::string)>;
   using CurlSetupCallback = std::function<void(CURL *curl)>;
   using CurlHeaderCallback = std::function<curl_slist*(curl_slist *chunk)>;
   using JsonProducer = std::function<std::string(const Parameters &parameters)>;
@@ -131,7 +132,7 @@ namespace Vault {
   public:
     explicit HttpClient(Config &config);
 
-    HttpClient(Config &config, HttpErrorCallback errorCallback);
+    HttpClient(Config &config, HttpErrorCallback errorCallback, ResponseErrorCallback responseErrorCallback);
     virtual ~HttpClient() = default;
 
     [[nodiscard]] virtual std::optional<HttpResponse> get(const Url &url, const Token &token, const Namespace &ns) const;
@@ -151,6 +152,7 @@ namespace Vault {
     long connectTimeout_;
     std::filesystem::path caBundle_;
     HttpErrorCallback errorCallback_;
+    ResponseErrorCallback responseErrorCallback_;
 
     [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback) const;
   };
@@ -220,7 +222,9 @@ namespace Vault {
   public:
     Client(const Client &other, Token token);
     Client(Config &config, AuthenticationStrategy &authStrategy);
-    Client(Config &config, AuthenticationStrategy &authStrategy, HttpErrorCallback httpErrorCallback);
+    Client(Config &config, AuthenticationStrategy &authStrategy,
+           HttpErrorCallback httpErrorCallback,
+           ResponseErrorCallback responseErrorCallback = [](const std::string& err){});
     virtual ~Client() = default;
 
     [[nodiscard]] virtual bool is_authenticated() const { return !token_.empty(); }

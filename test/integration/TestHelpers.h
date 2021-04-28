@@ -27,6 +27,7 @@ namespace TestHelpers {
       Vault::Token token{getOrDefault("VAULT_SINGLE_TOKEN", "")};
       Vault::TokenStrategy tokenStrategy{token};
       Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::ResponseErrorCallback respError = [&](const std::string &err) { std::cout << "Response error :" <<  err << std::endl; };
 
       Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
@@ -34,7 +35,7 @@ namespace TestHelpers {
         .withDebug(false)
         .build();
 
-      return Vault::Client{config, tokenStrategy, httpErrorCallback};
+      return Vault::Client{config, tokenStrategy, httpErrorCallback, respError};
     }
   }
 
@@ -44,6 +45,7 @@ namespace TestHelpers {
       Vault::SecretId secretId{getOrDefault("APPROLE_SECRET_ID", "")};
       Vault::AppRoleStrategy authStrategy{roleId, secretId};
       Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::ResponseErrorCallback respError = [&](const std::string &err) { std::cout << "Response error :" <<  err << std::endl; };
 
       Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
@@ -51,7 +53,7 @@ namespace TestHelpers {
         .withDebug(false)
         .build();
 
-      return Vault::Client{config, authStrategy, httpErrorCallback};
+      return Vault::Client{config, authStrategy, httpErrorCallback, respError};
     }
   }
 
@@ -61,13 +63,15 @@ namespace TestHelpers {
       Vault::Token wrappedToken{getOrDefault("APPROLE_WRAPPED_TOKEN", "")};
       Vault::WrappedSecretAppRoleStrategy wrappedAuthStrategy{roleId, wrappedToken};
       Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::ResponseErrorCallback respError = [&](const std::string &err) { std::cout << "Response error :" <<  err << std::endl; };
+
       Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
         .withTlsEnabled(false)
         .withDebug(false)
         .build();
 
-      return Vault::Client{config, wrappedAuthStrategy, httpErrorCallback};
+      return Vault::Client{config, wrappedAuthStrategy, httpErrorCallback, respError};
     }
   }
 
@@ -77,13 +81,14 @@ namespace TestHelpers {
       auto password = getOrDefault("LDAP_PASSWORD", "");
       auto ldapStrategy = Vault::LdapStrategy{username, password};
       Vault::HttpErrorCallback httpErrorCallback = [&](const std::string &err) { std::cout << err << std::endl; };
+      Vault::ResponseErrorCallback respError = [&](const std::string &err) { std::cout << "Response error :" <<  err << std::endl; };
       Vault::Config config = Vault::ConfigBuilder()
         .withHost(Vault::Host{"localhost"})
         .withTlsEnabled(false)
         .withDebug(false)
         .build();
 
-      return Vault::Client{config, ldapStrategy, httpErrorCallback};
+      return Vault::Client{config, ldapStrategy, httpErrorCallback, respError};
     }
   }
 }
