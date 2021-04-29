@@ -14,7 +14,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config)
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
   , errorCallback_([&](const std::string& err){})
-  , responseErrorCallback_([&](const std::string& err){})
+  , responseErrorCallback_([&](HttpResponse err){})
 {}
 
 Vault::HttpClient::HttpClient(Vault::Config& config,
@@ -211,8 +211,5 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
 
 void
 Vault::HttpClient::reportError(std::optional<HttpResponse> response) const {
-    nlohmann::json j;
-    j["Status code"] = response.value().statusCode.value();
-    j["Response"] = response.value().body.value();
-    responseErrorCallback_(j.dump());
+    responseErrorCallback_(response.value());
 }
