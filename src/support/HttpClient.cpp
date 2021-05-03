@@ -14,7 +14,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config)
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
   , errorCallback_([&](const std::string& err){})
-  , responseErrorCallback_([&](HttpResponse err){})
+  , responseErrorCallback([&](HttpResponse err){})
 {}
 
 Vault::HttpClient::HttpClient(Vault::Config& config,
@@ -25,7 +25,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config,
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
   , errorCallback_(std::move(errorCallback))
-  , responseErrorCallback_(std::move(responseErrorCallback))
+  , responseErrorCallback(std::move(responseErrorCallback))
 {}
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
@@ -207,9 +207,4 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     Vault::HttpResponseStatusCode{response_code},
     Vault::HttpResponseBodyString{buffer}
   });
-}
-
-void
-Vault::HttpClient::reportError(std::optional<HttpResponse> response) const {
-    responseErrorCallback_(response.value());
 }

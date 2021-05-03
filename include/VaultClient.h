@@ -144,7 +144,7 @@ namespace Vault {
     [[nodiscard]] virtual std::optional<HttpResponse> list(const Url &url, const Token &token, const Namespace &ns) const;
 
     static bool is_success(std::optional<HttpResponse> response);
-    void reportError(std::optional<HttpResponse> response) const;
+    ResponseErrorCallback responseErrorCallback;
 
   private:
     bool debug_;
@@ -152,7 +152,6 @@ namespace Vault {
     long connectTimeout_;
     std::filesystem::path caBundle_;
     HttpErrorCallback errorCallback_;
-    ResponseErrorCallback responseErrorCallback_;
 
     [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback) const;
   };

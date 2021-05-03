@@ -13,7 +13,7 @@ Vault::HttpConsumer::get(const Vault::Client &client, const Vault::Url &url) {
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -29,7 +29,7 @@ Vault::HttpConsumer::list(const Vault::Client &client, const Vault::Url &url) {
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -49,7 +49,7 @@ Vault::HttpConsumer::del(const Vault::Client &client, const Vault::Url &url) {
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -79,7 +79,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -107,7 +107,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -144,7 +144,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -168,7 +168,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -197,7 +197,7 @@ Vault::HttpConsumer::put(const Vault::Client &client,
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -230,7 +230,7 @@ Vault::HttpConsumer::put(const Vault::Client &client,
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -254,7 +254,7 @@ Vault::HttpConsumer::put(const Client &client,
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -276,7 +276,7 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
 
     return AuthenticationResponse{body, token};
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
@@ -295,7 +295,7 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
 
     return AuthenticationResponse{body, token};
   } else {
-    client.getHttpClient().reportError(response);
+    client.getHttpClient().responseErrorCallback(response.value());
     return std::nullopt;
   }
 }
