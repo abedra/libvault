@@ -1,6 +1,5 @@
 #include <utility>
 #include "VaultClient.h"
-#include "json.hpp"
 
 static size_t
 writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
