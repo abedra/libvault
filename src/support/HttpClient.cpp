@@ -13,14 +13,18 @@ Vault::HttpClient::HttpClient(Vault::Config& config)
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
   , errorCallback_([&](const std::string& err){})
+  , responseErrorCallback([&](HttpResponse err){})
 {}
 
-Vault::HttpClient::HttpClient(Vault::Config& config, HttpErrorCallback errorCallback)
+Vault::HttpClient::HttpClient(Vault::Config& config,
+                              HttpErrorCallback errorCallback,
+                              ResponseErrorCallback responseErrorCallback)
   : debug_(config.getDebug())
   , verify_(config.getVerify())
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
   , errorCallback_(std::move(errorCallback))
+  , responseErrorCallback(std::move(responseErrorCallback))
 {}
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
