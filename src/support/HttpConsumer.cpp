@@ -12,10 +12,12 @@ Vault::HttpConsumer::get(const Vault::Client &client, const Vault::Url &url) {
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -28,10 +30,12 @@ Vault::HttpConsumer::list(const Vault::Client &client, const Vault::Url &url) {
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -48,10 +52,12 @@ Vault::HttpConsumer::del(const Vault::Client &client, const Vault::Url &url) {
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -78,10 +84,12 @@ Vault::HttpConsumer::post(const Vault::Client &client,
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -106,10 +114,12 @@ Vault::HttpConsumer::post(const Vault::Client &client,
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -143,10 +153,12 @@ Vault::HttpConsumer::post(const Vault::Client &client,
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -167,10 +179,12 @@ Vault::HttpConsumer::post(const Vault::Client &client,
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 
@@ -196,10 +210,12 @@ Vault::HttpConsumer::put(const Vault::Client &client,
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -229,10 +245,12 @@ Vault::HttpConsumer::put(const Vault::Client &client,
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<std::string>
@@ -253,10 +271,12 @@ Vault::HttpConsumer::put(const Client &client,
 
   if (HttpClient::is_success(response)) {
     return std::optional<std::string>(response.value().body.value());
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<Vault::AuthenticationResponse>
@@ -275,10 +295,12 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
     auto token = Vault::Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
 
     return AuthenticationResponse{body, token};
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }
 
 std::optional<Vault::AuthenticationResponse>
@@ -294,8 +316,11 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
     auto token = Vault::Token{nlohmann::json::parse(body.value())["auth"]["client_token"]};
 
     return AuthenticationResponse{body, token};
-  } else {
-    client.getHttpClient().responseErrorCallback(response.value());
-    return std::nullopt;
   }
+
+
+  if (response)
+    client.getHttpClient().responseErrorCallback(response.value());
+
+  return std::nullopt;
 }

@@ -119,7 +119,7 @@ The following tables show support for each of the secret backends, auth methods,
 | Okta              | Yes         | No                 |
 | RADIUS            | Yes         | No                 |
 | TLS Certificate   | Yes         | No                 |
-| Tokens            | Partial     | Partial            |
+| Tokens            | Yes         | Yes                |
 | Username/Password | Yes         | No                 |
 
 \* Requires an enterprise license and cannot be integration tested
