@@ -37,8 +37,9 @@ Vault::Sys::unwrap(const Token& token) {
     return std::optional<std::string>(response.value().body.value());
   }
 
-  if (response)
+  if (response) {
     client_.getHttpClient().responseErrorCallback(response.value());
+  }
 
   return std::nullopt;
 }
