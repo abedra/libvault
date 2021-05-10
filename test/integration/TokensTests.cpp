@@ -39,8 +39,9 @@ TEST_CASE("Token Authentication Tests")
 
     SECTION("LookupTokenSelf") {
       auto lookup_response = new_tokens.lookupTokenSelf();
-      auto data = nlohmann::json::parse(lookup_response.value())["data"];
       REQUIRE(lookup_response.has_value());
+
+      auto data = nlohmann::json::parse(lookup_response.value())["data"];
       CHECK(data["id"] == new_root.getToken().value());
       CHECK(data["creation_ttl"] == SECONDS_IN_ONE_HOUR);
     }
