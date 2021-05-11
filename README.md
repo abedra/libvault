@@ -23,7 +23,7 @@ The following example shows both a secret put and get. The most common scenario 
 
 ```cpp
 #include <iostream>
-#include "VaultClient.h"
+#include <libvault/VaultClient.h>
 
 int main(void)
 {
