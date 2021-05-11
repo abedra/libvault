@@ -125,9 +125,11 @@ endif ()
 if (UNIX)
   install(TARGETS vault
       LIBRARY DESTINATION ${CMAKE_INSTALL_DIR}
-      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libvault)
 
   configure_file(vault.pc.in vault.pc @ONLY)
+  install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc"
+          DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 endif (UNIX)
 
 if (ENABLE_TEST)
