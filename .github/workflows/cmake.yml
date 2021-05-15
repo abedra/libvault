@@ -8,7 +8,7 @@ env:
 jobs:
   gcc-build:
     name: GCC ${{ matrix.version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     
     strategy:
       fail-fast: false
@@ -57,7 +57,7 @@ jobs:
 
   clang-build:
     name: Clang ${{ matrix.version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     
     strategy:
       fail-fast: false
