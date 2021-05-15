@@ -1105,6 +1105,7 @@ namespace Vault {
   };
 
   class AWS {
+  public:
     class Auth {
     public:
       explicit Auth(const Client &client) : client_(client) {}
@@ -1175,6 +1176,7 @@ namespace Vault {
   };
 
   class Azure {
+  public:
     class Auth {
     public:
       explicit Auth(const Client &client) : client_(client) {}
@@ -1232,6 +1234,7 @@ namespace Vault {
   };
 
   class GoogleCloud {
+  public:
     class Auth {
     public:
       explicit Auth(const Client &client) : client_(client) {}
