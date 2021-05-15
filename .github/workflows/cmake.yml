@@ -25,6 +25,12 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get install libcurl4-openssl-dev
 
+    - name: Install compiler
+      run: |
+        sudo add-apt-repository "deb http://dk.archive.ubuntu.com/ubuntu/ bionic main universe"
+        sudo apt-get update
+        sudo apt-get install -y g++-${{ matrix.version }} libbsd-dev uuid-dev
+
     - name: Install Catch2
       run: |
         git clone https://github.com/catchorg/Catch2.git
