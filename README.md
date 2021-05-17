@@ -4,7 +4,7 @@
    <img src="https://img.shields.io/lgtm/alerts/g/abedra/libvault" alt="Total alerts"/>
 </a>
 ![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/abedra/libvault)
-[![Version](https://img.shields.io/badge/version-0.39.0-4a8fff)](https://img.shields.io/badge/version-0.39.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.41.0-4a8fff)](https://img.shields.io/badge/version-0.41.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
@@ -23,7 +23,7 @@ The following example shows both a secret put and get. The most common scenario 
 
 ```cpp
 #include <iostream>
-#include "VaultClient.h"
+#include <libvault/VaultClient.h>
 
 int main(void)
 {
