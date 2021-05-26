@@ -22,7 +22,7 @@ endif (CURL_FOUND)
 include(GNUInstallDirs)
 include_directories("${PROJECT_SOURCE_DIR}/lib")
 
-add_library(vault SHARED
+add_library(libvault SHARED
     include/VaultClient.h
     src/auth/AliCloud.cpp
     src/auth/AppRole.cpp
@@ -106,27 +106,27 @@ add_library(vault SHARED
     src/system/Sys.cpp
     src/auth/Tokens.cpp)
 
-target_include_directories(vault PUBLIC
+target_include_directories(libvault PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include/>)
 
-set_target_properties(vault PROPERTIES
+set_target_properties(libvault PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 0
     PUBLIC_HEADER "include/VaultClient.h")
 
-target_include_directories(vault PRIVATE src)
+target_include_directories(libvault PRIVATE src)
 
 if(LINK_CURL)
-  target_link_libraries(vault curl)
+  target_link_libraries(libvault curl)
 endif(LINK_CURL)
 
 if (ENABLE_COVERAGE)
-  target_link_libraries(vault gcov)
+  target_link_libraries(libvault gcov)
 endif ()
 
 if (UNIX)
-  install(TARGETS vault
+  install(TARGETS libvault
       EXPORT libvaultTargets
       LIBRARY DESTINATION ${CMAKE_INSTALL_DIR}
       PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libvault)
@@ -165,7 +165,7 @@ if (ENABLE_TEST)
 
   target_include_directories(libvault_test PRIVATE include)
 
-  target_link_libraries(libvault_test vault)
+  target_link_libraries(libvault_test libvault)
   target_link_libraries(libvault_test curl)
   target_link_libraries(libvault_test Catch2::Catch2)
 
@@ -192,7 +192,7 @@ if (ENABLE_TEST)
 
     target_include_directories(libvault_integration_test PRIVATE include)
 
-    target_link_libraries(libvault_integration_test vault)
+    target_link_libraries(libvault_integration_test libvault)
     target_link_libraries(libvault_integration_test curl)
     target_link_libraries(libvault_integration_test Catch2::Catch2)
 
