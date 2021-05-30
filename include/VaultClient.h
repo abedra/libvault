@@ -1619,14 +1619,14 @@ namespace Vault {
     explicit JwtOidc(const Client &client) : client_(client) {}
 
     std::optional<std::string> configure(const Parameters &parameters) const;
-    std::optional<std::string> readConfig();
-    [[nodiscard]] std::optional<std::string> createRole(const Path &path, const Parameters &parameters) const;
-    std::optional<std::string> readRole(const Path &path);
-    std::optional<std::string> listRoles();
-    std::optional<std::string> deleteRole(const Path &path);
-    std::optional<std::string> oidcAuthorizationUrlRequest(const Parameters &parameters);
-    std::optional<std::string> oidcCallback();
-    std::optional<std::string> jwtLogin(const Parameters &parameters);
+    [[nodiscard]] std::optional<std::string> readConfig() const;
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> listRoles() const;
+    std::optional<std::string> deleteRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> oidcAuthorizationUrlRequest(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> oidcCallback() const;
+    [[nodiscard]] std::optional<std::string> jwtLogin(const Parameters &parameters) const;
 
   private:
     [[nodiscard]] Url getUrl(const Path &path) const;

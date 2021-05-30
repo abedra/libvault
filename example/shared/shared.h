@@ -5,7 +5,7 @@
 
 Vault::Client getRootClient(const Vault::Token &rootToken) {
   Vault::TokenStrategy tokenStrategy{rootToken};
-  Vault::Config config = Vault::ConfigBuilder().withDebug(true).withTlsEnabled(false).build();
+  Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
   Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
     std::cout << err << std::endl;
   };
@@ -24,7 +24,7 @@ Vault::Client getAppRoleClient(const Vault::RoleId &roleId, const Vault::SecretI
 
 Vault::Client getJwtClient(const Vault::RoleId &role, const Vault::Jwt &jwt) {
   Vault::JwtStrategy authStrategy{role, jwt};
-  Vault::Config config = Vault::ConfigBuilder().withDebug(true).withTlsEnabled(false).build();
+  Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
   Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
     std::cout << err << std::endl;
   };
@@ -72,6 +72,10 @@ std::optional<std::string> createRole(const Vault::JwtOidc &jwtAdmin) {
 
 std::optional<std::string> deleteRole(const Vault::AppRole &appRoleAdmin) {
   return appRoleAdmin.del(Vault::Path{"example"});
+}
+
+std::optional<std::string> deleteRole(const Vault::JwtOidc &jwtAdmin) {
+  return jwtAdmin.deleteRole(Vault::Path{"example"});
 }
 
 Vault::RoleId getRoleId(const Vault::AppRole &appRoleAdmin) {

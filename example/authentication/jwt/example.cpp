@@ -13,7 +13,7 @@ std::string read(std::filesystem::path path) {
 Vault::Jwt makeJwt(const std::filesystem::path &publicKeyPath, const std::filesystem::path &privateKeyPath) {
   std::string publicKeyString = read(publicKeyPath);
   std::string privateKeyString = read(privateKeyPath);
-  auto token = jwt::create()
+  std::string token = jwt::create()
       .set_type("JWT")
       .set_audience("example")
       .set_payload_claim("example", jwt::claim(std::string{"example"}))
@@ -35,8 +35,6 @@ Vault::Client setup(const Vault::Client &rootClient, const std::filesystem::path
   Vault::RoleId role{"example"};
   Vault::Jwt jwt = makeJwt(publicKeyPath, privateKeyPath);
 
-  std::cout << jwt.value() << std::endl;
-
   return getJwtClient(role, jwt);
 }
 
@@ -44,6 +42,7 @@ void cleanup(const Vault::Client &rootClient) {
   Vault::Sys::Auth authAdmin{rootClient};
   Vault::JwtOidc jwtAdmin{rootClient};
 
+  deleteRole(jwtAdmin);
   disableJwtAuthentication(authAdmin);
 }
 
@@ -63,5 +62,5 @@ int main(void) {
     std::cout << "Unable to authenticate" << std::endl;
   }
 
-//  cleanup(rootClient);
+  cleanup(rootClient);
 }
