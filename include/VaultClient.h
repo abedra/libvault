@@ -71,6 +71,7 @@ namespace Vault {
   LIBVAULT_TINY_STRING(SecretMount)
   LIBVAULT_TINY_STRING(Token)
   LIBVAULT_TINY_STRING(Url)
+  LIBVAULT_TINY_STRING(Jwt)
 
   LIBVAULT_TINY_LONG(ConnectTimeout)
   LIBVAULT_TINY_LONG(HttpResponseStatusCode)
@@ -223,7 +224,7 @@ namespace Vault {
     Client(Config &config, AuthenticationStrategy &authStrategy);
     Client(Config &config, AuthenticationStrategy &authStrategy,
            HttpErrorCallback httpErrorCallback,
-           ResponseErrorCallback responseErrorCallback = [](HttpResponse err){});
+           ResponseErrorCallback responseErrorCallback = [](const HttpResponse& err){});
     virtual ~Client() = default;
 
     [[nodiscard]] virtual bool is_authenticated() const { return !token_.empty(); }
@@ -326,6 +327,19 @@ namespace Vault {
 
     Certificate cert_;
     Certificate key_;
+  };
+
+  class JwtStrategy : public AuthenticationStrategy {
+  public:
+    explicit JwtStrategy(RoleId role, Jwt jwt) : role_(std::move(role)), jwt_(std::move(jwt)) {}
+
+    std::optional<AuthenticationResponse> authenticate(const Client &client) override;
+
+  private:
+    static Url getUrl(const Client &client);
+
+    Vault::RoleId role_;
+    Vault::Jwt jwt_;
   };
 
   class Ldap {
@@ -1604,18 +1618,18 @@ namespace Vault {
   public:
     explicit JwtOidc(const Client &client) : client_(client) {}
 
-    std::optional<std::string> configure(const Parameters &parameters);
-    std::optional<std::string> readConfig();
-    std::optional<std::string> createRole(const Path &path, const Parameters &parameters);
-    std::optional<std::string> readRole(const Path &path);
-    std::optional<std::string> listRoles();
-    std::optional<std::string> deleteRole(const Path &path);
-    std::optional<std::string> oidcAuthorizationUrlRequest(const Parameters &parameters);
-    std::optional<std::string> oidcCallback();
-    std::optional<std::string> jwtLogin(const Parameters &parameters);
+    std::optional<std::string> configure(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readConfig() const;
+    std::optional<std::string> createRole(const Path &path, const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> readRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> listRoles() const;
+    std::optional<std::string> deleteRole(const Path &path) const;
+    [[nodiscard]] std::optional<std::string> oidcAuthorizationUrlRequest(const Parameters &parameters) const;
+    [[nodiscard]] std::optional<std::string> oidcCallback() const;
+    [[nodiscard]] std::optional<std::string> jwtLogin(const Parameters &parameters) const;
 
   private:
-    Url getUrl(const Path &path);
+    [[nodiscard]] Url getUrl(const Path &path) const;
 
     const Client &client_;
   };

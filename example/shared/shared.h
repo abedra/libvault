@@ -1,13 +1,18 @@
 #pragma once
 #include <iostream>
 #include "../../lib/json.hpp"
-#include "VaultClient.h"
+#include "libvault/VaultClient.h"
 
 Vault::Client getRootClient(const Vault::Token &rootToken) {
   Vault::TokenStrategy tokenStrategy{rootToken};
   Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
-
-  return Vault::Client{config, tokenStrategy};
+  Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
+    std::cout << err << std::endl;
+  };
+  Vault::ResponseErrorCallback responseCallback = [&](Vault::HttpResponse err) {
+    std::cout << err.statusCode << " : " << err.body.value() << std::endl;
+  };
+  return Vault::Client{config, tokenStrategy, httpErrorCallback, responseCallback};
 }
 
 Vault::Client getAppRoleClient(const Vault::RoleId &roleId, const Vault::SecretId &secretId) {
@@ -15,6 +20,19 @@ Vault::Client getAppRoleClient(const Vault::RoleId &roleId, const Vault::SecretI
   Vault::Config config = Vault::ConfigBuilder().withTlsEnabled(false).build();
 
   return Vault::Client{config, authStrategy};
+}
+
+Vault::Client getJwtClient(const Vault::RoleId &role, const Vault::Jwt &jwt) {
+  Vault::JwtStrategy authStrategy{role, jwt};
+  Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
+  Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
+    std::cout << err << std::endl;
+  };
+  Vault::ResponseErrorCallback responseCallback = [&](Vault::HttpResponse err) {
+    std::cout << err.statusCode << " : " << err.body.value() << std::endl;
+  };
+
+  return Vault::Client{config, authStrategy, httpErrorCallback, responseCallback};
 }
 
 std::optional<std::string> createPolicy(const Vault::Sys::Policy &policyAdmin) {
@@ -41,8 +59,23 @@ std::optional<std::string> createRole(const Vault::AppRole &appRoleAdmin) {
   return appRoleAdmin.create(Vault::Path{"example"}, parameters);
 }
 
+std::optional<std::string> createRole(const Vault::JwtOidc &jwtAdmin) {
+  Vault::Parameters  parameters{
+    {"role_type", "jwt"},
+    {"user_claim", "example"},
+    {"bound_audiences", "example"},
+    {"policies", "example"}
+  };
+
+  return jwtAdmin.createRole(Vault::Path{"example"}, parameters);
+}
+
 std::optional<std::string> deleteRole(const Vault::AppRole &appRoleAdmin) {
   return appRoleAdmin.del(Vault::Path{"example"});
+}
+
+std::optional<std::string> deleteRole(const Vault::JwtOidc &jwtAdmin) {
+  return jwtAdmin.deleteRole(Vault::Path{"example"});
 }
 
 Vault::RoleId getRoleId(const Vault::AppRole &appRoleAdmin) {
@@ -71,4 +104,17 @@ std::optional<std::string> enableKeyValue(const Vault::Sys::Mounts &mountAdmin) 
 
 std::optional<std::string> disableKeyValue(const Vault::Sys::Mounts &mountAdmin) {
   return mountAdmin.disable(Vault::Path{});
+}
+
+std::optional<std::string> enableJwtAuthentication(const Vault::Sys::Auth &authAdmin) {
+  return authAdmin.enable(Vault::Path{"jwt"}, Vault::Parameters{{"type", "jwt"}});
+}
+
+std::optional<std::string> disableJwtAuthentication(const Vault::Sys::Auth &authAdmin) {
+  return authAdmin.disable(Vault::Path{"jwt"});
+}
+
+std::optional<std::string> configureJwtAuthentication(const Vault::JwtOidc &jwtAdmin, std::string publicKeyString) {
+  Vault::Parameters parameters{{"jwt_validation_pubkeys", publicKeyString}};
+  return jwtAdmin.configure(parameters);
 }
