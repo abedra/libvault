@@ -116,7 +116,8 @@ namespace Vault {
 
   // bool should be inserted as a string, because of a bug that got fixed in cpp20
   // https://stackoverflow.com/questions/60681710/prefer-stdstring-in-stdvariantbool-stdstring-for-const-char
-  using ValueVariant = std::variant<std::string, int, std::vector<std::string>>;
+  using Map = std::unordered_map<std::string, std::string>;
+  using ValueVariant = std::variant<std::string, int, std::vector<std::string>, Map>;
   using Parameters = std::unordered_map<std::string, ValueVariant>;
   using HttpErrorCallback = std::function<void(std::string)>;
   using ResponseErrorCallback = std::function<void(HttpResponse)>;

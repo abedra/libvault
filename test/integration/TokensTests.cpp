@@ -17,7 +17,8 @@ TEST_CASE("Token Authentication Tests")
   {
     // Create new token
     Vault::Parameters params{{"ttl",       "1h"},
-                                 {"renewable", "true"}};
+                             {"renewable", "true"},
+                             {"meta", Vault::Map{{"user", "Armon"}}}};
 
     auto response = token.createToken(params);
     REQUIRE(response.has_value());
