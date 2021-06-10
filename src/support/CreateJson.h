@@ -19,8 +19,8 @@ inline nlohmann::json create_json(const Vault::Parameters& parameters) {
     else if (std::holds_alternative<Vault::Map>(value)) {
       auto map = std::get<Vault::Map>(value);
       nlohmann::json j;
-      for (auto[key, value] : map) {
-        j[key] = value;
+      for (auto&[map_key, map_value] : map) {
+        j[map_key] = map_value;
       }
       json[key] = j;
     }
