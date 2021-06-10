@@ -2,6 +2,7 @@
 #include <iostream>
 #include "json.hpp"
 #include "VaultClient.h"
+#include "support/CreateJson.h"
 
 Vault::KeyValue::KeyValue(const Vault::Client& client)
   : version_(KeyValue::Version::v2)
@@ -54,10 +55,7 @@ std::optional<std::string> Vault::KeyValue::create(const Vault::Path& path, cons
     parameters,
     [&](const Parameters& params) {
       nlohmann::json json;
-      json["data"] = nlohmann::json::object();
-      for (auto&& [key, value] : params) {
-        json["data"][key] = value;
-      }
+      json["data"] = helpers::create_json(params);
       return json.dump();
     }
   );
@@ -74,10 +72,7 @@ std::optional<std::string> Vault::KeyValue::update(const Vault::Path& path, cons
     parameters,
     [&](const Parameters& params) {
       nlohmann::json json;
-      json["data"] = nlohmann::json::object();
-      for (auto&& [key, value] : params) {
-        json["data"][key] = value;
-      }
+      json["data"] = helpers::create_json(params);
       return json.dump();
     }
   );

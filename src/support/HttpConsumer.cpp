@@ -1,6 +1,7 @@
 #include <iostream>
 #include "json.hpp"
 #include "VaultClient.h"
+#include "support/CreateJson.h"
 
 std::optional<std::string>
 Vault::HttpConsumer::get(const Vault::Client &client, const Vault::Url &url) {
@@ -72,10 +73,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
     return std::nullopt;
   }
 
-  nlohmann::json json = nlohmann::json::object();
-  for (auto&&[key, value] : parameters) {
-    json[key] = value;
-  }
+  nlohmann::json json = helpers::create_json(parameters);
 
   auto response = client.getHttpClient().post(
       url,
@@ -104,10 +102,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
     return std::nullopt;
   }
 
-  nlohmann::json json = nlohmann::json::object();
-  for (auto&&[key, value] : parameters) {
-    json[key] = value;
-  }
+  nlohmann::json json = helpers::create_json(parameters);
 
   auto response = client.getHttpClient().post(
       url,
@@ -137,18 +132,9 @@ Vault::HttpConsumer::post(const Vault::Client &client,
     return std::nullopt;
   }
 
-  nlohmann::json json = nlohmann::json::object();
-  for (auto&&[key, value] : parameters) {
-    json[key] = value;
-  }
-
-  for (auto&&[key, value] : options) {
-    json["options"][key] = value;
-  }
-
-  for (auto&&[key, value] : config) {
-    json["config"][key] = value;
-  }
+  nlohmann::json json = helpers::create_json(parameters);
+  json["options"] = helpers::create_json(options);
+  json["config"] = helpers::create_json(config);
 
   auto response = client.getHttpClient().post(
       url,
@@ -203,10 +189,7 @@ Vault::HttpConsumer::put(const Vault::Client &client,
     return std::nullopt;
   }
 
-  nlohmann::json json = nlohmann::json::object();
-  for (auto&&[key, value] : parameters) {
-    json[key] = value;
-  }
+  nlohmann::json json = helpers::create_json(parameters);
 
   auto response = client.getHttpClient().put(
       url,
@@ -235,14 +218,8 @@ Vault::HttpConsumer::put(const Vault::Client &client,
     return std::nullopt;
   }
 
-  nlohmann::json json = nlohmann::json::object();
-  for (auto&&[key, value] : parameters) {
-    json[key] = value;
-  }
-
-  for (auto && [key, value] : options) {
-    json["options"][key] = value;
-  }
+  nlohmann::json json = helpers::create_json(parameters);
+  json["options"] = helpers::create_json(options);
 
   auto response = client.getHttpClient().put(
       url,
