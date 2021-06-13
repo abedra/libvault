@@ -16,6 +16,7 @@
 #include <sstream>
 #include <utility>
 #include <vector>
+#include <variant>
 
 namespace Vault {
   template<typename Name, typename T>
@@ -113,7 +114,11 @@ namespace Vault {
   class Config;
   class Client;
 
-  using Parameters = std::unordered_map<std::string, std::string>;
+  // bool should be inserted as a string, because of a bug that got fixed in cpp20
+  // https://stackoverflow.com/questions/60681710/prefer-stdstring-in-stdvariantbool-stdstring-for-const-char
+  using Map = std::unordered_map<std::string, std::string>;
+  using ValueVariant = std::variant<std::string, int, std::vector<std::string>, Map>;
+  using Parameters = std::unordered_map<std::string, ValueVariant>;
   using HttpErrorCallback = std::function<void(std::string)>;
   using ResponseErrorCallback = std::function<void(HttpResponse)>;
   using CurlSetupCallback = std::function<void(CURL *curl)>;

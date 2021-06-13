@@ -44,7 +44,7 @@ TEST_CASE("Pki")
       CHECK(!data["private_key"].empty());
       CHECK(!data["serial_number"].empty());
 
-      Vault::Parameters revokeParameters({{"serial_number", data["serial_number"]}});
+      Vault::Parameters revokeParameters({{"serial_number", std::string(data["serial_number"])}});
       auto revokeResponse = pki.revokeCertificate(revokeParameters);
 
       if (revokeResponse) {

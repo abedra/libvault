@@ -51,7 +51,7 @@ TEST_CASE("Totp")
       auto code = nlohmann::json::parse(generate.value())["data"]["code"];
       CHECK(!code.empty());
 
-      auto validate = totp.validate(path, Vault::Parameters({{"code", code}}));
+      auto validate = totp.validate(path, Vault::Parameters({{"code", std::string(code)}}));
 
       if (validate) {
         auto valid = nlohmann::json::parse(validate.value())["data"]["valid"];
