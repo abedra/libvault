@@ -11,6 +11,7 @@ option(ENABLE_TEST "Enable tests?" ON)
 option(ENABLE_INTEGRATION_TEST "Enable integration tests?" OFF)
 option(ENABLE_COVERAGE "Enable gcov code coverage" OFF)
 option(LINK_CURL "Link curl library for vault" OFF)
+option(BUILD_SHARED_LIBS "Build vault as a shared library" ON)
 
 find_package(CURL)
 if (CURL_FOUND)
@@ -22,7 +23,7 @@ endif (CURL_FOUND)
 include(GNUInstallDirs)
 include_directories("${PROJECT_SOURCE_DIR}/lib")
 
-add_library(vault SHARED
+add_library(vault
     include/VaultClient.h
     src/auth/AliCloud.cpp
     src/auth/AppRole.cpp
