@@ -134,6 +134,16 @@ TEST_CASE("Token Authentication Tests")
     }
   }
 
+  SECTION("Create Orphan Token") {
+    Vault::Parameters params{{"policies",  "default"},
+                             {"ttl",       "1h"},
+                             {"renewable", "true"}};
+    auto response = token.createTokenOrphan(params);
+    REQUIRE(response.has_value());
+    bool orphan = nlohmann::json::parse(response.value())["auth"]["orphan"];
+    CHECK(orphan);
+  }
+
   SECTION("Revoke Token and Orphan Children") {
     Vault::Parameters params{{"ttl", "1h"}};
 
