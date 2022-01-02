@@ -13,7 +13,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config)
   , connectTimeout_(config.getConnectTimeout().value())
   , caBundle_(config.getCaBundle())
   , errorCallback_([&](const std::string& err){})
-  , responseErrorCallback([&](HttpResponse err){})
+  , responseErrorCallback([&](const HttpResponse& err){})
 {}
 
 Vault::HttpClient::HttpClient(Vault::Config& config,
@@ -41,7 +41,8 @@ Vault::HttpClient::get(const Vault::Url& url,
     token,
     ns,
     [&](CURL *curl) {},
-    [&](curl_slist *chunk){ return chunk; }
+    [&](curl_slist *chunk){ return chunk; },
+    errorCallback_
   );
 }
 
@@ -57,7 +58,8 @@ Vault::HttpClient::post(const Vault::Url& url,
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
     },
-    [&](curl_slist *chunk){ return chunk; }
+    [&](curl_slist *chunk){ return chunk; },
+    errorCallback_
   );
 }
 
@@ -74,7 +76,8 @@ Vault::HttpClient::post(const Vault::Url& url,
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
     },
-    headerCallback
+    headerCallback,
+    errorCallback_
   );
 }
 
@@ -94,7 +97,8 @@ Vault::HttpClient::post(const Vault::Url& url,
         curl_easy_setopt(curl, CURLOPT_SSLCERT, cert.value().c_str());
         curl_easy_setopt(curl, CURLOPT_SSLKEY, key.value().c_str());
       },
-      [&](curl_slist *chunk){ return chunk; }
+      [&](curl_slist *chunk){ return chunk; },
+      errorCallback_
   );
 }
 
@@ -111,7 +115,8 @@ Vault::HttpClient::put(const Vault::Url& url,
       curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
     },
-    [&](curl_slist *chunk){ return chunk; }
+    [&](curl_slist *chunk){ return chunk; },
+    errorCallback_
   );
 }
 
@@ -124,7 +129,8 @@ Vault::HttpClient::del(const Vault::Url& url, const Vault::Token& token, const V
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
     },
-    [&](curl_slist *chunk){ return chunk; }
+    [&](curl_slist *chunk){ return chunk; },
+    errorCallback_
   );
 }
 
@@ -137,73 +143,107 @@ Vault::HttpClient::list(const Vault::Url& url, const Vault::Token& token, const 
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
     },
-    [&](curl_slist *chunk){ return chunk; }
+    [&](curl_slist *chunk){ return chunk; },
+    errorCallback_
   );
 }
+
+struct CurlWrapper final {
+    explicit CurlWrapper(const Vault::HttpErrorCallback& errorCallback) {
+        curl_ = curl_easy_init();
+        slist_ = nullptr;
+        errorCallback_ = errorCallback;
+    }
+
+    ~CurlWrapper() {
+        curl_easy_cleanup(curl_);
+        curl_slist_free_all(slist_);
+    }
+
+    void appendHeader(const std::string& header) {
+        slist_ = curl_slist_append(slist_, header.c_str());
+    }
+
+    void setupHeaders(const Vault::CurlHeaderCallback &curlHeaderCallback) {
+        slist_ = curlHeaderCallback(slist_);
+    }
+
+    void setupOptions(const Vault::CurlSetupCallback &curlSetupCallback) {
+        curlSetupCallback(curl_);
+    }
+
+    template<class A>
+    void setOption(const CURLoption option, A value) {
+        curl_easy_setopt(curl_, option, value);
+    }
+
+    [[nodiscard]]
+    std::optional<Vault::HttpResponse> execute() const {
+        std::string buffer;
+
+        curl_easy_setopt(curl_, CURLOPT_WRITEFUNCTION, writeCallback);
+        curl_easy_setopt(curl_, CURLOPT_WRITEDATA, &buffer);
+        curl_easy_setopt(curl_, CURLOPT_HTTPHEADER, slist_);
+
+        CURLcode res = curl_easy_perform(curl_);
+        if (res != CURLE_OK) {
+            errorCallback_(curl_easy_strerror(res));
+            return std::nullopt;
+        }
+
+        long responseCode = 0;
+        curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &responseCode);
+
+        return std::optional<Vault::HttpResponse>({
+            Vault::HttpResponseStatusCode{responseCode},
+            Vault::HttpResponseBodyString{buffer}
+        });
+    }
+
+private:
+    CURL *curl_;
+    curl_slist *slist_;
+    Vault::HttpErrorCallback errorCallback_;
+};
 
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::executeRequest(const Vault::Url& url,
                                   const Vault::Token& token,
                                   const Vault::Namespace& ns,
                                   const Vault::CurlSetupCallback& setupCallback,
-                                  const Vault::CurlHeaderCallback& curlHeaderCallback) const {
-  CURL *curl;
-  std::string buffer;
-  long response_code = 0;
-
-  curl = curl_easy_init();
-  if (curl) {
-    struct curl_slist *chunk = nullptr;
+                                  const Vault::CurlHeaderCallback& curlHeaderCallback,
+                                  const Vault::HttpErrorCallback& errorCallback) const {
+    auto curlWrapper = std::make_unique<CurlWrapper>(errorCallback);
 
     if (!token.empty()) {
-      chunk = curl_slist_append(chunk, ("X-Vault-Token: " + token).c_str());
+        curlWrapper->appendHeader("X-Vault-Token: " + token);
     }
 
     if (!ns.empty()) {
-      chunk = curl_slist_append(chunk, ("X-Vault-Namespace: " + ns).c_str());
+        curlWrapper->appendHeader("X-Vault-Namespace: " + ns);
     }
 
-    chunk = curl_slist_append(chunk, "Content-Type: application/json");
-    chunk = curlHeaderCallback(chunk);
+    curlWrapper->appendHeader("Content-Type: application/json");
+    curlWrapper->setupHeaders(curlHeaderCallback);
 
     if (verify_) {
-      if (!caBundle_.empty()) {
-        curl_easy_setopt(curl, CURLOPT_CAINFO, caBundle_.u8string().c_str());
-      }
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
+        if (!caBundle_.empty()) {
+            curlWrapper->setOption(CURLOPT_CAINFO, caBundle_.u8string().c_str());
+        }
+
+        curlWrapper->setOption(CURLOPT_SSL_VERIFYPEER, 1);
     } else {
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curlWrapper->setOption(CURLOPT_SSL_VERIFYPEER, 0);
     }
 
-    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connectTimeout_);
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-    curl_easy_setopt(curl, CURLOPT_URL, url.value().c_str());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+    curlWrapper->setOption(CURLOPT_CONNECTTIMEOUT, connectTimeout_);
+    curlWrapper->setOption(CURLOPT_URL, url.value().c_str());
 
     if (debug_) {
-      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curlWrapper->setOption(CURLOPT_VERBOSE, 1L);
     }
 
-    setupCallback(curl);
+    curlWrapper->setupOptions(setupCallback);
 
-    CURLcode res = curl_easy_perform(curl);
-    if (res != CURLE_OK) {
-      errorCallback_(curl_easy_strerror(res));
-
-      curl_easy_cleanup(curl);
-      curl_slist_free_all(chunk);
-
-      return std::nullopt;
-    }
-
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-    curl_easy_cleanup(curl);
-    curl_slist_free_all(chunk);
-  }
-
-  return std::optional<HttpResponse>({
-    Vault::HttpResponseStatusCode{response_code},
-    Vault::HttpResponseBodyString{buffer}
-  });
+    return curlWrapper->execute();
 }

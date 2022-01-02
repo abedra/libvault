@@ -159,7 +159,7 @@ namespace Vault {
     std::filesystem::path caBundle_;
     HttpErrorCallback errorCallback_;
 
-    [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback) const;
+    [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback, const HttpErrorCallback& errorCallback) const;
   };
 
   class Config {
