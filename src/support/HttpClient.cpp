@@ -161,7 +161,7 @@ struct CurlWrapper final {
     }
 
     void appendHeader(const std::string& header) {
-        curl_slist_append(slist_, header.c_str());
+        slist_ = curl_slist_append(slist_, header.c_str());
     }
 
     void setupHeaders(const Vault::CurlHeaderCallback &curlHeaderCallback) {
@@ -192,7 +192,7 @@ struct CurlWrapper final {
         }
 
         long responseCode = 0;
-        curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, responseCode);
+        curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &responseCode);
 
         return std::optional<Vault::HttpResponse>({
             Vault::HttpResponseStatusCode{responseCode},
