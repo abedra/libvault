@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.12)
 project(vault VERSION 0.47.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -160,7 +160,14 @@ if (UNIX)
 endif (UNIX)
 
 if (ENABLE_TEST)
-  find_package(Catch2 REQUIRED)
+  include(FetchContent)
+  FetchContent_Declare(
+          Catch2
+          GIT_SHALLOW    TRUE
+          GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+          GIT_TAG        v2.13.6)
+  FetchContent_MakeAvailable(Catch2)
+  list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/contrib)
   enable_testing()
 
   add_executable(libvault_test test/test.cpp)

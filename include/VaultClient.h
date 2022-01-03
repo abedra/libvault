@@ -160,6 +160,70 @@ namespace Vault {
     HttpErrorCallback errorCallback_;
 
     [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback, const HttpErrorCallback& errorCallback) const;
+
+    struct CurlWrapper final {
+        explicit CurlWrapper(const Vault::HttpErrorCallback& errorCallback) {
+            curl_ = curl_easy_init();
+            slist_ = nullptr;
+            errorCallback_ = errorCallback;
+        }
+
+        ~CurlWrapper() {
+            curl_easy_cleanup(curl_);
+            curl_slist_free_all(slist_);
+        }
+
+        void appendHeader(const std::string& header) {
+            slist_ = curl_slist_append(slist_, header.c_str());
+        }
+
+        void setupHeaders(const Vault::CurlHeaderCallback &curlHeaderCallback) {
+            slist_ = curlHeaderCallback(slist_);
+        }
+
+        void setupOptions(const Vault::CurlSetupCallback &curlSetupCallback) {
+            curlSetupCallback(curl_);
+        }
+
+        template<class A>
+        void setOption(const CURLoption option, A value) {
+            curl_easy_setopt(curl_, option, value);
+        }
+
+        [[nodiscard]]
+        std::optional<Vault::HttpResponse> execute() const {
+            std::string buffer;
+
+            curl_easy_setopt(curl_, CURLOPT_WRITEFUNCTION, writeCallback);
+            curl_easy_setopt(curl_, CURLOPT_WRITEDATA, &buffer);
+            curl_easy_setopt(curl_, CURLOPT_HTTPHEADER, slist_);
+
+            CURLcode res = curl_easy_perform(curl_);
+            if (res != CURLE_OK) {
+                errorCallback_(curl_easy_strerror(res));
+                return std::nullopt;
+            }
+
+            long responseCode = 0;
+            curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &responseCode);
+
+            return std::optional<Vault::HttpResponse>({
+                Vault::HttpResponseStatusCode{responseCode},
+                Vault::HttpResponseBodyString{buffer}
+            });
+        }
+
+      private:
+        CURL *curl_;
+        curl_slist *slist_;
+        Vault::HttpErrorCallback errorCallback_;
+
+        static size_t
+        writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+            ((std::string *) userp)->append((char *) contents, size * nmemb);
+            return size * nmemb;
+        }
+    };
   };
 
   class Config {

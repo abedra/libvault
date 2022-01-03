@@ -1,12 +1,6 @@
 #include <utility>
 #include "VaultClient.h"
 
-static size_t
-writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
-  ((std::string *) userp)->append((char *) contents, size * nmemb);
-  return size * nmemb;
-}
-
 Vault::HttpClient::HttpClient(Vault::Config& config)
   : debug_(config.getDebug())
   , verify_(config.getVerify())
@@ -148,64 +142,6 @@ Vault::HttpClient::list(const Vault::Url& url, const Vault::Token& token, const 
   );
 }
 
-struct CurlWrapper final {
-    explicit CurlWrapper(const Vault::HttpErrorCallback& errorCallback) {
-        curl_ = curl_easy_init();
-        slist_ = nullptr;
-        errorCallback_ = errorCallback;
-    }
-
-    ~CurlWrapper() {
-        curl_easy_cleanup(curl_);
-        curl_slist_free_all(slist_);
-    }
-
-    void appendHeader(const std::string& header) {
-        slist_ = curl_slist_append(slist_, header.c_str());
-    }
-
-    void setupHeaders(const Vault::CurlHeaderCallback &curlHeaderCallback) {
-        slist_ = curlHeaderCallback(slist_);
-    }
-
-    void setupOptions(const Vault::CurlSetupCallback &curlSetupCallback) {
-        curlSetupCallback(curl_);
-    }
-
-    template<class A>
-    void setOption(const CURLoption option, A value) {
-        curl_easy_setopt(curl_, option, value);
-    }
-
-    [[nodiscard]]
-    std::optional<Vault::HttpResponse> execute() const {
-        std::string buffer;
-
-        curl_easy_setopt(curl_, CURLOPT_WRITEFUNCTION, writeCallback);
-        curl_easy_setopt(curl_, CURLOPT_WRITEDATA, &buffer);
-        curl_easy_setopt(curl_, CURLOPT_HTTPHEADER, slist_);
-
-        CURLcode res = curl_easy_perform(curl_);
-        if (res != CURLE_OK) {
-            errorCallback_(curl_easy_strerror(res));
-            return std::nullopt;
-        }
-
-        long responseCode = 0;
-        curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &responseCode);
-
-        return std::optional<Vault::HttpResponse>({
-            Vault::HttpResponseStatusCode{responseCode},
-            Vault::HttpResponseBodyString{buffer}
-        });
-    }
-
-private:
-    CURL *curl_;
-    curl_slist *slist_;
-    Vault::HttpErrorCallback errorCallback_;
-};
-
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::executeRequest(const Vault::Url& url,
                                   const Vault::Token& token,
@@ -213,37 +149,37 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
                                   const Vault::CurlSetupCallback& setupCallback,
                                   const Vault::CurlHeaderCallback& curlHeaderCallback,
                                   const Vault::HttpErrorCallback& errorCallback) const {
-    auto curlWrapper = std::make_unique<CurlWrapper>(errorCallback);
+    CurlWrapper curlWrapper{errorCallback};
 
     if (!token.empty()) {
-        curlWrapper->appendHeader("X-Vault-Token: " + token);
+        curlWrapper.appendHeader("X-Vault-Token: " + token);
     }
 
     if (!ns.empty()) {
-        curlWrapper->appendHeader("X-Vault-Namespace: " + ns);
+        curlWrapper.appendHeader("X-Vault-Namespace: " + ns);
     }
 
-    curlWrapper->appendHeader("Content-Type: application/json");
-    curlWrapper->setupHeaders(curlHeaderCallback);
+    curlWrapper.appendHeader("Content-Type: application/json");
+    curlWrapper.setupHeaders(curlHeaderCallback);
 
     if (verify_) {
         if (!caBundle_.empty()) {
-            curlWrapper->setOption(CURLOPT_CAINFO, caBundle_.u8string().c_str());
+            curlWrapper.setOption(CURLOPT_CAINFO, caBundle_.u8string().c_str());
         }
 
-        curlWrapper->setOption(CURLOPT_SSL_VERIFYPEER, 1);
+        curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 1);
     } else {
-        curlWrapper->setOption(CURLOPT_SSL_VERIFYPEER, 0);
+        curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 0);
     }
 
-    curlWrapper->setOption(CURLOPT_CONNECTTIMEOUT, connectTimeout_);
-    curlWrapper->setOption(CURLOPT_URL, url.value().c_str());
+    curlWrapper.setOption(CURLOPT_CONNECTTIMEOUT, connectTimeout_);
+    curlWrapper.setOption(CURLOPT_URL, url.value().c_str());
 
     if (debug_) {
-        curlWrapper->setOption(CURLOPT_VERBOSE, 1L);
+        curlWrapper.setOption(CURLOPT_VERBOSE, 1L);
     }
 
-    curlWrapper->setupOptions(setupCallback);
+    curlWrapper.setupOptions(setupCallback);
 
-    return curlWrapper->execute();
+    return curlWrapper.execute();
 }
