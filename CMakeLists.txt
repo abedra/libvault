@@ -12,6 +12,7 @@ option(ENABLE_INTEGRATION_TEST "Enable integration tests?" OFF)
 option(ENABLE_COVERAGE "Enable gcov code coverage" OFF)
 option(LINK_CURL "Link curl library for vault" OFF)
 option(BUILD_SHARED_LIBS "Build vault as a shared library" ON)
+option(INSTALL "Run install targets" ON)
 
 find_package(CURL)
 if (CURL_FOUND)
@@ -127,7 +128,7 @@ if (ENABLE_COVERAGE)
   target_link_libraries(vault gcov)
 endif ()
 
-if (UNIX)
+if (INSTALL)
   install(TARGETS vault
       EXPORT libvaultTargets
       LIBRARY DESTINATION ${CMAKE_INSTALL_DIR}
@@ -157,7 +158,7 @@ if (UNIX)
   configure_file(vault.pc.in vault.pc @ONLY)
   install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc"
           DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-endif (UNIX)
+endif (INSTALL)
 
 if (ENABLE_TEST)
   include(FetchContent)
