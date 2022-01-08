@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(vault VERSION 0.47.0 DESCRIPTION "Vault library for C++")
+project(vault VERSION 0.48.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
