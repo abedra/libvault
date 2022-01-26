@@ -21,5 +21,5 @@ std::optional<std::string> Vault::AliCloud::Auth::login(const Parameters &parame
 }
 
 Vault::Url Vault::AliCloud::Auth::getUrl(const Vault::Path& path) {
-  return client_.getUrl("/v1/auth/alicloud", path);
+  return client_.getUrl("/v1/auth/alicloud/", path);
 }

@@ -1151,6 +1151,7 @@ namespace Vault {
   };
 
   class AliCloud {
+  public:
     class Auth {
     public:
       explicit Auth(const Client &client) : client_(client) {}
