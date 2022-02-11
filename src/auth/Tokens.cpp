@@ -6,6 +6,10 @@ std::optional<std::string>  Tokens::createToken(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"create"}), parameters);
 }
 
+std::optional<std::string>  Tokens::createTokenOrphan(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"create-orphan"}), parameters);
+}
+
 std::optional<std::string>  Tokens::lookupTokenSelf() {
   return HttpConsumer::get(client_, getUrl(Path{"lookup-self"}));
 }

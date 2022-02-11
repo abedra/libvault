@@ -112,7 +112,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return response.value().body.value();
   }
 
   if (response) {
@@ -143,7 +143,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
       json.dump());
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return response.value().body.value();
   }
 
   if (response) {
@@ -170,7 +170,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return response.value().body.value();
   }
 
   if (response) {
@@ -199,7 +199,7 @@ Vault::HttpConsumer::put(const Vault::Client &client,
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return response.value().body.value();
   }
 
   if (response) {
@@ -229,7 +229,7 @@ Vault::HttpConsumer::put(const Vault::Client &client,
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return response.value().body.value();
   }
 
   if (response) {
@@ -256,7 +256,7 @@ Vault::HttpConsumer::put(const Client &client,
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return response.value().body.value();
   }
 
   if (response) {
@@ -274,8 +274,7 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
       url,
       client.getToken(),
       client.getNamespace(),
-      jsonProducer()
-  );
+      jsonProducer());
 
   if (HttpClient::is_success(response)) {
     auto body = Vault::HttpResponseBodyString{response.value().body};

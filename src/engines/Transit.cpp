@@ -38,7 +38,7 @@ std::optional<std::string> Vault::Transit::decrypt(const Path& path, const Param
 
   if (response) {
     auto encoded_text = nlohmann::json::parse(response.value())["data"]["plaintext"];
-    return std::optional<std::string>(Base64::decode(encoded_text));
+    return Base64::decode(encoded_text);
   } else {
     return std::nullopt;
   }
