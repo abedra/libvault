@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "VaultClient.h"
 
 Vault::ConfigBuilder& Vault::ConfigBuilder::withTlsEnabled(bool flag) {
@@ -37,6 +39,11 @@ Vault::ConfigBuilder& Vault::ConfigBuilder::withConnectTimeout(Vault::ConnectTim
 
 Vault::ConfigBuilder& Vault::ConfigBuilder::withCaBundle(const std::filesystem::path &caBundle) {
   config_.caBundle_ = caBundle;
+  return *this;
+}
+
+Vault::ConfigBuilder& Vault::ConfigBuilder::withSetupCallback(Vault::CurlSetupCallback cb) {
+  config_.setup_callback_ = std::move(cb);
   return *this;
 }
 

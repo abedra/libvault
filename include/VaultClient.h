@@ -158,8 +158,15 @@ namespace Vault {
     long connectTimeout_;
     std::filesystem::path caBundle_;
     HttpErrorCallback errorCallback_;
+    CurlSetupCallback user_setup;
 
-    [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback, const HttpErrorCallback& errorCallback) const;
+    [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url,
+                                                             const Token &token,
+                                                             const Namespace &ns,
+                                                             const CurlSetupCallback &callback,
+                                                             const Vault::CurlSetupCallback& userSetupCallback,
+                                                             const CurlHeaderCallback& headerCallback,
+                                                             const HttpErrorCallback& errorCallback) const;
 
     struct CurlWrapper final {
         explicit CurlWrapper(const Vault::HttpErrorCallback& errorCallback) {
@@ -238,6 +245,7 @@ namespace Vault {
     Port getPort() { return port_; }
     Namespace getNamespace() { return ns_; }
     std::filesystem::path getCaBundle() { return caBundle_; }
+    CurlSetupCallback getSetupCallback() { return setup_callback_; }
 
   private:
     Config()
@@ -249,6 +257,7 @@ namespace Vault {
       , port_(Port{"8200"})
       , ns_("")
       , caBundle_()
+      , setup_callback_{}
       {}
 
     bool tls_;
@@ -259,6 +268,7 @@ namespace Vault {
     Port port_;
     Namespace ns_;
     std::filesystem::path caBundle_;
+    CurlSetupCallback setup_callback_;
   };
 
   class ConfigBuilder {
@@ -275,6 +285,7 @@ namespace Vault {
     ConfigBuilder &withNamespace(Namespace ns);
     ConfigBuilder &withConnectTimeout(ConnectTimeout timeout);
     ConfigBuilder &withCaBundle(const std::filesystem::path &caBundle);
+    ConfigBuilder &withSetupCallback(CurlSetupCallback cb);
     Config &build();
 
   private:

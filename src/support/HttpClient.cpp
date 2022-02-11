@@ -8,6 +8,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config)
   , caBundle_(config.getCaBundle())
   , errorCallback_([&](const std::string& err){})
   , responseErrorCallback([&](const HttpResponse& err){})
+  , user_setup(config.getSetupCallback())
 {}
 
 Vault::HttpClient::HttpClient(Vault::Config& config,
@@ -19,6 +20,7 @@ Vault::HttpClient::HttpClient(Vault::Config& config,
   , caBundle_(config.getCaBundle())
   , errorCallback_(std::move(errorCallback))
   , responseErrorCallback(std::move(responseErrorCallback))
+  , user_setup(config.getSetupCallback())
 {}
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
@@ -35,6 +37,7 @@ Vault::HttpClient::get(const Vault::Url& url,
     token,
     ns,
     [&](CURL *curl) {},
+    user_setup,
     [&](curl_slist *chunk){ return chunk; },
     errorCallback_
   );
@@ -52,6 +55,7 @@ Vault::HttpClient::post(const Vault::Url& url,
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
     },
+    user_setup,
     [&](curl_slist *chunk){ return chunk; },
     errorCallback_
   );
@@ -70,6 +74,7 @@ Vault::HttpClient::post(const Vault::Url& url,
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
     },
+    user_setup,
     headerCallback,
     errorCallback_
   );
@@ -91,6 +96,7 @@ Vault::HttpClient::post(const Vault::Url& url,
         curl_easy_setopt(curl, CURLOPT_SSLCERT, cert.value().c_str());
         curl_easy_setopt(curl, CURLOPT_SSLKEY, key.value().c_str());
       },
+      user_setup,
       [&](curl_slist *chunk){ return chunk; },
       errorCallback_
   );
@@ -109,6 +115,7 @@ Vault::HttpClient::put(const Vault::Url& url,
       curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, value.c_str());
     },
+    user_setup,
     [&](curl_slist *chunk){ return chunk; },
     errorCallback_
   );
@@ -123,6 +130,7 @@ Vault::HttpClient::del(const Vault::Url& url, const Vault::Token& token, const V
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
     },
+    user_setup,
     [&](curl_slist *chunk){ return chunk; },
     errorCallback_
   );
@@ -137,6 +145,7 @@ Vault::HttpClient::list(const Vault::Url& url, const Vault::Token& token, const 
     [&](CURL *curl) {
       curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "LIST");
     },
+    user_setup,
     [&](curl_slist *chunk){ return chunk; },
     errorCallback_
   );
@@ -147,6 +156,7 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
                                   const Vault::Token& token,
                                   const Vault::Namespace& ns,
                                   const Vault::CurlSetupCallback& setupCallback,
+                                  const Vault::CurlSetupCallback& userSetupCallback,
                                   const Vault::CurlHeaderCallback& curlHeaderCallback,
                                   const Vault::HttpErrorCallback& errorCallback) const {
     CurlWrapper curlWrapper{errorCallback};
@@ -180,6 +190,10 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     }
 
     curlWrapper.setupOptions(setupCallback);
+
+    if (userSetupCallback) {
+      curlWrapper.setupOptions(userSetupCallback);
+    }
 
     return curlWrapper.execute();
 }
