@@ -74,7 +74,8 @@ namespace Vault {
   LIBVAULT_TINY_STRING(Url)
   LIBVAULT_TINY_STRING(Jwt)
 
-  LIBVAULT_TINY_LONG(ConnectTimeout)
+  LIBVAULT_TINY_LONG(Timeout)
+  LIBVAULT_TINY_LONG(Threshold)
   LIBVAULT_TINY_LONG(HttpResponseStatusCode)
   LIBVAULT_TINY_LONG(TTL)
 
@@ -140,7 +141,10 @@ namespace Vault {
     [[nodiscard]] bool getTls() const { return tls_; }
     [[nodiscard]] bool getDebug() const { return debug_; }
     [[nodiscard]] bool getVerify() const { return verify_; }
-    [[nodiscard]] ConnectTimeout getConnectTimeout() const { return connectTimeout_; }
+    [[nodiscard]] Timeout getConnectTimeout() const { return connectTimeout_; }
+    [[nodiscard]] Timeout getRequestTimeout() const { return requestTimeout_; }
+    [[nodiscard]] Timeout getLowSpeedTimeout() const { return lowSpeedTimeout_; }
+    [[nodiscard]] Threshold getLowSpeedLimit() const { return lowSpeedLimit_; }
     [[nodiscard]] Host getHost() const { return host_; }
     [[nodiscard]] Port getPort() const { return port_; }
     [[nodiscard]] Namespace getNamespace() const { return ns_; }
@@ -151,7 +155,10 @@ namespace Vault {
         : tls_(true)
         , debug_(false)
         , verify_(true)
-        , connectTimeout_(ConnectTimeout{10})
+        , connectTimeout_(Timeout{10})
+        , requestTimeout_(Timeout{10})
+        , lowSpeedTimeout_(Timeout{10})
+        , lowSpeedLimit_(Threshold{60})
         , host_(Host{"localhost"})
         , port_(Port{"8200"})
         , ns_("")
@@ -161,7 +168,10 @@ namespace Vault {
     bool tls_;
     bool debug_;
     bool verify_;
-    ConnectTimeout connectTimeout_;
+    Timeout connectTimeout_;
+    Timeout requestTimeout_;
+    Timeout lowSpeedTimeout_;
+    Threshold lowSpeedLimit_;
     Host host_;
     Port port_;
     Namespace ns_;
@@ -270,8 +280,11 @@ namespace Vault {
     ConfigBuilder &withHost(Host host);
     ConfigBuilder &withPort(Port port);
     ConfigBuilder &withNamespace(Namespace ns);
-    ConfigBuilder &withConnectTimeout(ConnectTimeout timeout);
+    ConfigBuilder &withConnectTimeout(Timeout timeout);
     ConfigBuilder &withCaBundle(const std::filesystem::path &caBundle);
+    ConfigBuilder &withRequestTimeout(Timeout timeout);
+    ConfigBuilder &withLowSpeedTimeout(Timeout timeout);
+    ConfigBuilder &withLowSpeedLimit(Threshold threshold);
     Config &build();
 
   private:

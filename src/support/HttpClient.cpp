@@ -170,7 +170,10 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
         curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 0);
     }
 
-    curlWrapper.setOption(CURLOPT_CONNECTTIMEOUT, config_.getConnectTimeout());
+    curlWrapper.setOption(CURLOPT_CONNECTTIMEOUT, config_.getConnectTimeout().value());
+    curlWrapper.setOption(CURLOPT_TIMEOUT, config_.getRequestTimeout().value());
+    curlWrapper.setOption(CURLOPT_LOW_SPEED_TIME, config_.getLowSpeedTimeout().value());
+    curlWrapper.setOption(CURLOPT_LOW_SPEED_LIMIT, config_.getLowSpeedLimit().value());
     curlWrapper.setOption(CURLOPT_URL, url.value().c_str());
 
     if (config_.getDebug()) {
