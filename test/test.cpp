@@ -140,7 +140,7 @@ TEST_CASE("VaultConfig#make options set")
     .withTlsVerification(false)
     .withTlsEnabled(false)
     .withDebug(true)
-    .withConnectTimeout(Vault::ConnectTimeout{5})
+    .withConnectTimeout(Vault::Timeout{5})
     .build();
 
   REQUIRE(config.getHost().value() == "example.com");
