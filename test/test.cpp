@@ -10,7 +10,6 @@ public:
   std::optional<Vault::AuthenticationResponse> authenticate(const Vault::Client& client) override {
     return std::nullopt;
   }
-private:
 };
 
 class SuccessfulAuth : public Vault::AuthenticationStrategy {
@@ -18,7 +17,6 @@ public:
   std::optional<Vault::AuthenticationResponse> authenticate(const Vault::Client& client) override {
     return std::optional<Vault::AuthenticationResponse>({Vault::HttpResponseBodyString{""}, Vault::Token{"success"}});
   }
-private:
 };
 
 class MockHttpClient : public Vault::HttpClient {
@@ -50,7 +48,7 @@ public:
   MockVaultClient(Vault::Config& config, Vault::AuthenticationStrategy& authStrategy, const MockHttpClient& mockHttpClient)
     : Vault::Client(config, authStrategy)
     , mockHttpClient_(mockHttpClient)
-    {}
+  { }
 
   [[nodiscard]] const Vault::HttpClient& getHttpClient() const override {
     return mockHttpClient_;
@@ -123,24 +121,34 @@ TEST_CASE("HttpClient#is_success when status 200")
 
 TEST_CASE("VaultConfig#make default")
 {
-  config= Vault::ConfigBuilder().build();
+  config = Vault::ConfigBuilder().build();
 
   REQUIRE(config.getHost().value() == "localhost");
   REQUIRE(config.getPort().value() == "8200");
   REQUIRE(config.getTls() == true);
   REQUIRE(config.getDebug() == false);
   REQUIRE(config.getConnectTimeout().value() == 10);
+  REQUIRE(config.getRequestTimeout().value() == 10);
+  REQUIRE(config.getLowSpeedTimeout().value() == 10);
+  REQUIRE(config.getLowSpeedLimit().value() == 60);
+  REQUIRE(config.getNamespace().value().empty());
+  REQUIRE(config.getCaBundle() == std::filesystem::path{});
 }
 
 TEST_CASE("VaultConfig#make options set")
 {
-  config= Vault::ConfigBuilder()
+  config = Vault::ConfigBuilder()
     .withHost(Vault::Host{"example.com"})
     .withPort(Vault::Port{"8100"})
     .withTlsVerification(false)
     .withTlsEnabled(false)
     .withDebug(true)
-    .withConnectTimeout(Vault::ConnectTimeout{5})
+    .withConnectTimeout(Vault::Timeout{5})
+    .withRequestTimeout(Vault::Timeout{5})
+    .withLowSpeedTimeout(Vault::Timeout{5})
+    .withLowSpeedLimit(Vault::Threshold{5})
+    .withNamespace(Vault::Namespace{"namespace"})
+    .withCaBundle(std::filesystem::path{"cacert"})
     .build();
 
   REQUIRE(config.getHost().value() == "example.com");
@@ -149,11 +157,16 @@ TEST_CASE("VaultConfig#make options set")
   REQUIRE(config.getDebug() == true);
   REQUIRE(config.getVerify() == false);
   REQUIRE(config.getConnectTimeout().value() == 5);
+  REQUIRE(config.getRequestTimeout().value() == 5);
+  REQUIRE(config.getLowSpeedTimeout().value() == 5);
+  REQUIRE(config.getLowSpeedLimit().value() == 5);
+  REQUIRE(config.getNamespace().value() == "namespace");
+  REQUIRE(config.getCaBundle() == std::filesystem::path{"cacert"});
 }
 
 TEST_CASE("MockHttpClient#return mocked response")
 {
-  auto httpClient = MockHttpClient(Vault::ConfigBuilder().build());
+  auto httpClient = MockHttpClient(config);
 
   httpClient.SetResponse(std::nullopt);
   REQUIRE(httpClient.get(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
@@ -183,7 +196,6 @@ TEST_CASE("MockHttpClient#return mocked response")
 
 TEST_CASE("MockVaultClient#mock getHttpClient")
 {
-  auto config = Vault::ConfigBuilder().build();
   auto strategy = SuccessfulAuth();
   auto httpClient = MockHttpClient(config);
   auto vaultClient = MockVaultClient(config, strategy, httpClient);

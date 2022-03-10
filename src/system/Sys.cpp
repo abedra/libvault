@@ -34,11 +34,11 @@ Vault::Sys::unwrap(const Token& token) {
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return {response.value().body.value()};
   }
 
   if (response) {
-    client_.getHttpClient().responseErrorCallback(response.value());
+    client_.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;

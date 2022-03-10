@@ -1,25 +1,19 @@
 #include <utility>
 #include "VaultClient.h"
 
-Vault::HttpClient::HttpClient(Vault::Config& config)
-  : debug_(config.getDebug())
-  , verify_(config.getVerify())
-  , connectTimeout_(config.getConnectTimeout().value())
-  , caBundle_(config.getCaBundle())
+Vault::HttpClient::HttpClient(Vault::Config config)
+  : config_(std::move(config))
   , errorCallback_([&](const std::string& err){})
-  , responseErrorCallback([&](const HttpResponse& err){})
-{}
+  , responseErrorCallback_([&](const HttpResponse& err){})
+{ }
 
-Vault::HttpClient::HttpClient(Vault::Config& config,
+Vault::HttpClient::HttpClient(Vault::Config config,
                               HttpErrorCallback errorCallback,
                               ResponseErrorCallback responseErrorCallback)
-  : debug_(config.getDebug())
-  , verify_(config.getVerify())
-  , connectTimeout_(config.getConnectTimeout().value())
-  , caBundle_(config.getCaBundle())
+  : config_(std::move(config))
   , errorCallback_(std::move(errorCallback))
-  , responseErrorCallback(std::move(responseErrorCallback))
-{}
+  , responseErrorCallback_(std::move(responseErrorCallback))
+{ }
 
 bool Vault::HttpClient::is_success(std::optional<HttpResponse> response) {
   return response &&
@@ -142,6 +136,10 @@ Vault::HttpClient::list(const Vault::Url& url, const Vault::Token& token, const 
   );
 }
 
+void Vault::HttpClient::handleResponseError(const HttpResponse &response) const {
+  return responseErrorCallback_(response);
+}
+
 std::optional<Vault::HttpResponse>
 Vault::HttpClient::executeRequest(const Vault::Url& url,
                                   const Vault::Token& token,
@@ -162,9 +160,9 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
     curlWrapper.appendHeader("Content-Type: application/json");
     curlWrapper.setupHeaders(curlHeaderCallback);
 
-    if (verify_) {
-        if (!caBundle_.empty()) {
-            curlWrapper.setOption(CURLOPT_CAINFO, caBundle_.u8string().c_str());
+    if (config_.getVerify()) {
+        if (!config_.getCaBundle().empty()) {
+            curlWrapper.setOption(CURLOPT_CAINFO, config_.getCaBundle().u8string().c_str());
         }
 
         curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 1);
@@ -172,10 +170,13 @@ Vault::HttpClient::executeRequest(const Vault::Url& url,
         curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 0);
     }
 
-    curlWrapper.setOption(CURLOPT_CONNECTTIMEOUT, connectTimeout_);
+    curlWrapper.setOption(CURLOPT_CONNECTTIMEOUT, config_.getConnectTimeout().value());
+    curlWrapper.setOption(CURLOPT_TIMEOUT, config_.getRequestTimeout().value());
+    curlWrapper.setOption(CURLOPT_LOW_SPEED_TIME, config_.getLowSpeedTimeout().value());
+    curlWrapper.setOption(CURLOPT_LOW_SPEED_LIMIT, config_.getLowSpeedLimit().value());
     curlWrapper.setOption(CURLOPT_URL, url.value().c_str());
 
-    if (debug_) {
+    if (config_.getDebug()) {
         curlWrapper.setOption(CURLOPT_VERBOSE, 1L);
     }
 

@@ -74,7 +74,8 @@ namespace Vault {
   LIBVAULT_TINY_STRING(Url)
   LIBVAULT_TINY_STRING(Jwt)
 
-  LIBVAULT_TINY_LONG(ConnectTimeout)
+  LIBVAULT_TINY_LONG(Timeout)
+  LIBVAULT_TINY_LONG(Threshold)
   LIBVAULT_TINY_LONG(HttpResponseStatusCode)
   LIBVAULT_TINY_LONG(TTL)
 
@@ -111,7 +112,6 @@ namespace Vault {
   };
 
   class ConfigBuilder;
-  class Config;
   class Client;
 
   // bool should be inserted as a string, because of a bug that got fixed in cpp20
@@ -120,7 +120,7 @@ namespace Vault {
   using ValueVariant = std::variant<std::string, int, std::vector<std::string>, Map>;
   using Parameters = std::unordered_map<std::string, ValueVariant>;
   using HttpErrorCallback = std::function<void(std::string)>;
-  using ResponseErrorCallback = std::function<void(HttpResponse)>;
+  using ResponseErrorCallback = std::function<void(const HttpResponse&)>;
   using CurlSetupCallback = std::function<void(CURL *curl)>;
   using CurlHeaderCallback = std::function<curl_slist*(curl_slist *chunk)>;
   using JsonProducer = std::function<std::string(const Parameters &parameters)>;
@@ -134,11 +134,55 @@ namespace Vault {
     static std::string decode(std::string const &encoded_string);
   };
 
+  class Config {
+  public:
+    friend class ConfigBuilder;
+
+    [[nodiscard]] bool getTls() const { return tls_; }
+    [[nodiscard]] bool getDebug() const { return debug_; }
+    [[nodiscard]] bool getVerify() const { return verify_; }
+    [[nodiscard]] Timeout getConnectTimeout() const { return connectTimeout_; }
+    [[nodiscard]] Timeout getRequestTimeout() const { return requestTimeout_; }
+    [[nodiscard]] Timeout getLowSpeedTimeout() const { return lowSpeedTimeout_; }
+    [[nodiscard]] Threshold getLowSpeedLimit() const { return lowSpeedLimit_; }
+    [[nodiscard]] Host getHost() const { return host_; }
+    [[nodiscard]] Port getPort() const { return port_; }
+    [[nodiscard]] Namespace getNamespace() const { return ns_; }
+    [[nodiscard]] std::filesystem::path getCaBundle() const { return caBundle_; }
+
+  private:
+    Config()
+        : tls_(true)
+        , debug_(false)
+        , verify_(true)
+        , connectTimeout_(Timeout{10})
+        , requestTimeout_(Timeout{10})
+        , lowSpeedTimeout_(Timeout{10})
+        , lowSpeedLimit_(Threshold{60})
+        , host_(Host{"localhost"})
+        , port_(Port{"8200"})
+        , ns_("")
+        , caBundle_()
+    {}
+
+    bool tls_;
+    bool debug_;
+    bool verify_;
+    Timeout connectTimeout_;
+    Timeout requestTimeout_;
+    Timeout lowSpeedTimeout_;
+    Threshold lowSpeedLimit_;
+    Host host_;
+    Port port_;
+    Namespace ns_;
+    std::filesystem::path caBundle_;
+  };
+
   class HttpClient {
   public:
-    explicit HttpClient(Config &config);
+    explicit HttpClient(Config  config);
 
-    HttpClient(Config &config, HttpErrorCallback errorCallback, ResponseErrorCallback responseErrorCallback);
+    HttpClient(Config  config, HttpErrorCallback errorCallback, ResponseErrorCallback responseErrorCallback);
     virtual ~HttpClient() = default;
 
     [[nodiscard]] virtual std::optional<HttpResponse> get(const Url &url, const Token &token, const Namespace &ns) const;
@@ -150,14 +194,12 @@ namespace Vault {
     [[nodiscard]] virtual std::optional<HttpResponse> list(const Url &url, const Token &token, const Namespace &ns) const;
 
     static bool is_success(std::optional<HttpResponse> response);
-    ResponseErrorCallback responseErrorCallback;
+    void handleResponseError(const HttpResponse& value) const;
 
   private:
-    bool debug_;
-    bool verify_;
-    long connectTimeout_;
-    std::filesystem::path caBundle_;
+    Config config_;
     HttpErrorCallback errorCallback_;
+    ResponseErrorCallback responseErrorCallback_;
 
     [[nodiscard]] std::optional<HttpResponse> executeRequest(const Url &url, const Token &token, const Namespace &ns, const CurlSetupCallback &callback, const CurlHeaderCallback& headerCallback, const HttpErrorCallback& errorCallback) const;
 
@@ -226,41 +268,6 @@ namespace Vault {
     };
   };
 
-  class Config {
-  public:
-    friend class ConfigBuilder;
-
-    [[nodiscard]] bool getTls() const { return tls_; }
-    [[nodiscard]] bool getDebug() const { return debug_; }
-    [[nodiscard]] bool getVerify() const { return verify_; }
-    ConnectTimeout getConnectTimeout() { return connectTimeout_; }
-    Host getHost() { return host_; }
-    Port getPort() { return port_; }
-    Namespace getNamespace() { return ns_; }
-    std::filesystem::path getCaBundle() { return caBundle_; }
-
-  private:
-    Config()
-      : tls_(true)
-      , debug_(false)
-      , verify_(true)
-      , connectTimeout_(ConnectTimeout{10})
-      , host_(Host{"localhost"})
-      , port_(Port{"8200"})
-      , ns_("")
-      , caBundle_()
-      {}
-
-    bool tls_;
-    bool debug_;
-    bool verify_;
-    ConnectTimeout connectTimeout_;
-    Host host_;
-    Port port_;
-    Namespace ns_;
-    std::filesystem::path caBundle_;
-  };
-
   class ConfigBuilder {
   public:
     explicit operator Config &&() {
@@ -273,8 +280,11 @@ namespace Vault {
     ConfigBuilder &withHost(Host host);
     ConfigBuilder &withPort(Port port);
     ConfigBuilder &withNamespace(Namespace ns);
-    ConfigBuilder &withConnectTimeout(ConnectTimeout timeout);
+    ConfigBuilder &withConnectTimeout(Timeout timeout);
     ConfigBuilder &withCaBundle(const std::filesystem::path &caBundle);
+    ConfigBuilder &withRequestTimeout(Timeout timeout);
+    ConfigBuilder &withLowSpeedTimeout(Timeout timeout);
+    ConfigBuilder &withLowSpeedLimit(Threshold threshold);
     Config &build();
 
   private:

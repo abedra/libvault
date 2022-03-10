@@ -30,8 +30,23 @@ Vault::ConfigBuilder& Vault::ConfigBuilder::withNamespace(Vault::Namespace ns) {
   return *this;
 }
 
-Vault::ConfigBuilder& Vault::ConfigBuilder::withConnectTimeout(Vault::ConnectTimeout timeout) {
+Vault::ConfigBuilder& Vault::ConfigBuilder::withConnectTimeout(Vault::Timeout timeout) {
   config_.connectTimeout_ = timeout;
+  return *this;
+}
+
+Vault::ConfigBuilder& Vault::ConfigBuilder::withRequestTimeout(Vault::Timeout timeout) {
+  config_.requestTimeout_ = timeout;
+  return *this;
+}
+
+Vault::ConfigBuilder& Vault::ConfigBuilder::withLowSpeedTimeout(Vault::Timeout timeout) {
+  config_.lowSpeedTimeout_ = timeout;
+  return *this;
+}
+
+Vault::ConfigBuilder& Vault::ConfigBuilder::withLowSpeedLimit(Vault::Threshold threshold) {
+  config_.lowSpeedLimit_ = threshold;
   return *this;
 }
 
