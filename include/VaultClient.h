@@ -1856,6 +1856,7 @@ namespace Vault {
     std::optional<std::string> listAccessors();  // requires sudo
     std::optional<std::string> createToken(const Parameters &parameters);
     std::optional<std::string> createTokenOrphan(const Parameters &parameters);
+    std::optional<std::string> createTokenWithRole(const Path &path, const Parameters &parameters);
     std::optional<std::string> createWrappedToken(const Parameters &parameters, const TTL& ttl);
     std::optional<std::string> lookupToken(const Parameters &parameters);
     std::optional<std::string> lookupTokenSelf();

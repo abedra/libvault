@@ -195,6 +195,17 @@ TEST_CASE("Token Authentication Tests")
       CHECK(std::find(roles_list.begin(), roles_list.end(), role1.value()) != roles_list.end());
     }
 
+    SECTION("Create Token With Role") {
+      Vault::Parameters params{{"ttl",       "1h"}};
+      auto token_response = token.createTokenWithRole(role1, params);
+      REQUIRE(token_response.has_value());
+
+      std::string new_token = nlohmann::json::parse(token_response.value())["auth"]["client_token"];
+      auto res = token.lookupToken(Vault::Parameters{{"token", new_token}});
+      std::filesystem::path path = nlohmann::json::parse(*res)["data"]["path"];
+      CHECK(path.filename() == role1.value());
+    }
+
     SECTION("ReadRole") {
       auto response = token.readTokenRole(role1);
       CHECK(response.has_value());
