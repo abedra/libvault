@@ -12,11 +12,11 @@ Vault::HttpConsumer::get(const Vault::Client &client, const Vault::Url &url) {
   auto response = client.getHttpClient().get(url, client.getToken(), client.getNamespace());
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return {response.value().body.value()};
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -31,11 +31,11 @@ Vault::HttpConsumer::list(const Vault::Client &client, const Vault::Url &url) {
   auto response = client.getHttpClient().list(url, client.getToken(), client.getNamespace());
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return {response.value().body.value()};
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -54,11 +54,11 @@ Vault::HttpConsumer::del(const Vault::Client &client, const Vault::Url &url) {
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return {response.value().body.value()};
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -84,11 +84,11 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   );
 
   if (HttpClient::is_success(response)) {
-    return std::optional<std::string>(response.value().body.value());
+    return {response.value().body.value()};
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -116,7 +116,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -147,7 +147,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -174,7 +174,7 @@ Vault::HttpConsumer::post(const Vault::Client &client,
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -203,7 +203,7 @@ Vault::HttpConsumer::put(const Vault::Client &client,
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -233,7 +233,7 @@ Vault::HttpConsumer::put(const Vault::Client &client,
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -260,7 +260,7 @@ Vault::HttpConsumer::put(const Client &client,
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -284,7 +284,7 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
   }
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;
@@ -307,7 +307,7 @@ Vault::HttpConsumer::authenticate(const Vault::Client &client,
 
 
   if (response) {
-    client.getHttpClient().responseErrorCallback(response.value());
+    client.getHttpClient().handleResponseError(response.value());
   }
 
   return std::nullopt;

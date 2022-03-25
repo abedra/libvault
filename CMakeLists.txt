@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(vault VERSION 0.48.0 DESCRIPTION "Vault library for C++")
+project(vault VERSION 0.49.0 DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -178,6 +178,7 @@ if (ENABLE_TEST)
   target_link_libraries(libvault_test vault)
   target_link_libraries(libvault_test curl)
   target_link_libraries(libvault_test Catch2::Catch2)
+  target_link_libraries(libvault_test stdc++fs)
 
   include(CTest)
   include(Catch)
