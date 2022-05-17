@@ -4,7 +4,6 @@ project(vault VERSION 0.50.0 DESCRIPTION "Vault library for C++")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS_DEBUG --coverage)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(ENABLE_TEST "Enable tests?" ON)
@@ -126,6 +125,7 @@ endif(LINK_CURL)
 
 if (ENABLE_COVERAGE)
   target_link_libraries(vault gcov)
+  set(CMAKE_CXX_FLAGS_DEBUG --coverage)
 endif ()
 
 if (INSTALL)
