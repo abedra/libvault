@@ -156,7 +156,7 @@ if (INSTALL)
           DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libvault")
 
   configure_file(vault.pc.in vault.pc @ONLY)
-  install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc"
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
           DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 endif (INSTALL)
 
