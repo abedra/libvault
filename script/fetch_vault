@@ -2,7 +2,7 @@
 
 set -e
 
-VAULT_VERSION=1.6.1
+VAULT_VERSION=1.10.4
 
 if [[ ! -f "bin/vault" ]]; then
     mkdir -p bin

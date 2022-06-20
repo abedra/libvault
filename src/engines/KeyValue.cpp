@@ -48,6 +48,10 @@ std::optional<std::string> Vault::KeyValue::read(const Vault::Path& path) {
   return Vault::HttpConsumer::get(client_, getUrl(path));
 }
 
+std::optional<std::string> Vault::KeyValue::read(const Vault::Path& path, const Vault::SecretVersion &secretVersion) {
+  return read(Vault::Path{path + "?version=" + secretVersion});
+}
+
 std::optional<std::string> Vault::KeyValue::create(const Vault::Path& path, const Parameters& parameters) {
   return Vault::HttpConsumer::post(
     client_,
