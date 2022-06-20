@@ -78,6 +78,7 @@ namespace Vault {
   LIBVAULT_TINY_LONG(Threshold)
   LIBVAULT_TINY_LONG(HttpResponseStatusCode)
   LIBVAULT_TINY_LONG(TTL)
+  LIBVAULT_TINY_LONG(SecretVersion)
 
   #undef LIBVAULT_TINY_STRING
   #undef LIBVAULT_TINY_LONG
@@ -458,6 +459,7 @@ namespace Vault {
 
     std::optional<std::string> list(const Path &path);
     std::optional<std::string> read(const Path &path);
+    std::optional<std::string> read(const Path &path, const SecretVersion &secretVersion);
     std::optional<std::string> create(const Path &path, const Parameters &parameters);
     std::optional<std::string> update(const Path &path, const Parameters &parameters);
     std::optional<std::string> del(const Path &path);

@@ -47,6 +47,31 @@ TEST_CASE("KeyValue Functions") {
       KV::assertDeleteValues(kv, path);
     }
 
+    SECTION("Read previous version") {
+      Vault::Parameters data(
+          {
+              {"foo",       "updated"},
+              {"baz",       "updated"},
+              {"something", "updated"},
+          });
+
+      kv.create(path, data);
+
+      auto response = kv.read(path);
+
+      if (response) {
+        std::unordered_map<std::string, std::string> secrets = nlohmann::json::parse(response.value())["data"]["data"];
+
+        CHECK(secrets.size() == 3);
+
+        auto baz = secrets.find("baz");
+        CHECK(baz != secrets.end());
+        CHECK(baz->second == "quux");
+      } else {
+        CHECK(false);
+      }
+    }
+
     SECTION("v1 only") {
       auto response = kv.update(path, {});
       CHECK(!response);
