@@ -57,7 +57,7 @@ TEST_CASE("KeyValue Functions") {
 
       kv.create(path, data);
 
-      auto response = kv.read(path);
+      auto response = kv.read(path, Vault::SecretVersion{1});
 
       if (response) {
         std::unordered_map<std::string, std::string> secrets = nlohmann::json::parse(response.value())["data"]["data"];
