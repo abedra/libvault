@@ -250,13 +250,13 @@ namespace Vault {
             }
 
             long responseCode = 0;
-            char *url = nullptr;
+            std::string url;
             curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &responseCode);
             curl_easy_getinfo(curl_, CURLINFO_EFFECTIVE_URL, &url);
 
             return std::optional<Vault::HttpResponse>({
                 Vault::HttpResponseStatusCode{responseCode},
-                Vault::HttpResponseUrl{url ? url : "<no response url returned>"},
+                Vault::HttpResponseUrl{url.length() ? url : "<no response url returned>"},
                 Vault::HttpResponseBodyString{buffer},
             });
         }
