@@ -62,6 +62,7 @@ namespace Vault {
   LIBVAULT_TINY_STRING(Certificate)
   LIBVAULT_TINY_STRING(Host)
   LIBVAULT_TINY_STRING(HttpResponseBodyString)
+  LIBVAULT_TINY_STRING(HttpResponseUrl)
   LIBVAULT_TINY_STRING(KeyType)
   LIBVAULT_TINY_STRING(Namespace)
   LIBVAULT_TINY_STRING(Path)
@@ -104,6 +105,7 @@ namespace Vault {
 
   struct HttpResponse {
     HttpResponseStatusCode statusCode{};
+    HttpResponseUrl url;
     HttpResponseBodyString body;
   };
 
@@ -248,11 +250,14 @@ namespace Vault {
             }
 
             long responseCode = 0;
+            std::string url;
             curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &responseCode);
+            curl_easy_getinfo(curl_, CURLINFO_EFFECTIVE_URL, &url);
 
             return std::optional<Vault::HttpResponse>({
                 Vault::HttpResponseStatusCode{responseCode},
-                Vault::HttpResponseBodyString{buffer}
+                Vault::HttpResponseUrl{url.length() ? url : "<no response url returned>"},
+                Vault::HttpResponseBodyString{buffer},
             });
         }
 

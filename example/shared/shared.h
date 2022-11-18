@@ -10,7 +10,7 @@ Vault::Client getRootClient(const Vault::Token &rootToken) {
     std::cout << err << std::endl;
   };
   Vault::ResponseErrorCallback responseCallback = [&](Vault::HttpResponse err) {
-    std::cout << err.statusCode << " : " << err.body.value() << std::endl;
+    std::cout << err.statusCode << " : " << err.url.value() << " : " << err.body.value() << std::endl;
   };
   return Vault::Client{config, tokenStrategy, httpErrorCallback, responseCallback};
 }
@@ -29,7 +29,7 @@ Vault::Client getJwtClient(const Vault::RoleId &role, const Vault::Jwt &jwt) {
     std::cout << err << std::endl;
   };
   Vault::ResponseErrorCallback responseCallback = [&](Vault::HttpResponse err) {
-    std::cout << err.statusCode << " : " << err.body.value() << std::endl;
+    std::cout << err.statusCode << " : " << err.url.value() << " : " << err.body.value() << std::endl;
   };
 
   return Vault::Client{config, authStrategy, httpErrorCallback, responseCallback};

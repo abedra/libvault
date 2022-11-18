@@ -109,13 +109,13 @@ TEST_CASE("HttpClient#is_success when response is empty")
 
 TEST_CASE("HttpClient#is_success when status code not 200")
 {
-  auto response = std::optional<Vault::HttpResponse>({Vault::HttpResponseStatusCode{403}, Vault::HttpResponseBodyString{"Permission Denied"}});
+  auto response = std::optional<Vault::HttpResponse>({Vault::HttpResponseStatusCode{403}, Vault::HttpResponseUrl{"http://example.com"}, Vault::HttpResponseBodyString{"Permission Denied"}});
   REQUIRE(!Vault::HttpClient::is_success(response));
 }
 
 TEST_CASE("HttpClient#is_success when status 200")
 {
-  auto response = std::optional<Vault::HttpResponse>({Vault::HttpResponseStatusCode{200}, Vault::HttpResponseBodyString{"OK"}});
+  auto response = std::optional<Vault::HttpResponse>({Vault::HttpResponseStatusCode{200}, Vault::HttpResponseUrl{"http://example.com"}, Vault::HttpResponseBodyString{"OK"}});
   REQUIRE(Vault::HttpClient::is_success(response));
 }
 
@@ -174,7 +174,7 @@ TEST_CASE("MockHttpClient#return mocked response")
   REQUIRE(httpClient.del(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
   REQUIRE(httpClient.list(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar")) == std::nullopt);
 
-  auto resp = Vault::HttpResponse{Vault::HttpResponseStatusCode{200}, Vault::HttpResponseBodyString("success")};
+  auto resp = Vault::HttpResponse{Vault::HttpResponseStatusCode{200}, Vault::HttpResponseUrl{"http://example.com/test"}, Vault::HttpResponseBodyString("success")};
   httpClient.SetResponse(resp);
   auto getResp = httpClient.get(Vault::Url("/test"), Vault::Token("foo"), Vault::Namespace("bar"));
   REQUIRE(getResp.has_value());
