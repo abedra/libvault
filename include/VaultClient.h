@@ -521,7 +521,8 @@ namespace Vault {
 
   class AppRole {
   public:
-    explicit AppRole(const Client &client) : client_(client) {}
+    explicit AppRole(const Client &client) : client_(client), path_(Path{"approle"}) {}
+    explicit AppRole(const Client &client, const Path &path) : client_(client), path_(path) {}
 
     [[nodiscard]] std::optional<std::string> list() const;
     [[nodiscard]] std::optional<std::string> create(const Path &roleName, const Parameters &parameters) const;
@@ -546,6 +547,7 @@ namespace Vault {
     [[nodiscard]] Url getUrl(const Path &path) const;
 
     const Client &client_;
+    const Path path_;
   };
 
   class Sys {

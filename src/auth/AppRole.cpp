@@ -77,5 +77,5 @@ std::optional<std::string> Vault::AppRole::tidy(const Path &roleName) const {
 }
 
 Vault::Url Vault::AppRole::getUrl(const Path &path) const {
-  return client_.getUrl("/v1/auth/approle/role/", path);
+  return client_.getUrl("/v1/auth/" + path_ + "/role/", path);
 }
