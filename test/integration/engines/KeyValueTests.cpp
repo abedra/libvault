@@ -31,7 +31,7 @@ TEST_CASE("KeyValue Functions") {
       responses.push_back(kv.undelete(path, versions));
 
       for(auto &response : responses) {
-        CHECK(!response);
+        REQUIRE(!response);
       }
     }
   }
@@ -62,19 +62,19 @@ TEST_CASE("KeyValue Functions") {
       if (response) {
         std::unordered_map<std::string, std::string> secrets = nlohmann::json::parse(response.value())["data"]["data"];
 
-        CHECK(secrets.size() == 3);
+        REQUIRE(secrets.size() == 3);
 
         auto baz = secrets.find("baz");
-        CHECK(baz != secrets.end());
-        CHECK(baz->second == "quux");
+        REQUIRE(baz != secrets.end());
+        REQUIRE(baz->second == "quux");
       } else {
-        CHECK(false);
+        REQUIRE(false);
       }
     }
 
     SECTION("v1 only") {
       auto response = kv.update(path, {});
-      CHECK(!response);
+      REQUIRE(!response);
     }
 
     SECTION("config") {
@@ -85,10 +85,10 @@ TEST_CASE("KeyValue Functions") {
       if (response) {
         auto config = nlohmann::json::parse(response.value())["data"];
 
-        CHECK(config["cas_required"] == false);
-        CHECK(config["max_versions"] == 10);
+        REQUIRE(config["cas_required"] == false);
+        REQUIRE(config["max_versions"] == 10);
       } else {
-        CHECK(false);
+        REQUIRE(false);
       }
     }
 
@@ -100,14 +100,14 @@ TEST_CASE("KeyValue Functions") {
       if (response) {
         auto metadata = nlohmann::json::parse(response.value())["data"];
 
-        CHECK(metadata["current_version"] > 0);
-        CHECK(metadata["max_versions"] == 10);
+        REQUIRE(metadata["current_version"] > 0);
+        REQUIRE(metadata["max_versions"] == 10);
 
         kv.deleteMetadata(path);
         response = kv.readMetadata(path);
-        CHECK(!response);
+        REQUIRE(!response);
       } else {
-        CHECK(false);
+        REQUIRE(false);
       }
     }
   }
