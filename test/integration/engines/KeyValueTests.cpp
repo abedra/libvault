@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
-#include "VaultClient.h"
 #include "../TestHelpers.h"
+#include "VaultClient.h"
 
 TEST_CASE("KeyValue Functions") {
   Vault::Client vaultClient = TestHelpers::AppRole::login();
@@ -30,8 +30,8 @@ TEST_CASE("KeyValue Functions") {
       responses.push_back(kv.destroy(path, versions));
       responses.push_back(kv.undelete(path, versions));
 
-      for(auto &response : responses) {
-        CHECK(!response);
+      for (auto &response : responses) {
+        REQUIRE(!response);
       }
     }
   }
@@ -48,66 +48,66 @@ TEST_CASE("KeyValue Functions") {
     }
 
     SECTION("Read previous version") {
-      Vault::Parameters data(
-          {
-              {"foo",       "updated"},
-              {"baz",       "updated"},
-              {"something", "updated"},
-          });
+      Vault::Parameters data({
+          {"foo", "updated"},
+          {"baz", "updated"},
+          {"something", "updated"},
+      });
 
       kv.create(path, data);
 
       auto response = kv.read(path, Vault::SecretVersion{1});
 
       if (response) {
-        std::unordered_map<std::string, std::string> secrets = nlohmann::json::parse(response.value())["data"]["data"];
+        std::unordered_map<std::string, std::string> secrets =
+            nlohmann::json::parse(response.value())["data"]["data"];
 
-        CHECK(secrets.size() == 3);
+        REQUIRE(secrets.size() == 3);
 
         auto baz = secrets.find("baz");
-        CHECK(baz != secrets.end());
-        CHECK(baz->second == "quux");
+        REQUIRE(baz != secrets.end());
+        REQUIRE(baz->second == "quux");
       } else {
-        CHECK(false);
+        REQUIRE(false);
       }
     }
 
     SECTION("v1 only") {
       auto response = kv.update(path, {});
-      CHECK(!response);
+      REQUIRE(!response);
     }
 
     SECTION("config") {
-      Vault::Parameters parameters({ {"max_versions", "10"} });
+      Vault::Parameters parameters({{"max_versions", "10"}});
       kv.updateConfig(parameters);
 
       auto response = kv.readConfig();
       if (response) {
         auto config = nlohmann::json::parse(response.value())["data"];
 
-        CHECK(config["cas_required"] == false);
-        CHECK(config["max_versions"] == 10);
+        REQUIRE(config["cas_required"] == false);
+        REQUIRE(config["max_versions"] == 10);
       } else {
-        CHECK(false);
+        REQUIRE(false);
       }
     }
 
     SECTION("metadata") {
-      Vault::Parameters parameters({ {"max_versions", "10"} });
+      Vault::Parameters parameters({{"max_versions", "10"}});
       kv.updateMetadata(path, parameters);
 
       auto response = kv.readMetadata(path);
       if (response) {
         auto metadata = nlohmann::json::parse(response.value())["data"];
 
-        CHECK(metadata["current_version"] > 0);
-        CHECK(metadata["max_versions"] == 10);
+        REQUIRE(metadata["current_version"] > 0);
+        REQUIRE(metadata["max_versions"] == 10);
 
         kv.deleteMetadata(path);
         response = kv.readMetadata(path);
-        CHECK(!response);
+        REQUIRE(!response);
       } else {
-        CHECK(false);
+        REQUIRE(false);
       }
     }
   }
