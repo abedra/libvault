@@ -1,7 +1,0 @@
-#!/bin/sh
-
-export VAULT_ADDR=http://127.0.0.1:8200
-TOKEN=$(grep Root operator.txt | awk '{print $4}')
-
-VAULT_TOKEN=$TOKEN bin/vault write -f transit/keys/mykey
-VAULT_TOKEN=$TOKEN bin/vault write -f transit/keys/signkey type=ed25519

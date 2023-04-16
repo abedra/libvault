@@ -1,15 +1,28 @@
 #!/bin/sh
 
-script/initialize
-script/unseal
-script/install_policy
-script/install_approle
-script/install_key_value
-script/install_transit
-script/install_totp
-script/install_pki
-script/install_rabbitmq
-script/install_database
-script/setup_approle
-script/setup_key_value
-script/setup_transit
+export VAULT_ADDR=http://127.0.0.1:8200
+TOKEN=vault-plaintext-root-token
+
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault policy write example config/example.hcl
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault auth enable approle
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault secrets enable -version=1 -path=legacy kv
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault secrets enable transit
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault secrets enable totp
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault secrets enable pki
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault secrets enable rabbitmq
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault secrets enable database
+
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault kv put secret/hello foo=bar
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault kv put legacy/hello foo=bar
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault write -f transit/keys/mykey
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault write -f transit/keys/signkey type=ed25519
+docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault write auth/approle/role/client policies="example"
+
+ROLE_ID=$(docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault read auth/approle/role/client/role-id | grep role_id | awk '{print $2}' | ansifilter)
+SECRET_ID=$(docker exec -e VAULT_TOKEN=$TOKEN -it docker-vault-1 vault write -f auth/approle/role/client/secret-id | grep -m1 secret_id | awk '{print $2}' | ansifilter)
+
+rm -f .env
+
+echo "export VAULT_ROOT_TOKEN=$TOKEN" >> .env
+echo "export APPROLE_ROLE_ID=$ROLE_ID" >> .env
+echo "export APPROLE_SECRET_ID=$SECRET_ID" >> .env

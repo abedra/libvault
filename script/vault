@@ -1,5 +1,0 @@
-#!/bin/sh
-
-set -e
-
-sudo bin/vault server -config config/config.hcl

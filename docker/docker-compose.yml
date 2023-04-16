@@ -7,6 +7,8 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
+    networks:
+        - integration
   rabbitmq:
     image: "rabbitmq:3-management"
     ports:
@@ -14,6 +16,22 @@ services:
       - "15672:15672"
     volumes:
       - 'rabbitmq_data:/data'
+    networks:
+        - integration
+  vault:
+    image: vault:latest
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
+      VAULT_DEV_ROOT_TOKEN_ID: "vault-plaintext-root-token"
+    volumes:
+      - ../config:/config
+    networks:
+        - integration
 
 volumes:
   rabbitmq_data:
+
+networks:
+  integration: 

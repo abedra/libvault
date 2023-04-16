@@ -13,3 +13,4 @@ operator.txt
 venv
 *.gch
 example/**/example
+.cache

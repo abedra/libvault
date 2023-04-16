@@ -1,9 +1,0 @@
-#!/bin/bash
-
-export VAULT_ADDR=http://127.0.0.1:8200
-TOKENS=($(grep Unseal operator.txt | awk '{print $4}'))
-
-for token in "${TOKENS[@]}"
-do
-    bin/vault operator unseal "$token"
-done
