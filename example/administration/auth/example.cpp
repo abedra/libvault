@@ -1,11 +1,11 @@
-#include <iostream>
-#include "VaultClient.h"
 #include "../../shared/shared.h"
+#include <iostream>
 
 int main(void) {
   char *rootTokenEnv = std::getenv("VAULT_ROOT_TOKEN");
   if (!rootTokenEnv) {
-    std::cout << "The VAULT_ROOT_TOKEN environment variable must be set" << std::endl;
+    std::cout << "The VAULT_ROOT_TOKEN environment variable must be set"
+              << std::endl;
     exit(-1);
   }
   Vault::Token rootToken{rootTokenEnv};
