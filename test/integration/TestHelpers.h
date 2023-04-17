@@ -18,6 +18,8 @@ inline void responseErrorCallback(Vault::HttpResponse err) {
             << std::endl;
 }
 
+inline void emptyResponseErrorCallback(Vault::HttpResponse err) {}
+
 template <typename T> void print_response(std::optional<T> response) {
   if (response) {
     std::cout << response.value() << std::endl;
@@ -42,7 +44,7 @@ inline Vault::Client login() {
                              .build();
 
   return Vault::Client{config, tokenStrategy, httpErrorCallback,
-                       responseErrorCallback};
+                       emptyResponseErrorCallback};
 }
 } // namespace Token
 
@@ -62,7 +64,7 @@ inline Vault::Client login() {
                              .build();
 
   return Vault::Client{config, authStrategy, httpErrorCallback,
-                       responseErrorCallback};
+                       emptyResponseErrorCallback};
 }
 } // namespace AppRole
 
