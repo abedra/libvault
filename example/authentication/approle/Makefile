@@ -1,10 +1,14 @@
 default: example
 
 example.o: example.cpp
-	g++ -std=c++17 -c ../../../lib/json.hpp example.cpp
+	g++ -Wall -std=c++17 -I../../../include -c ../../../lib/json.hpp example.cpp
 
 example: example.o
-	g++ example.o -o example -lvault -lcurl
+	g++ -L../../../cmake-build-debug example.o -o example -lvault -lcurl
+
+.PHONY: macos
+macos:
+	install_name_tool -change @rpath/libvault.0.dylib ../../../cmake-build-debug/libvault.0.dylib example
 
 .PHONY: clean
 clean:

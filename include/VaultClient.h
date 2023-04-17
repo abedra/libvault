@@ -413,16 +413,22 @@ private:
 
 class AppRoleStrategy : public AuthenticationStrategy {
 public:
-  AppRoleStrategy(RoleId roleId, SecretId secretId);
+  explicit AppRoleStrategy(RoleId roleId, SecretId secretId)
+      : roleId_(std::move(roleId)), secretId_(std::move(secretId)),
+        mount_(Path{"approle"}) {}
+  explicit AppRoleStrategy(RoleId roleId, SecretId secretId, Path mount)
+      : roleId_(std::move(roleId)), secretId_(std::move(secretId)),
+        mount_(std::move(mount)) {}
 
   std::optional<AuthenticationResponse>
   authenticate(const Client &client) override;
 
 private:
-  static Url getUrl(const Client &vaultClient, const Path &path);
+  Url getUrl(const Client &vaultClient, const Path &path);
 
   RoleId roleId_;
   SecretId secretId_;
+  Path mount_;
 };
 
 class WrappedSecretAppRoleStrategy : public AuthenticationStrategy {
@@ -600,7 +606,10 @@ private:
 
 class AppRole {
 public:
-  explicit AppRole(const Client &client) : client_(client) {}
+  explicit AppRole(const Client &client)
+      : client_(client), mount_(Path{"approle"}) {}
+  explicit AppRole(const Client &client, Path mount)
+      : client_(client), mount_(std::move(mount)) {}
 
   [[nodiscard]] std::optional<std::string> list() const;
   [[nodiscard]] std::optional<std::string>
@@ -642,6 +651,7 @@ private:
   [[nodiscard]] Url getUrl(const Path &path) const;
 
   const Client &client_;
+  Path mount_;
 };
 
 class Sys {
