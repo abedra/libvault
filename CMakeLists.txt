@@ -185,7 +185,9 @@ if(ENABLE_TEST)
   target_link_libraries(libvault_test vault)
   target_link_libraries(libvault_test curl)
   target_link_libraries(libvault_test Catch2::Catch2)
-  # target_link_libraries(libvault_test stdc++fs)
+  link_libraries(
+    "$<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:-lstdc++fs>"
+  )
 
   include(CTest)
   include(Catch)
