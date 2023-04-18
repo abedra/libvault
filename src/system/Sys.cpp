@@ -1,5 +1,5 @@
-#include <iostream>
 #include "VaultClient.h"
+#include <iostream>
 
 std::optional<std::string> Vault::Sys::health() {
   return Vault::HttpConsumer::get(client_, getUrl(Path{"health"}));
@@ -13,25 +13,18 @@ std::optional<std::string> Vault::Sys::leader() {
   return HttpConsumer::get(client_, getUrl(Path("leader")));
 }
 
-std::optional<std::string> Vault::Sys::wrap(const Parameters &parameters, const TTL& ttl) {
-  return HttpConsumer::post(
-      client_,
-      getUrl(Path{"wrapping/wrap"}),
-      parameters,
-      [&](curl_slist *chunk) {
-        return curl_slist_append(chunk, ("X-Vault-Wrap-TTL: " + ttl).c_str());
-      }
-  );
+std::optional<std::string> Vault::Sys::wrap(const Parameters &parameters,
+                                            const TTL &ttl) {
+  return HttpConsumer::post(client_, getUrl(Path{"wrapping/wrap"}), parameters,
+                            [&](curl_slist *chunk) {
+                              return curl_slist_append(
+                                  chunk, ("X-Vault-Wrap-TTL: " + ttl).c_str());
+                            });
 }
 
-std::optional<std::string>
-Vault::Sys::unwrap(const Token& token) {
+std::optional<std::string> Vault::Sys::unwrap(const Token &token) {
   auto response = client_.getHttpClient().post(
-      getUrl(Path{"wrapping/unwrap"}),
-      token,
-      client_.getNamespace(),
-      ""
-  );
+      getUrl(Path{"wrapping/unwrap"}), token, client_.getNamespace(), "");
 
   if (HttpClient::is_success(response)) {
     return {response.value().body.value()};
@@ -45,35 +38,36 @@ Vault::Sys::unwrap(const Token& token) {
 }
 
 std::optional<std::string> Vault::Sys::lookup(const Token &token) {
-  return HttpConsumer::post(
-    client_,
-    getUrl(Path{"wrapping/lookup"}),
-    Parameters({{"token", token.value()}})
-  );
+  return HttpConsumer::post(client_, getUrl(Path{"wrapping/lookup"}),
+                            Parameters({{"token", token.value()}}));
 }
 
 std::optional<std::string> Vault::Sys::rewrap(const Token &token) {
-  return HttpConsumer::post(
-      client_,
-      getUrl(Path{"wrapping/rewrap"}),
-      Parameters({{"token", token.value()}})
-  );
+  return HttpConsumer::post(client_, getUrl(Path{"wrapping/rewrap"}),
+                            Parameters({{"token", token.value()}}));
 }
 
-std::optional<std::string> Vault::Sys::auditHash(const Path &path, const Parameters &parameters) {
-  return HttpConsumer::post(client_, getUrl(Path{"audit-hash/" + path}), parameters);
+std::optional<std::string> Vault::Sys::auditHash(const Path &path,
+                                                 const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"audit-hash/" + path}),
+                            parameters);
 }
 
-std::optional<std::string> Vault::Sys::capabilities(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Sys::capabilities(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"capabilities"}), parameters);
 }
 
-std::optional<std::string> Vault::Sys::capabilitiesAccessor(const Parameters &parameters) {
-  return HttpConsumer::post(client_, getUrl(Path{"capabilities-accessor"}), parameters);
+std::optional<std::string>
+Vault::Sys::capabilitiesAccessor(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"capabilities-accessor"}),
+                            parameters);
 }
 
-std::optional<std::string> Vault::Sys::capabilitiesSelf(const Parameters &parameters) {
-  return HttpConsumer::post(client_, getUrl(Path{"capabilities-self"}), parameters);
+std::optional<std::string>
+Vault::Sys::capabilitiesSelf(const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"capabilities-self"}),
+                            parameters);
 }
 
 std::optional<std::string> Vault::Sys::state() {
@@ -92,8 +86,10 @@ std::optional<std::string> Vault::Sys::metrics() {
   return HttpConsumer::get(client_, getUrl(Path{"metrics"}));
 }
 
-std::optional<std::string> Vault::Sys::reloadPlugin(const Parameters &parameters) {
-  return HttpConsumer::put(client_, getUrl(Path{"plugins/reload/backend"}), parameters);
+std::optional<std::string>
+Vault::Sys::reloadPlugin(const Parameters &parameters) {
+  return HttpConsumer::put(client_, getUrl(Path{"plugins/reload/backend"}),
+                           parameters);
 }
 
 std::optional<std::string> Vault::Sys::remount(const Parameters &parameters) {
@@ -109,7 +105,8 @@ std::optional<std::string> Vault::Sys::seal() {
 }
 
 std::optional<std::string> Vault::Sys::sealStatus() {
-  return HttpConsumer::get(client_, getUrl(Path{"seal-status"}));
+  return HttpConsumer::unauthenticated_get(client_,
+                                           getUrl(Path{"seal-status"}));
 }
 
 std::optional<std::string> Vault::Sys::stepDown() {
