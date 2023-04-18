@@ -114,7 +114,8 @@ std::optional<std::string> Vault::Sys::stepDown() {
 }
 
 std::optional<std::string> Vault::Sys::unseal(const Parameters &parameters) {
-  return HttpConsumer::put(client_, getUrl(Path{"unseal"}), parameters);
+  return HttpConsumer::unauthenticated_post(client_, getUrl(Path{"unseal"}),
+                                            parameters);
 }
 
 std::optional<std::string> Vault::Sys::openApi() {

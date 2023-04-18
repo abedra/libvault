@@ -373,6 +373,9 @@ public:
   static std::optional<std::string> list(const Client &client, const Url &url);
   static std::optional<std::string> post(const Client &client, const Url &url,
                                          const Parameters &parameters);
+  static std::optional<std::string>
+  unauthenticated_post(const Client &client, const Url &url,
+                       const Parameters &parameters);
   static std::optional<std::string> post(const Client &client, const Url &url,
                                          const Parameters &parameters,
                                          const Parameters &options,

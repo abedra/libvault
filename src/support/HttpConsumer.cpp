@@ -129,6 +129,26 @@ Vault::HttpConsumer::post(const Vault::Client &client, const Vault::Url &url,
 }
 
 std::optional<std::string>
+Vault::HttpConsumer::unauthenticated_post(const Vault::Client &client,
+                                          const Vault::Url &url,
+                                          const Parameters &parameters) {
+  nlohmann::json json = helpers::create_json(parameters);
+
+  auto response = client.getHttpClient().post(
+      url, Token{}, client.getNamespace(), json.dump());
+
+  if (HttpClient::is_success(response)) {
+    return response.value().body.value();
+  }
+
+  if (response) {
+    client.getHttpClient().handleResponseError(response.value());
+  }
+
+  return std::nullopt;
+}
+
+std::optional<std::string>
 Vault::HttpConsumer::post(const Vault::Client &client, const Vault::Url &url,
                           const Parameters &parameters,
                           const Parameters &options, const Parameters &config) {
