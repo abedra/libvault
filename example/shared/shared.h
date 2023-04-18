@@ -47,7 +47,7 @@ inline Vault::Client getJwtClient(const Vault::RoleId &role,
 inline std::optional<std::string>
 createPolicy(const Vault::Sys::Policy &policyAdmin) {
   Vault::Parameters parameters{
-      {"policy", "path \"secret/*\" {capabilities = [\"read\", \"update\", "
+      {"policy", "path \"kv/*\" {capabilities = [\"read\", \"update\", "
                  "\"list\", \"delete\", \"create\"]}"}};
   return policyAdmin.create(Vault::Path{"example"}, parameters);
 }
@@ -115,14 +115,16 @@ inline Vault::SecretId getSecretId(const Vault::AppRole &appRoleAdmin) {
 }
 
 inline std::optional<std::string>
-enableKeyValue(const Vault::Sys::Mounts &mountAdmin) {
-  return mountAdmin.enable(Vault::Path{}, Vault::Parameters{},
+enableKeyValue(const Vault::Sys::Mounts &mountAdmin,
+               const Vault::SecretMount &secretMount) {
+  return mountAdmin.enable(secretMount, Vault::Parameters{{"type", "kv"}},
                            Vault::Parameters{}, Vault::Parameters{});
 }
 
 inline std::optional<std::string>
-disableKeyValue(const Vault::Sys::Mounts &mountAdmin) {
-  return mountAdmin.disable(Vault::Path{});
+disableKeyValue(const Vault::Sys::Mounts &mountAdmin,
+                const Vault::SecretMount &secretMount) {
+  return mountAdmin.disable(secretMount);
 }
 
 inline std::optional<std::string>

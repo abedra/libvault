@@ -869,15 +869,16 @@ public:
     [[nodiscard]] std::optional<std::string> list() const;
     [[nodiscard]] std::optional<std::string> readUi() const;
     [[nodiscard]] std::optional<std::string> read() const;
-    std::optional<std::string> enable(const Path &path,
+    std::optional<std::string> enable(const SecretMount &path,
                                       const Parameters &parameters,
                                       const Parameters &options,
                                       const Parameters &config) const;
-    std::optional<std::string> disable(const Path &path) const;
+    std::optional<std::string> disable(const SecretMount &path) const;
     [[nodiscard]] std::optional<std::string>
-    readConfiguration(const Path &path) const;
+    readConfiguration(const SecretMount &path) const;
     std::optional<std::string>
-    tuneConfiguration(const Path &path, const Parameters &parameters) const;
+    tuneConfiguration(const SecretMount &path,
+                      const Parameters &parameters) const;
 
   private:
     [[nodiscard]] Url getUrl(const Path &path) const;
