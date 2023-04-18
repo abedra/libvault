@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(
   vault
-  VERSION 0.54.0
+  VERSION 0.55.0
   DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
