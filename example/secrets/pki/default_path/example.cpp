@@ -1,23 +1,20 @@
-#include <iostream>
 #include "../../../../lib/json.hpp"
+#include "../../../shared/shared.h"
 #include "VaultClient.h"
+#include <iostream>
 
 void setup(const Vault::Pki &pkiAdmin) {
-  Vault::Parameters rootCertificateParameters({
-    {"common_name", "my-website.com"},
-    {"ttl", "8760h"}
-  });
-  Vault::Parameters urlParameters({
-    {"issuing_certificates", "http://127.0.0.1:8200/v1/pki/ca"},
-    {"crl_distribution_points", "http://127.0.0.1:8200/v1/pki/crl"}
-  });
-  Vault::Parameters roleParameters({
-    {"allowed_domains", "my-website.com"},
-    {"allow_subdomains", "true"},
-    {"max_ttl", "72h"}
-  });
+  Vault::Parameters rootCertificateParameters(
+      {{"common_name", "my-website.com"}, {"ttl", "8760h"}});
+  Vault::Parameters urlParameters(
+      {{"issuing_certificates", "http://127.0.0.1:8200/v1/pki/ca"},
+       {"crl_distribution_points", "http://127.0.0.1:8200/v1/pki/crl"}});
+  Vault::Parameters roleParameters({{"allowed_domains", "my-website.com"},
+                                    {"allow_subdomains", "true"},
+                                    {"max_ttl", "72h"}});
 
-  auto rootCertificateResponse = pkiAdmin.generateRoot(Vault::RootCertificateTypes::INTERNAL, rootCertificateParameters);
+  auto rootCertificateResponse = pkiAdmin.generateRoot(
+      Vault::RootCertificateTypes::INTERNAL, rootCertificateParameters);
   if (!rootCertificateResponse) {
     std::cout << "Could not generate root certificate" << std::endl;
     exit(-1);
@@ -28,20 +25,20 @@ void setup(const Vault::Pki &pkiAdmin) {
 }
 
 int main(void) {
-  char *roleId = std::getenv("APPROLE_ROLE_ID");
-  char *secretId = std::getenv("APPROLE_SECRET_ID");
-
-  if (!roleId && !secretId) {
-    std::cout << "APPROLE_ROLE_ID and APPROLE_SECRET_ID environment variables must be set" << std::endl;
+  char *rootTokenEnv = std::getenv("VAULT_ROOT_TOKEN");
+  if (!rootTokenEnv) {
+    std::cout << "The VAULT_ROOT_TOKEN environment variable must be set"
+              << std::endl;
     exit(-1);
   }
+  Vault::Token rootToken{rootTokenEnv};
+  Vault::Client rootClient = getRootClient(rootToken);
+  Vault::Sys::Mounts mountAdmin{rootClient};
+  Vault::SecretMount mount{"pki"};
 
-  Vault::AppRoleStrategy appRoleStrategy{Vault::RoleId{roleId}, Vault::SecretId{secretId}};
-  Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
-  Vault::Client vaultClient = Vault::Client{config, appRoleStrategy};
-
-  if (vaultClient.is_authenticated()) {
-    Vault::Pki pkiAdmin{vaultClient};
+  if (rootClient.is_authenticated()) {
+    enablePki(mountAdmin, mount);
+    Vault::Pki pkiAdmin{rootClient};
     setup(pkiAdmin);
 
     Vault::Path path("example-dot-com");
@@ -59,4 +56,6 @@ int main(void) {
   } else {
     std::cout << "Unable to authenticate to Vault" << std::endl;
   }
+
+  disablePki(mountAdmin, mount);
 }

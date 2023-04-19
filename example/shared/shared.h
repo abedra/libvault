@@ -144,3 +144,16 @@ configureJwtAuthentication(const Vault::JwtOidc &jwtAdmin,
   Vault::Parameters parameters{{"jwt_validation_pubkeys", publicKeyString}};
   return jwtAdmin.configure(parameters);
 }
+
+inline std::optional<std::string>
+enablePki(const Vault::Sys::Mounts &mountAdmin,
+          const Vault::SecretMount &mount) {
+  return mountAdmin.enable(mount, Vault::Parameters{{"type", "pki"}},
+                           Vault::Parameters{}, Vault::Parameters{});
+}
+
+inline std::optional<std::string>
+disablePki(const Vault::Sys::Mounts &mountAdmin,
+           const Vault::SecretMount &mount) {
+  return mountAdmin.disable(mount);
+}
