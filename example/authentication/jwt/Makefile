@@ -1,10 +1,14 @@
 default: example
 
 example.o: example.cpp
-	g++ -std=c++17 -c ../../../lib/json.hpp example.cpp
+	g++ -Wall -Wno-unused-private-field -std=c++17 -I../../../include -c -I/opt/homebrew/opt/openssl@1.1/include ../../../lib/json.hpp example.cpp
 
 example: example.o
-	g++ example.o -o example -lvault -lcurl -lssl -lcrypto
+	g++ -L../../../cmake-build-debug -L/opt/homebrew/opt/openssl@1.1/lib example.o -o example -lvault -lcurl -lssl -lcrypto
+
+.PHONY: macos
+macos:
+	install_name_tool -change @rpath/libvault.0.dylib ../../../cmake-build-debug/libvault.0.dylib example
 
 .PHONY: clean
 clean:

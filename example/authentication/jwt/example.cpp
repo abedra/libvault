@@ -52,7 +52,7 @@ void cleanup(const Vault::Client &rootClient) {
 }
 
 int main(void) {
-  char *rootTokenEnv = std::getenv("VAULT_TOKEN");
+  char *rootTokenEnv = std::getenv("VAULT_ROOT_TOKEN");
   if (!rootTokenEnv) {
     std::cout << "The VAULT_TOKEN environment variable must be set"
               << std::endl;
