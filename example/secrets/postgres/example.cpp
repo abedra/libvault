@@ -1,10 +1,9 @@
-#include <iostream>
+#include "../../../lib/json.hpp"
+#include "../../shared/shared.h"
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <pqxx/pqxx>
-
-#include "../../../../lib/json.hpp"
-#include "VaultClient.h"
 
 struct Database {
   std::string host;
@@ -17,11 +16,14 @@ struct Database {
     Vault::KeyValue kv{vaultClient};
     auto databaseSecrets = kv.read(Vault::Path{"database"});
     if (databaseSecrets) {
-      std::unordered_map<std::string, std::string> secrets = nlohmann::json::parse(databaseSecrets.value())["data"]["data"];
+      std::unordered_map<std::string, std::string> secrets =
+          nlohmann::json::parse(databaseSecrets.value())["data"]["data"];
       auto maybeUsername = secrets.find(this->username);
       auto maybePassword = secrets.find(this->password);
-      this->username = maybeUsername == secrets.end() ? this->username : maybeUsername->second;
-      this->password = maybePassword == secrets.end() ? this->password : maybePassword->second;
+      this->username = maybeUsername == secrets.end() ? this->username
+                                                      : maybeUsername->second;
+      this->password = maybePassword == secrets.end() ? this->password
+                                                      : maybePassword->second;
 
       return *this;
     } else {
@@ -33,7 +35,7 @@ struct Database {
     std::stringstream ss;
     ss << "hostaddr=" << host << " "
        << "port=" << port << " "
-       << "user=" << username<< " "
+       << "user=" << username << " "
        << "password=" << password << " "
        << "dbname=" << name;
     return ss.str();
@@ -60,29 +62,39 @@ pqxx::connection getConnection(Database &database) {
 }
 
 int main(void) {
-  char *roleId = std::getenv("APPROLE_ROLE_ID");
-  char *secretId = std::getenv("APPROLE_SECRET_ID");
-  if (!roleId && !secretId) {
-    std::cout << "APPROLE_ROLE_ID and APPROLE_SECRET_ID environment variables must be set" << std::endl;
+  char *rootTokenEnv = std::getenv("VAULT_ROOT_TOKEN");
+  if (!rootTokenEnv) {
+    std::cout << "The VAULT_ROOT_TOKEN environment variable must be set"
+              << std::endl;
     exit(-1);
   }
-  Vault::AppRoleStrategy appRoleStrategy{Vault::RoleId{roleId}, Vault::SecretId{secretId}};
-  Vault::Config config = Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
-  Vault::Client vaultClient = Vault::Client{config, appRoleStrategy};
+  Vault::Token rootToken{rootTokenEnv};
+  Vault::Client rootClient = getRootClient(rootToken);
 
-  if (vaultClient.is_authenticated()) {
-    Database databaseConfig = getDatabaseConfiguration(std::filesystem::path{"config.json"});
+  if (rootClient.is_authenticated()) {
+    Vault::KeyValue kv{rootClient};
+    Vault::Path key{"database"};
+    Vault::Parameters parameters(
+        {{"vault:dbuser", "postgres"}, {"vault:dbpass", "postgres"}});
+
+    kv.create(key, parameters);
+    Database databaseConfig =
+        getDatabaseConfiguration(std::filesystem::path{"config.json"});
     std::cout << "From Config" << std::endl;
-    std::cout << databaseConfig.username << " : " << databaseConfig.password << std::endl << std::endl;
+    std::cout << databaseConfig.username << " : " << databaseConfig.password
+              << std::endl
+              << std::endl;
 
-    Database databaseConfigWithSecrets = databaseConfig.withSecrets(vaultClient);
+    Database databaseConfigWithSecrets = databaseConfig.withSecrets(rootClient);
     std::cout << "With Secrets" << std::endl;
-    std::cout << databaseConfigWithSecrets.username << " : " << databaseConfigWithSecrets.password << std::endl << std::endl;
+    std::cout << databaseConfigWithSecrets.username << " : "
+              << databaseConfigWithSecrets.password << std::endl
+              << std::endl;
 
     auto conn = getConnection(databaseConfigWithSecrets);
     if (conn.is_open()) {
       std::cout << "Connected to database" << std::endl;
-      conn.disconnect();
+      conn.close();
     } else {
       std::cout << "Could not connect to database" << std::endl;
     }

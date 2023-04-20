@@ -1,5 +1,4 @@
 #include "../../shared/shared.h"
-#include "VaultClient.h"
 #include <iostream>
 
 int main(void) {
