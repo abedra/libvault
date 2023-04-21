@@ -62,7 +62,7 @@ protected:
 
 #define LIBVAULT_TINY_LONG(Name)                                               \
   struct Name##Detail {};                                                      \
-  using Name = Tiny<Name##Detail, long>;
+  using Name = Tiny<Name##Detail, int64_t>;
 
 LIBVAULT_TINY_STRING(Algorithm)
 LIBVAULT_TINY_STRING(Certificate)
@@ -266,7 +266,7 @@ private:
         return std::nullopt;
       }
 
-      long responseCode = 0;
+      int64_t responseCode = 0;
       char *url = nullptr;
       curl_easy_getinfo(curl_, CURLINFO_RESPONSE_CODE, &responseCode);
       curl_easy_getinfo(curl_, CURLINFO_EFFECTIVE_URL, &url);
@@ -540,11 +540,12 @@ public:
   std::optional<std::string> update(const Path &path,
                                     const Parameters &parameters);
   std::optional<std::string> del(const Path &path);
-  std::optional<std::string> del(const Path &path, std::vector<long> versions);
+  std::optional<std::string> del(const Path &path,
+                                 std::vector<int64_t> versions);
   std::optional<std::string> undelete(const Path &path,
-                                      std::vector<long> versions);
+                                      std::vector<int64_t> versions);
   std::optional<std::string> destroy(const Path &path,
-                                     std::vector<long> versions);
+                                     std::vector<int64_t> versions);
   std::optional<std::string> readConfig();
   std::optional<std::string> updateConfig(const Parameters &parameters);
   std::optional<std::string> readMetadata(const Path &path);
@@ -2163,7 +2164,7 @@ class Tokens {
 public:
   explicit Tokens(const Client &client) : client_(client) {}
 
-  std::optional<std::string> listAccessors(); // requires sudo
+  std::optional<std::string> listAccessors();
   std::optional<std::string> createToken(const Parameters &parameters);
   std::optional<std::string> createTokenOrphan(const Parameters &parameters);
   std::optional<std::string> createTokenWithRole(const Path &path,

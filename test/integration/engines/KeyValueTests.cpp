@@ -10,7 +10,7 @@ TEST_CASE("KeyValue Functions") {
     Vault::SecretMount secretMount{"legacy"};
     Vault::KeyValue kv(vaultClient, secretMount, Vault::KeyValue::Version::v1);
     Vault::Path path("hello");
-    std::vector<long> versions({1, 2, 3});
+    std::vector<int64_t> versions({1, 2, 3});
 
     SECTION("CRUD") {
       KV::setValues(kv, path);
