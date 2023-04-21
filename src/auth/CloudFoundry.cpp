@@ -1,6 +1,7 @@
 #include "VaultClient.h"
 
-std::optional<std::string> Vault::CloudFoundry::configure(const Parameters &parameters) {
+std::optional<std::string>
+Vault::CloudFoundry::configure(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config"}), parameters);
 }
 
@@ -12,7 +13,9 @@ std::optional<std::string> Vault::CloudFoundry::deleteConfig() {
   return HttpConsumer::del(client_, getUrl(Path{"config"}));
 }
 
-std::optional<std::string> Vault::CloudFoundry::createRole(const Path &path, const Parameters &parameters) {
+std::optional<std::string>
+Vault::CloudFoundry::createRole(const Path &path,
+                                const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"roles/" + path}), parameters);
 }
 
@@ -28,7 +31,8 @@ std::optional<std::string> Vault::CloudFoundry::listRoles() {
   return HttpConsumer::list(client_, getUrl(Path{"roles"}));
 }
 
-std::optional<std::string> Vault::CloudFoundry::login(const Parameters &parameters) {
+std::optional<std::string>
+Vault::CloudFoundry::login(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"login"}), parameters);
 }
 

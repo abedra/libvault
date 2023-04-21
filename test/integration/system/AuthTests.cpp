@@ -1,5 +1,5 @@
-#include <optional>
 #include <catch2/catch.hpp>
+#include <optional>
 
 #include "json.hpp"
 
@@ -12,7 +12,8 @@ TEST_CASE("Auth Functions") {
 
   SECTION("list") {
     auto first = auth.list();
-    Vault::Parameters parameters{{"type", "userpass"}, {"description", "userpass"}};
+    Vault::Parameters parameters{{"type", "userpass"},
+                                 {"description", "userpass"}};
     auth.enable(Vault::Path{"userpass"}, parameters);
     auto userPass = auth.list();
     auth.disable(Vault::Path{"userpass"});
@@ -20,13 +21,14 @@ TEST_CASE("Auth Functions") {
 
     if (first && userPass && disabledUserPass) {
       auto firstData = nlohmann::json::parse(first.value())["data"];
-      CHECK(firstData.size() == 2);
+      REQUIRE(firstData.size() == 2);
       auto userPassData = nlohmann::json::parse(userPass.value())["data"];
-      CHECK(userPassData.size() == 3);
-      auto disabledUserPassData = nlohmann::json::parse(disabledUserPass.value())["data"];
-      CHECK(disabledUserPassData.size() == 2);
+      REQUIRE(userPassData.size() == 3);
+      auto disabledUserPassData =
+          nlohmann::json::parse(disabledUserPass.value())["data"];
+      REQUIRE(disabledUserPassData.size() == 2);
     } else {
-      CHECK(false);
+      REQUIRE(false);
     }
   }
 
@@ -37,11 +39,11 @@ TEST_CASE("Auth Functions") {
 
     if (response) {
       auto data = nlohmann::json::parse(response.value())["data"];
-      CHECK(data["force_no_cache"] == false);
-      CHECK(data["token_type"] == "default-service");
-      CHECK(data["max_lease_ttl"] == 5000);
+      REQUIRE(data["force_no_cache"] == false);
+      REQUIRE(data["token_type"] == "default-service");
+      REQUIRE(data["max_lease_ttl"] == 5000);
     } else {
-      CHECK(false);
+      REQUIRE(false);
     }
   }
 }

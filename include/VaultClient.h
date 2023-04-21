@@ -91,24 +91,24 @@ LIBVAULT_TINY_LONG(SecretVersion)
 #undef LIBVAULT_TINY_LONG
 
 namespace Algorithms {
-const static Vault::Algorithm SHA1 = Vault::Algorithm{"sha1"};
-const static Vault::Algorithm SHA2_224 = Vault::Algorithm{"sha2-224"};
-const static Vault::Algorithm SHA2_256 = Vault::Algorithm{"sha2-256"};
-const static Vault::Algorithm SHA2_384 = Vault::Algorithm{"sha2-384"};
-const static Vault::Algorithm SHA2_512 = Vault::Algorithm{"sha2-512"};
+static const Vault::Algorithm SHA1 = Vault::Algorithm{"sha1"};
+static const Vault::Algorithm SHA2_224 = Vault::Algorithm{"sha2-224"};
+static const Vault::Algorithm SHA2_256 = Vault::Algorithm{"sha2-256"};
+static const Vault::Algorithm SHA2_384 = Vault::Algorithm{"sha2-384"};
+static const Vault::Algorithm SHA2_512 = Vault::Algorithm{"sha2-512"};
 } // namespace Algorithms
 
 namespace RootCertificateTypes {
-const static Vault::RootCertificateType INTERNAL =
+static const Vault::RootCertificateType INTERNAL =
     Vault::RootCertificateType("internal");
-const static Vault::RootCertificateType EXPORTED =
+static const Vault::RootCertificateType EXPORTED =
     Vault::RootCertificateType("exported");
 } // namespace RootCertificateTypes
 
 namespace KeyTypes {
-const static Vault::KeyType ENCRYPTION_KEY = Vault::KeyType{"encryption-key"};
-const static Vault::KeyType SIGNING_KEY = Vault::KeyType{"signing-key"};
-const static Vault::KeyType HMAC_KEY = Vault::KeyType{"hmac-key"};
+static const Vault::KeyType ENCRYPTION_KEY = Vault::KeyType{"encryption-key"};
+static const Vault::KeyType SIGNING_KEY = Vault::KeyType{"signing-key"};
+static const Vault::KeyType HMAC_KEY = Vault::KeyType{"hmac-key"};
 } // namespace KeyTypes
 
 struct HttpResponse {
@@ -286,7 +286,7 @@ private:
 
     static size_t writeCallback(void *contents, size_t size, size_t nmemb,
                                 void *userp) {
-      ((std::string *)userp)->append((char *)contents, size * nmemb);
+      ((std::string *)userp)->append((char *)contents, size * nmemb); // NOLINT
       return size * nmemb;
     }
   };
@@ -323,9 +323,9 @@ public:
 class Client {
 public:
   Client(const Client &other, Token token);
-  Client(Config &config, AuthenticationStrategy &authStrategy);
+  Client(Config &config, AuthenticationStrategy &authStrategy); // NOLINT
   Client(
-      Config &config, AuthenticationStrategy &authStrategy,
+      Config &config, AuthenticationStrategy &authStrategy, // NOLINT
       HttpErrorCallback httpErrorCallback,
       ResponseErrorCallback responseErrorCallback =
           [](const HttpResponse &err) {});

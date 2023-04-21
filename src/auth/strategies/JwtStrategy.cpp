@@ -1,7 +1,8 @@
-#include "json.hpp"
 #include "VaultClient.h"
+#include "json.hpp"
 
-std::optional<Vault::AuthenticationResponse> Vault::JwtStrategy::authenticate(const Vault::Client &client) {
+std::optional<Vault::AuthenticationResponse>
+Vault::JwtStrategy::authenticate(const Vault::Client &client) {
   return HttpConsumer::authenticate(client, getUrl(client), [this]() {
     nlohmann::json j;
     j = nlohmann::json::object();
@@ -11,6 +12,6 @@ std::optional<Vault::AuthenticationResponse> Vault::JwtStrategy::authenticate(co
   });
 }
 
-Vault::Url Vault::JwtStrategy::getUrl(const Vault::Client& client) {
+Vault::Url Vault::JwtStrategy::getUrl(const Vault::Client &client) {
   return client.getUrl("/v1/auth/jwt/login", Path{});
 }

@@ -1,6 +1,7 @@
 #include "VaultClient.h"
 
-std::optional<std::string> Vault::Okta::configure(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Okta::configure(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config"}), parameters);
 }
 
@@ -12,7 +13,8 @@ std::optional<std::string> Vault::Okta::listUsers() {
   return HttpConsumer::list(client_, getUrl(Path{"users"}));
 }
 
-std::optional<std::string> Vault::Okta::registerUser(const Path &path, const Parameters &parameters) {
+std::optional<std::string>
+Vault::Okta::registerUser(const Path &path, const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"users/" + path}), parameters);
 }
 
@@ -28,8 +30,10 @@ std::optional<std::string> Vault::Okta::listGroups() {
   return HttpConsumer::list(client_, getUrl(Path{"groups"}));
 }
 
-std::optional<std::string> Vault::Okta::registerGroup(const Path &path, const Parameters &parameters) {
-  return HttpConsumer::post(client_, getUrl(Path{"groups/" +path}), parameters);
+std::optional<std::string>
+Vault::Okta::registerGroup(const Path &path, const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"groups/" + path}),
+                            parameters);
 }
 
 std::optional<std::string> Vault::Okta::readGroup(const Path &path) {
@@ -40,7 +44,8 @@ std::optional<std::string> Vault::Okta::deleteGroup(const Path &path) {
   return HttpConsumer::del(client_, getUrl(Path{"groups/" + path}));
 }
 
-std::optional<std::string> Vault::Okta::login(const Path  &path, const Parameters &parameters) {
+std::optional<std::string> Vault::Okta::login(const Path &path,
+                                              const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"login" + path}), parameters);
 }
 

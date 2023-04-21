@@ -8,11 +8,15 @@ std::optional<std::string> Vault::Sys::Policy::read(const Path &path) const {
   return HttpConsumer::get(client_, getUrl(path));
 }
 
-std::optional<std::string> Vault::Sys::Policy::create(const Path &path, const Parameters &parameters) const {
+std::optional<std::string>
+Vault::Sys::Policy::create(const Path &path,
+                           const Parameters &parameters) const {
   return HttpConsumer::put(client_, getUrl(path), parameters);
 }
 
-std::optional<std::string> Vault::Sys::Policy::update(const Path &path, const Parameters &parameters) const {
+std::optional<std::string>
+Vault::Sys::Policy::update(const Path &path,
+                           const Parameters &parameters) const {
   return HttpConsumer::put(client_, getUrl(path), parameters);
 }
 

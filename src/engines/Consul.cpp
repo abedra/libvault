@@ -1,15 +1,21 @@
 #include "VaultClient.h"
 
-std::optional<std::string> Vault::Consul::configure(const Parameters &parameters) {
-  return Vault::HttpConsumer::post(client_, getUrl(Path{"config/access"}), parameters);
+std::optional<std::string>
+Vault::Consul::configure(const Parameters &parameters) {
+  return Vault::HttpConsumer::post(client_, getUrl(Path{"config/access"}),
+                                   parameters);
 }
 
-std::optional<std::string> Vault::Consul::createRole(const Path &path, const Parameters &parameters) {
-  return Vault::HttpConsumer::post(client_, getUrl(Path{"roles/" + path}), parameters);
+std::optional<std::string>
+Vault::Consul::createRole(const Path &path, const Parameters &parameters) {
+  return Vault::HttpConsumer::post(client_, getUrl(Path{"roles/" + path}),
+                                   parameters);
 }
 
-std::optional<std::string> Vault::Consul::updateRole(const Path &path, const Parameters &parameters) {
-  return Vault::HttpConsumer::post(client_, getUrl(Path{"roles/" + path}), parameters);
+std::optional<std::string>
+Vault::Consul::updateRole(const Path &path, const Parameters &parameters) {
+  return Vault::HttpConsumer::post(client_, getUrl(Path{"roles/" + path}),
+                                   parameters);
 }
 
 std::optional<std::string> Vault::Consul::readRole(const Path &path) {

@@ -4,11 +4,13 @@ std::optional<std::string> Vault::Sys::GenerateRoot::read() {
   return HttpConsumer::get(client_, getUrl(Path{"attempt"}));
 }
 
-std::optional<std::string> Vault::Sys::GenerateRoot::start(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Sys::GenerateRoot::start(const Parameters &parameters) {
   return HttpConsumer::put(client_, getUrl(Path{"attempt"}), parameters);
 }
 
-std::optional<std::string> Vault::Sys::GenerateRoot::update(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Sys::GenerateRoot::update(const Parameters &parameters) {
   return HttpConsumer::put(client_, getUrl(Path{"update"}), parameters);
 }
 

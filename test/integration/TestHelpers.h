@@ -2,6 +2,9 @@
 
 #include <catch2/catch.hpp>
 #include <iostream>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #include "VaultClient.h"
 #include "json.hpp"
@@ -120,18 +123,18 @@ inline void setValues(Vault::KeyValue kv, const Vault::Path &path) {
 }
 
 inline void assertListValues(Vault::KeyValue kv) {
-  // TODO: Should probably refactor the list method, this doesn't make much
-  // sense
+  // TODO(abedra): Should probably refactor the list method, this doesn't make
+  // much sense
   auto response = kv.list(Vault::Path{""});
 
   if (response) {
     std::vector<std::string> secrets =
         nlohmann::json::parse(response.value())["data"]["keys"];
 
-    CHECK(secrets.size() == 1);
-    CHECK(secrets.at(0) == "hello");
+    REQUIRE(secrets.size() == 1);
+    REQUIRE(secrets.at(0) == "hello");
   } else {
-    CHECK(false);
+    REQUIRE(false);
   }
 }
 
@@ -142,20 +145,20 @@ inline void assertReadValues(Vault::KeyValue kv, const Vault::Path &path) {
     std::unordered_map<std::string, std::string> secrets =
         nlohmann::json::parse(response.value())["data"]["data"];
 
-    CHECK(secrets.size() == 3);
+    REQUIRE(secrets.size() == 3);
 
     auto baz = secrets.find("baz");
-    CHECK(baz != secrets.end());
-    CHECK(baz->second == "quux");
+    REQUIRE(baz != secrets.end());
+    REQUIRE(baz->second == "quux");
   } else {
-    CHECK(false);
+    REQUIRE(false);
   }
 }
 
 inline void assertDeleteValues(Vault::KeyValue kv, const Vault::Path &path) {
   kv.del(path);
 
-  CHECK(!kv.read(path));
+  REQUIRE(!kv.read(path));
 }
 } // namespace KV
 
@@ -164,9 +167,9 @@ inline void assertHashPopulated(const std::optional<std::string> &response) {
   if (response) {
     std::string actual = nlohmann::json::parse(response.value())["data"]["sum"];
 
-    CHECK(!actual.empty());
+    REQUIRE(!actual.empty());
   } else {
-    CHECK(false);
+    REQUIRE(false);
   }
 }
 
@@ -175,9 +178,9 @@ inline void assertHmacPopulated(const std::optional<std::string> &response) {
     std::string actual =
         nlohmann::json::parse(response.value())["data"]["hmac"];
 
-    CHECK(!actual.empty());
+    REQUIRE(!actual.empty());
   } else {
-    CHECK(false);
+    REQUIRE(false);
   }
 }
 
@@ -187,9 +190,9 @@ assertSignaturePopulated(const std::optional<std::string> &response) {
     std::string actual =
         nlohmann::json::parse(response.value())["data"]["signature"];
 
-    CHECK(!actual.empty());
+    REQUIRE(!actual.empty());
   } else {
-    CHECK(false);
+    REQUIRE(false);
   }
 }
 } // namespace TestHelpers::Transit

@@ -31,4 +31,3 @@ std::optional<std::string> Vault::Sys::Pprof::trace() {
 Vault::Url Vault::Sys::Pprof::getUrl(const Path &path) {
   return client_.getUrl("/v1/sys/pprof/", path);
 }
-

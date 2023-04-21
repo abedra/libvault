@@ -1,6 +1,7 @@
 #include "VaultClient.h"
 
-std::optional<std::string> Vault::OpenLDAP::configure(const Parameters &parameters) {
+std::optional<std::string>
+Vault::OpenLDAP::configure(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config"}), parameters);
 }
 
@@ -20,20 +21,26 @@ std::optional<std::string> Vault::OpenLDAP::readStaticRole(const Path &path) {
   return HttpConsumer::get(client_, getUrl(Path{"static-role/" + path}));
 }
 
-std::optional<std::string> Vault::OpenLDAP::createStaticRole(const Path &path, const Parameters &parameters) {
-  return HttpConsumer::post(client_, getUrl(Path{"static-role/" + path}), parameters);
+std::optional<std::string>
+Vault::OpenLDAP::createStaticRole(const Path &path,
+                                  const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"static-role/" + path}),
+                            parameters);
 }
 
 std::optional<std::string> Vault::OpenLDAP::deleteStaticRole(const Path &path) {
   return HttpConsumer::del(client_, getUrl(Path{"static-role" + path}));
 }
 
-std::optional<std::string> Vault::OpenLDAP::getStaticRolePassword(const Path &path) {
+std::optional<std::string>
+Vault::OpenLDAP::getStaticRolePassword(const Path &path) {
   return HttpConsumer::get(client_, getUrl(Path{"static-cred/" + path}));
 }
 
-std::optional<std::string> Vault::OpenLDAP::rotateStaticRolePassword(const Path &path) {
-  return HttpConsumer::post(client_, getUrl(Path{"rotate-role/" + path}), Parameters{});
+std::optional<std::string>
+Vault::OpenLDAP::rotateStaticRolePassword(const Path &path) {
+  return HttpConsumer::post(client_, getUrl(Path{"rotate-role/" + path}),
+                            Parameters{});
 }
 
 std::optional<std::string> Vault::OpenLDAP::rotateRootPassword() {

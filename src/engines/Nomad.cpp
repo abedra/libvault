@@ -1,6 +1,7 @@
 #include "VaultClient.h"
 
-std::optional<std::string> Vault::Nomad::configureAccess(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Nomad::configureAccess(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config/access"}), parameters);
 }
 
@@ -8,7 +9,8 @@ std::optional<std::string> Vault::Nomad::readAccessConfiguration() {
   return HttpConsumer::get(client_, getUrl(Path{"config/access"}));
 }
 
-std::optional<std::string> Vault::Nomad::configureLease(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Nomad::configureLease(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config/least"}), parameters);
 }
 
@@ -20,11 +22,13 @@ std::optional<std::string> Vault::Nomad::deleteLeaseConfiguration() {
   return HttpConsumer::del(client_, getUrl(Path{"config/lease"}));
 }
 
-std::optional<std::string> Vault::Nomad::createRole(const Path &path, const Parameters &parameters) {
+std::optional<std::string>
+Vault::Nomad::createRole(const Path &path, const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"role/" + path}), parameters);
 }
 
-std::optional<std::string> Vault::Nomad::updateRole(const Path &path, const Parameters &parameters) {
+std::optional<std::string>
+Vault::Nomad::updateRole(const Path &path, const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"role/" + path}), parameters);
 }
 

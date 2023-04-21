@@ -1,10 +1,12 @@
 #include "VaultClient.h"
 
-std::optional<std::string> Vault::Radius::configure(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Radius::configure(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config"}), parameters);
 }
 
-std::optional<std::string> Vault::Radius::registerUser(const Path &path, const Parameters &parameters) {
+std::optional<std::string>
+Vault::Radius::registerUser(const Path &path, const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"users/" + path}), parameters);
 }
 

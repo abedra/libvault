@@ -8,11 +8,15 @@ std::optional<std::string> Vault::Sys::Policies::EGP::read(const Path &path) {
   return Vault::Sys::Policies::read(client_, getUrl(path));
 }
 
-std::optional<std::string> Vault::Sys::Policies::EGP::create(const Path &path, const Parameters &parameters) {
+std::optional<std::string>
+Vault::Sys::Policies::EGP::create(const Path &path,
+                                  const Parameters &parameters) {
   return Vault::Sys::Policies::create(client_, getUrl(path), parameters);
 }
 
-std::optional<std::string> Vault::Sys::Policies::EGP::update(const Path &path, const Parameters &parameters) {
+std::optional<std::string>
+Vault::Sys::Policies::EGP::update(const Path &path,
+                                  const Parameters &parameters) {
   return Vault::Sys::Policies::update(client_, getUrl(path), parameters);
 }
 

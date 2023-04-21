@@ -1,6 +1,7 @@
 #include "VaultClient.h"
 
-std::optional<std::string> Vault::Kerberos::configure(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Kerberos::configure(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config"}), parameters);
 }
 
@@ -8,7 +9,8 @@ std::optional<std::string> Vault::Kerberos::readConfig() {
   return HttpConsumer::get(client_, getUrl(Path{"config"}));
 }
 
-std::optional<std::string> Vault::Kerberos::configureLdap(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Kerberos::configureLdap(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"config/ldap"}), parameters);
 }
 
@@ -24,19 +26,24 @@ std::optional<std::string> Vault::Kerberos::readGroup(const Path &path) {
   return HttpConsumer::get(client_, getUrl(Path{"groups/" + path}));
 }
 
-std::optional<std::string> Vault::Kerberos::createGroup(const Path &path, const Parameters &parameters) {
-  return HttpConsumer::post(client_, getUrl(Path{"groups/" + path}), parameters);
+std::optional<std::string>
+Vault::Kerberos::createGroup(const Path &path, const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"groups/" + path}),
+                            parameters);
 }
 
-std::optional<std::string> Vault::Kerberos::updateGroup(const Path &path, const Parameters &parameters) {
-  return HttpConsumer::post(client_, getUrl(Path{"groups/" + path}), parameters);
+std::optional<std::string>
+Vault::Kerberos::updateGroup(const Path &path, const Parameters &parameters) {
+  return HttpConsumer::post(client_, getUrl(Path{"groups/" + path}),
+                            parameters);
 }
 
 std::optional<std::string> Vault::Kerberos::deleteGroup(const Path &path) {
   return HttpConsumer::del(client_, getUrl(Path{"groups/" + path}));
 }
 
-std::optional<std::string> Vault::Kerberos::login(const Parameters &parameters) {
+std::optional<std::string>
+Vault::Kerberos::login(const Parameters &parameters) {
   return HttpConsumer::post(client_, getUrl(Path{"login"}), parameters);
 }
 
