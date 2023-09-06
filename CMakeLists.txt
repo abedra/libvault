@@ -27,6 +27,10 @@ endif(CURL_FOUND)
 include(GNUInstallDirs)
 include_directories("${PROJECT_SOURCE_DIR}/lib")
 
+IF (WIN32)
+  RUNTIME_OUTPUT_NAME("VaultClient")
+ENDIF()
+
 add_library(
   vault
   include/VaultClient.h
