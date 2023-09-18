@@ -27,10 +27,6 @@ endif(CURL_FOUND)
 include(GNUInstallDirs)
 include_directories("${PROJECT_SOURCE_DIR}/lib")
 
-if(WIN32)
-    set_target_properties(vault PROPERTIES RUNTIME_OUTPUT_NAME "VaultClient")
-endif()
-
 add_library(
   vault
   include/VaultClient.h
@@ -116,6 +112,10 @@ add_library(
   src/system/tools/Tools.cpp
   src/system/Sys.cpp
   src/auth/Tokens.cpp)
+
+if(WIN32)
+    set_target_properties(vault PROPERTIES RUNTIME_OUTPUT_NAME "VaultClient")
+endif()
 
 target_include_directories(
   vault PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
