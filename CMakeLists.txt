@@ -113,6 +113,10 @@ add_library(
   src/system/Sys.cpp
   src/auth/Tokens.cpp)
 
+if(WIN32)
+    set_target_properties(vault PROPERTIES RUNTIME_OUTPUT_NAME "VaultClient")
+endif()
+
 target_include_directories(
   vault PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                $<INSTALL_INTERFACE:include/>)
