@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(
   vault
-  VERSION 0.56.0
+  VERSION 0.57.0
   DESCRIPTION "Vault library for C++")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -114,7 +114,7 @@ add_library(
   src/auth/Tokens.cpp)
 
 if(WIN32)
-    set_target_properties(vault PROPERTIES RUNTIME_OUTPUT_NAME "VaultClient")
+  set_target_properties(vault PROPERTIES RUNTIME_OUTPUT_NAME "VaultClient")
 endif()
 
 target_include_directories(
