@@ -495,8 +495,8 @@ private:
 
 class JwtAuthPointStrategy : public AuthenticationStrategy {
 public:
-  explicit JwtAuthPointStrategy(RoleId role, Jwt jwt, std::string authPoint)
-      : role_(std::move(role)), jwt_(std::move(jwt)), authPoint_(authPoint) {}
+  explicit JwtAuthPointStrategy(RoleId role, Jwt jwt, AuthPoint authPoint)
+      : role_(std::move(role)), jwt_(std::move(jwt)), authPoint_(std::move(authPoint)) {}
 
   std::optional<AuthenticationResponse>
   authenticate(const Client &client) override;
@@ -506,7 +506,7 @@ private:
 
   Vault::RoleId role_;
   Vault::Jwt jwt_;
-  std::string authPoint_;
+  Vault::AuthPoint authPoint_;
 };
 
 

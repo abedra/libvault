@@ -14,5 +14,5 @@ Vault::JwtAuthPointStrategy::authenticate(const Vault::Client &client) {
 
 Vault::Url Vault::JwtAuthPointStrategy::getUrl(const Vault::Client &client) {
 
-  return client.getUrl("/v1/auth/" + authPoint_ +  "/login", Path{});
+  return client.getUrl("/v1/auth/" + authPoint_.value() +  "/login", Path{});
 }
