@@ -80,6 +80,7 @@ LIBVAULT_TINY_STRING(SecretMount)
 LIBVAULT_TINY_STRING(Token)
 LIBVAULT_TINY_STRING(Url)
 LIBVAULT_TINY_STRING(Jwt)
+LIBVAULT_TINY_STRING(AuthPoint)
 
 LIBVAULT_TINY_LONG(Timeout)
 LIBVAULT_TINY_LONG(Threshold)
@@ -491,6 +492,23 @@ private:
   Vault::RoleId role_;
   Vault::Jwt jwt_;
 };
+
+class JwtAuthPointStrategy : public AuthenticationStrategy {
+public:
+  explicit JwtAuthPointStrategy(RoleId role, Jwt jwt, std::string authPoint)
+      : role_(std::move(role)), jwt_(std::move(jwt)), authPoint_(authPoint) {}
+
+  std::optional<AuthenticationResponse>
+  authenticate(const Client &client) override;
+
+private:
+  Url getUrl(const Client &client);
+
+  Vault::RoleId role_;
+  Vault::Jwt jwt_;
+  std::string authPoint_;
+};
+
 
 class Ldap {
   explicit Ldap(const Client &client) : client_(client) {}
