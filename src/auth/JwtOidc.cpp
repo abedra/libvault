@@ -42,5 +42,5 @@ Vault::JwtOidc::jwtLogin(const Parameters &parameters) const {
 }
 
 Vault::Url Vault::JwtOidc::getUrl(const Path &path) const {
-  return client_.getUrl("/v1/auth/jwt/", path);
+  return client_.getUrl("/v1/auth/" + mount_ + "/", path);
 }

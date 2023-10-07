@@ -29,26 +29,27 @@ Vault::Jwt makeJwt(const std::filesystem::path &publicKeyPath,
 
 Vault::Client setup(const Vault::Client &rootClient,
                     const std::filesystem::path &publicKeyPath,
-                    const std::filesystem::path &privateKeyPath) {
+                    const std::filesystem::path &privateKeyPath,
+                    const Vault::Path &path) {
   Vault::Sys::Auth authAdmin{rootClient};
-  Vault::JwtOidc jwtAdmin{rootClient};
+  Vault::JwtOidc jwtAdmin{rootClient, path};
 
-  enableJwtAuthentication(authAdmin);
+  enableJwtAuthentication(authAdmin, path);
   createRole(jwtAdmin);
   configureJwtAuthentication(jwtAdmin, read(publicKeyPath));
 
   Vault::RoleId role{"example"};
   Vault::Jwt jwt = makeJwt(publicKeyPath, privateKeyPath);
 
-  return getJwtClient(role, jwt);
+  return getJwtClient(role, jwt, path);
 }
 
-void cleanup(const Vault::Client &rootClient) {
+void cleanup(const Vault::Client &rootClient, const Vault::Path &path) {
   Vault::Sys::Auth authAdmin{rootClient};
-  Vault::JwtOidc jwtAdmin{rootClient};
+  Vault::JwtOidc jwtAdmin{rootClient, path};
 
   deleteRole(jwtAdmin);
-  disableJwtAuthentication(authAdmin);
+  disableJwtAuthentication(authAdmin, path);
 }
 
 int main(void) {
@@ -60,9 +61,13 @@ int main(void) {
   }
   Vault::Token rootToken{rootTokenEnv};
   Vault::Client rootClient = getRootClient(rootToken);
+  Vault::Path path{"jwt"};
   Vault::Client jwtClient =
-      setup(rootClient, std::filesystem::path{"public.pem"},
-            std::filesystem::path{"private.pem"});
+      setup(rootClient, 
+            std::filesystem::path{"public.pem"},
+            std::filesystem::path{"private.pem"},
+            path
+      );
 
   if (jwtClient.is_authenticated()) {
     std::cout << "Authenticated: " << jwtClient.getToken() << std::endl;
@@ -70,5 +75,5 @@ int main(void) {
     std::cout << "Unable to authenticate" << std::endl;
   }
 
-  cleanup(rootClient);
+  cleanup(rootClient, path);
 }

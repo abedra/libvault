@@ -28,8 +28,9 @@ inline Vault::Client getAppRoleClient(const Vault::RoleId &roleId,
 }
 
 inline Vault::Client getJwtClient(const Vault::RoleId &role,
-                                  const Vault::Jwt &jwt) {
-  Vault::JwtStrategy authStrategy{role, jwt};
+                                  const Vault::Jwt &jwt,
+                                  const Vault::Path &path) {
+  Vault::JwtStrategy authStrategy{role, jwt, path};
   Vault::Config config =
       Vault::ConfigBuilder().withDebug(false).withTlsEnabled(false).build();
   Vault::HttpErrorCallback httpErrorCallback = [&](std::string err) {
@@ -134,8 +135,20 @@ enableJwtAuthentication(const Vault::Sys::Auth &authAdmin) {
 }
 
 inline std::optional<std::string>
+enableJwtAuthentication(const Vault::Sys::Auth &authAdmin, 
+                        const Vault::Path &path) {
+  return authAdmin.enable(path, Vault::Parameters{{"type", "jwt"}});
+}
+
+inline std::optional<std::string>
 disableJwtAuthentication(const Vault::Sys::Auth &authAdmin) {
   return authAdmin.disable(Vault::Path{"jwt"});
+}
+
+inline std::optional<std::string>
+disableJwtAuthentication(const Vault::Sys::Auth &authAdmin, 
+                         const Vault::Path &path) {
+  return authAdmin.disable(path);
 }
 
 inline std::optional<std::string>

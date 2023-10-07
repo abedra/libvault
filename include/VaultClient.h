@@ -1995,7 +1995,8 @@ private:
 
 class JwtOidc {
 public:
-  explicit JwtOidc(const Client &client) : client_(client) {}
+  explicit JwtOidc(const Client &client) : client_(client), mount_(Path{"jwt"}) {}
+  JwtOidc(const Client &client, Path path) : client_(client), mount_(std::move(path)) {}
 
   std::optional<std::string> configure(const Parameters &parameters) const;
   [[nodiscard]] std::optional<std::string> readConfig() const;
@@ -2014,6 +2015,7 @@ private:
   [[nodiscard]] Url getUrl(const Path &path) const;
 
   const Client &client_;
+  const Path mount_;
 };
 
 class Kerberos {
