@@ -479,17 +479,26 @@ private:
 
 class JwtStrategy : public AuthenticationStrategy {
 public:
-  explicit JwtStrategy(RoleId role, Jwt jwt)
-      : role_(std::move(role)), jwt_(std::move(jwt)) {}
+  JwtStrategy(RoleId role, Jwt jwt)
+    : role_(std::move(role))
+    , jwt_(std::move(jwt))
+    , mount_(Path{"jwt"})
+  {}
 
-  std::optional<AuthenticationResponse>
-  authenticate(const Client &client) override;
+  JwtStrategy(RoleId role, Jwt jwt, Path mount)
+    : role_(std::move(role))
+    , jwt_(std::move(jwt))
+    , mount_(std::move(mount))
+  {}
+
+  std::optional<AuthenticationResponse> authenticate(const Client &client) override;
 
 private:
-  static Url getUrl(const Client &client);
+  Url getUrl(const Client &client, const Path &path);
 
   Vault::RoleId role_;
   Vault::Jwt jwt_;
+  Vault::Path mount_;
 };
 
 class Ldap {

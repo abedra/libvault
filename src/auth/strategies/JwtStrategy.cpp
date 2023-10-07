@@ -3,7 +3,7 @@
 
 std::optional<Vault::AuthenticationResponse>
 Vault::JwtStrategy::authenticate(const Vault::Client &client) {
-  return HttpConsumer::authenticate(client, getUrl(client), [this]() {
+  return HttpConsumer::authenticate(client, getUrl(client, Vault::Path{"/login"}), [this]() {
     nlohmann::json j;
     j = nlohmann::json::object();
     j["role"] = role_.value();
@@ -12,6 +12,7 @@ Vault::JwtStrategy::authenticate(const Vault::Client &client) {
   });
 }
 
-Vault::Url Vault::JwtStrategy::getUrl(const Vault::Client &client) {
-  return client.getUrl("/v1/auth/jwt/login", Path{});
+Vault::Url Vault::JwtStrategy::getUrl(const Vault::Client &client,
+                                      const Vault::Path &path) {
+  return client.getUrl("/v1/auth/" + mount_, path);
 }

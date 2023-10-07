@@ -1,6 +1,5 @@
 #include "VaultClient.h"
 #include "json.hpp"
-#include <utility>
 
 std::optional<Vault::AuthenticationResponse>
 Vault::AppRoleStrategy::authenticate(const Vault::Client &client) {

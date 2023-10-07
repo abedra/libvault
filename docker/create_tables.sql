@@ -1,5 +1,3 @@
-create database vault;
-
 create table things(
     id serial primary key,
     name text unique not null,
