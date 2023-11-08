@@ -27,7 +27,10 @@ template <typename Name, typename T> struct Tiny {
   friend std::string operator+(const Tiny &tiny, const Tiny &other) {
     return tiny.value() + other.value();
   }
-
+  template<typename U>
+  friend std::string operator+(const Tiny &tiny, const Tiny<U, T> &other) {
+    return tiny.value() + other.value();
+  }
   friend std::string operator+(const Tiny &tiny, const char *string) {
     return tiny.toString() + string;
   }
