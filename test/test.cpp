@@ -2,6 +2,7 @@
 #include <catch2/catch.hpp>
 #include <optional>
 #include <utility>
+#include <sstream>
 
 #include "VaultClient.h"
 
@@ -132,6 +133,34 @@ TEST_CASE("HttpClient#is_success when status 200") {
        Vault::HttpResponseUrl{"http://example.com"},
        Vault::HttpResponseBodyString{"OK"}});
   REQUIRE(Vault::HttpClient::is_success(response));
+}
+
+TEST_CASE("Tiny#base operators check") {
+  {
+    const auto token1 = Vault::Token{"hello"};
+    const auto token2 = Vault::Token{"token"};
+
+    REQUIRE(token1 + token2 == "hellotoken");
+    REQUIRE(token2 + token1 == "tokenhello");
+  }
+  {
+    const auto host = Vault::Host{"example.com"};
+    const auto port = Vault::Port{":6000"};
+    const auto url = std::string{"http://"} + host + port;
+
+    REQUIRE(url == "http://example.com:6000");
+  }
+  {
+    std::stringstream outStream;
+    outStream << "http://" << Vault::Host{"example.com"} << ":" << std::to_string(6000ul);
+
+    REQUIRE(outStream.str() == "http://example.com:6000");
+  }
+  {
+    REQUIRE(Vault::Url{Vault::Host{"example.com"} + Vault::Port{":6000"}}.value() == "example.com:6000");
+    REQUIRE(Vault::Url{            "example.com"  + Vault::Port{":6000"}}.value() == "example.com:6000");
+    REQUIRE(Vault::Url{Vault::Host{"example.com"} +             ":6000" }.value() == "example.com:6000");
+  }
 }
 
 TEST_CASE("VaultConfig#make default") {
