@@ -328,7 +328,7 @@ public:
       Config &config, AuthenticationStrategy &authStrategy, // NOLINT
       HttpErrorCallback httpErrorCallback,
       ResponseErrorCallback responseErrorCallback =
-          [](const HttpResponse &err) {});
+          []([[maybe_unused]] const HttpResponse &err) {});
   virtual ~Client() = default;
 
   [[nodiscard]] virtual bool is_authenticated() const {
@@ -408,7 +408,7 @@ public:
   explicit TokenStrategy(Token token) : token_(std::move(token)) {}
 
   std::optional<AuthenticationResponse>
-  authenticate(const Client &vaultClient) override {
+  authenticate([[maybe_unused]] const Client &vaultClient) override {
     return AuthenticationResponse{HttpResponseBodyString{""}, token_};
   }
 

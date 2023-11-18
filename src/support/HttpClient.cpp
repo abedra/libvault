@@ -3,8 +3,8 @@
 
 Vault::HttpClient::HttpClient(Vault::Config config)
     : config_(std::move(config)),
-      errorCallback_([&](const std::string &err) {}),
-      responseErrorCallback_([&](const HttpResponse &err) {}) {}
+      errorCallback_([&]([[maybe_unused]] const std::string &err) {}),
+      responseErrorCallback_([&]([[maybe_unused]] const HttpResponse &err) {}) {}
 
 Vault::HttpClient::HttpClient(Vault::Config config,
                               HttpErrorCallback errorCallback,
@@ -21,7 +21,7 @@ std::optional<Vault::HttpResponse>
 Vault::HttpClient::get(const Vault::Url &url, const Vault::Token &token,
                        const Vault::Namespace &ns) const {
   return executeRequest(
-      url, token, ns, [&](CURL *curl) {},
+      url, token, ns, [&]([[maybe_unused]] CURL *curl) {},
       [&](curl_slist *chunk) { return chunk; }, errorCallback_);
 }
 
