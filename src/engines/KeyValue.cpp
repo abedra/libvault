@@ -5,19 +5,26 @@
 #include <utility>
 
 Vault::KeyValue::KeyValue(const Vault::Client &client)
-    : version_(KeyValue::Version::v2), client_(client), mount_("secret") {}
+    : client_(client)
+    , version_(KeyValue::Version::v2)
+    , mount_("secret") {}
 
 Vault::KeyValue::KeyValue(const Vault::Client &client, Vault::SecretMount mount)
-    : version_(KeyValue::Version::v2), client_(client),
-      mount_(std::move(mount)) {}
+    : client_(client)
+    , version_(KeyValue::Version::v2)
+    , mount_(std::move(mount)) {}
 
 Vault::KeyValue::KeyValue(const Vault::Client &client,
                           KeyValue::Version version)
-    : version_(version), client_(client), mount_("secret") {}
+    : client_(client)
+    , version_(version)
+    , mount_("secret") {}
 
 Vault::KeyValue::KeyValue(const Vault::Client &client, Vault::SecretMount mount,
                           KeyValue::Version version)
-    : version_(version), client_(client), mount_(std::move(mount)) {}
+    : client_(client)
+    , version_(version)
+    , mount_(std::move(mount)) {}
 
 Vault::Url Vault::KeyValue::getUrl(const Vault::Path &path) {
   return version_ == KeyValue::Version::v1
@@ -81,7 +88,7 @@ std::optional<std::string> Vault::KeyValue::del(const Vault::Path &path,
 
   return Vault::HttpConsumer::post(
       client_, client_.getUrl("/v1" + mount_ + "/delete/", path), Parameters{},
-      [&](const Parameters &params) {
+      [&]([[maybe_unused]] const Parameters &params) {
         nlohmann::json j;
         j["versions"] = versions;
         return j.dump();
@@ -97,7 +104,7 @@ Vault::KeyValue::destroy(const Vault::Path &path,
 
   return Vault::HttpConsumer::post(
       client_, client_.getUrl("/v1" + mount_ + "/destroy/", path), Parameters{},
-      [&](const Parameters &params) {
+      [&]([[maybe_unused]] const Parameters &params) {
         nlohmann::json j;
         j["versions"] = versions;
         return j.dump();
@@ -112,7 +119,7 @@ Vault::KeyValue::undelete(const Path &path, std::vector<int64_t> versions) {
 
   return Vault::HttpConsumer::post(
       client_, client_.getUrl("/v1" + mount_ + "/undelete/", path),
-      Parameters{}, [&](const Parameters &params) {
+      Parameters{}, [&]([[maybe_unused]] const Parameters &params) {
         nlohmann::json j;
         j["versions"] = versions;
         return j.dump();
