@@ -1,6 +1,6 @@
 # libvault
 ![CMake](https://github.com/abedra/libvault/workflows/CMake/badge.svg)
-[![Version](https://img.shields.io/badge/version-0.58.0-4a8fff)](https://img.shields.io/badge/version-0.58.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.59.0-4a8fff)](https://img.shields.io/badge/version-0.59.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
