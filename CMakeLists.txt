@@ -17,13 +17,6 @@ option(LINK_CURL "Link curl library for vault" OFF)
 option(BUILD_SHARED_LIBS "Build vault as a shared library" ON)
 option(INSTALL "Run install targets" ON)
 
-find_package(CURL)
-if(CURL_FOUND)
-  include_directories(${CURL_INCLUDE_DIR})
-else(CURL_FOUND)
-  message(FATAL_ERROR "CURL not found")
-endif(CURL_FOUND)
-
 include(GNUInstallDirs)
 include_directories("${PROJECT_SOURCE_DIR}/lib")
 
@@ -130,7 +123,8 @@ set_target_properties(
 target_include_directories(vault PRIVATE src)
 
 if(LINK_CURL)
-  target_link_libraries(vault curl)
+  find_package(CURL CONFIG REQUIRED)
+  target_link_libraries(vault PUBLIC CURL::libcurl)
 endif(LINK_CURL)
 
 if(ENABLE_COVERAGE)
