@@ -1,12 +1,15 @@
 # libvault
+
 ![CMake](https://github.com/abedra/libvault/workflows/CMake/badge.svg)
-[![Version](https://img.shields.io/badge/version-0.59.0-4a8fff)](https://img.shields.io/badge/version-0.59.0-4a8fff)
+[![Version](https://img.shields.io/badge/version-0.60.0-4a8fff)](https://img.shields.io/badge/version-0.60.0-4a8fff)
 
 A C++ library for [Hashicorp Vault](https://www.vaultproject.io/)
 
 ## C++ 17
 
-This project assumes a C++ 17 capable compiler. This includes GCC 8 or higher, and clang 3.8 or higher. Support for lower standards versions of C++ will not be accepted due to inconsistent implementations of optional.
+This project assumes a C++ 17 capable compiler. This includes GCC 8 or higher,
+and clang 3.8 or higher. Support for lower standards versions of C++ will not
+be accepted due to inconsistent implementations of optional.
 
 ## Dependencies
 
@@ -15,7 +18,10 @@ This project assumes a C++ 17 capable compiler. This includes GCC 8 or higher, a
 
 ## Usage
 
-The following example shows both a secret put and get. The most common scenario is get for most applications and the put will happen outside of the application by another process. Additional examples are located in the [example](example) directory.
+The following example shows both a secret put and get. The most common scenario
+is get for most applications and the put will happen outside of the application
+by another process. Additional examples are located in the [example](example)
+directory.
 
 ```cpp
 #include <iostream>
@@ -53,11 +59,20 @@ int main(void)
 
 ## JSON Serialization
 
-This project uses [nlohmann/json](https://github.com/nlohmann/json) internally but does not expose it. This project makes no assumptions about serialization and returns `std:string` values that can be serialized by the tooling of your choice. Should you choose to use [nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp` file to your project. This project's integration tests have multiple examples of how to use it.
+This project uses [nlohmann/json](https://github.com/nlohmann/json) internally
+but does not expose it. This project makes no assumptions about serialization
+and returns `std:string` values that can be serialized by the tooling of your
+choice. Should you choose to use
+[nlohmann/json](https://github.com/nlohmann/json) you can add the `json.hpp`
+file to your project. This project's integration tests have multiple examples
+of how to use it.
 
 ## Feature Support
 
-The following tables show support for each of the secret backends, auth methods, and system endpoints. Because the surface area is so large, endpoints are implemented as needed. Pull requests are welcome. Feel free to file an issue or submit a pull request for additional support.
+The following tables show support for each of the secret backends, auth
+methods, and system endpoints. Because the surface area is so large, endpoints
+are implemented as needed. Pull requests are welcome. Feel free to file an
+issue or submit a pull request for additional support.
 
 | Secret Backend   | Implemented | Integration Tested |
 |------------------|-------------|--------------------|
@@ -173,7 +188,8 @@ The following tables show support for each of the secret backends, auth methods,
 
 ## Compile and Install
 
-This project uses [CMake](https://cmake.org/). To build the library run the following commands from the project root:
+This project uses [CMake](https://cmake.org/). To build the library run the
+following commands from the project root:
 
 ```sh
 mkdir build
@@ -186,14 +202,21 @@ make
 
 The following custom options can be provided to CMake to control your build:
 
-* `ENABLE_TEST [ON|OFF]` - `[Default ON]` Standard unit tests (Requires the Catch2 testing library)
-* `ENABLE_INTEGRATION_TEST [ON|OFF]` - `[Default OFF]` Enable integration tests (Requires configured, running Vault)
+* `ENABLE_TEST [ON|OFF]` - `[Default ON]` Standard unit tests (Requires the
+Catch2 testing library)
+* `ENABLE_INTEGRATION_TEST [ON|OFF]` - `[Default OFF]` Enable integration tests
+(Requires configured, running Vault)
 * `ENABLE_COVERAGE [ON|OFF]` - `[Default OFF]` Enable gcov code coverage
 * `LINK_CURL [ON|OFF]` - `[Default OFF]` Link curl library when compiling
 
 ## Local Development
 
-This project uses a standard C++ development with CMake environment. Additionally, a running and configured instance of Vault is required to run the integration tests. This project contains scripts that will download Vault, configure it, and run it. You are of course welcome to use your own Vault instance, but you will need to use the configuration from the `script` folder for the tests to pass.
+This project uses a standard C++ development with CMake environment.
+Additionally, a running and configured instance of Vault is required to run the
+integration tests. This project contains scripts that will download Vault,
+configure it, and run it. You are of course welcome to use your own Vault
+instance, but you will need to use the configuration from the `script` folder
+for the tests to pass.
 
 ### Vault Setup
 
@@ -206,4 +229,8 @@ $ script/vault
 $ script/bootstrap
 ```
 
-This will ensure you have a working instance of Vault that will work with the integration tests. Note that this setup does not demonstrate a production worthy configuration and should only be used for reference or inside of this project. For you production Vault setup please consult the Hashicorp Vault best practices.
+This will ensure you have a working instance of Vault that will work with the
+integration tests. Note that this setup does not demonstrate a production
+worthy configuration and should only be used for reference or inside of this
+project. For you production Vault setup please consult the Hashicorp Vault best
+practices.

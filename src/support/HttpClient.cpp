@@ -1,10 +1,12 @@
 #include "VaultClient.h"
+#include <curl/curl.h>
 #include <utility>
 
 Vault::HttpClient::HttpClient(Vault::Config config)
     : config_(std::move(config)),
       errorCallback_([&]([[maybe_unused]] const std::string &err) {}),
-      responseErrorCallback_([&]([[maybe_unused]] const HttpResponse &err) {}) {}
+      responseErrorCallback_([&]([[maybe_unused]] const HttpResponse &err) {}) {
+}
 
 Vault::HttpClient::HttpClient(Vault::Config config,
                               HttpErrorCallback errorCallback,
@@ -129,9 +131,11 @@ std::optional<Vault::HttpResponse> Vault::HttpClient::executeRequest(
                             config_.getCaBundle().u8string().c_str());
     }
 
-    curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 1);
+    curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 1L);
+    curlWrapper.setOption(CURLOPT_SSL_VERIFYHOST, 1L);
   } else {
-    curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 0);
+    curlWrapper.setOption(CURLOPT_SSL_VERIFYPEER, 0L);
+    curlWrapper.setOption(CURLOPT_SSL_VERIFYHOST, 0L);
   }
 
   curlWrapper.setOption(CURLOPT_CONNECTTIMEOUT,
