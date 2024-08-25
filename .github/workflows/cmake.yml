@@ -8,7 +8,7 @@ env:
 jobs:
   gcc-build:
     name: GCC ${{ matrix.version }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     strategy:
       fail-fast: false
@@ -27,7 +27,7 @@ jobs:
 
     - name: Install compiler
       run: |
-        sudo add-apt-repository "deb http://dk.archive.ubuntu.com/ubuntu/ bionic main universe"
+        sudo add-apt-repository "deb http://dk.archive.ubuntu.com/ubuntu/ jammy main universe"
         sudo apt-get update
         sudo apt-get install -y g++-${{ matrix.version }} libbsd-dev uuid-dev
 
@@ -63,7 +63,7 @@ jobs:
 
   clang-build:
     name: Clang ${{ matrix.version }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     strategy:
       fail-fast: false
@@ -83,7 +83,7 @@ jobs:
     - name: Install compiler
       run: |
           curl -L https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-${{ matrix.version }} main"
+          sudo add-apt-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-${{ matrix.version }} main"
           sudo apt-get update
           sudo apt-get install -y clang-${{ matrix.version }} libstdc++-7-dev libbsd-dev uuid-dev
 
