@@ -1251,6 +1251,8 @@ public:
   std::optional<std::string> tidy(const Parameters &parameters) const;
   [[nodiscard]] std::optional<std::string>
   revokeCertificate(const Parameters &parameters) const;
+  [[nodiscard]] std::optional<std::string>
+  listRevokedCertificate();
 
 private:
   [[nodiscard]] Url getUrl(const Path &path) const;
