@@ -138,6 +138,10 @@ Vault::Pki::revokeCertificate(const Parameters &parameters) const {
   return HttpConsumer::post(client_, getUrl(Path{"revoke"}), parameters);
 }
 
+std::optional<std::string> Vault::Pki::listRevoked() const {
+  return HttpConsumer::list(client_, getUrl(Path{"certs/revoked"}));
+}
+
 Vault::Url Vault::Pki::getUrl(const Path &path) const {
   return client_.getUrl("/v1/" + secretMount_,
                         path.empty() ? path : Path{"/" + path});

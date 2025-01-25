@@ -25,13 +25,7 @@ void setup(const Vault::Pki &pkiAdmin) {
 }
 
 int main(void) {
-  char *rootTokenEnv = std::getenv("VAULT_ROOT_TOKEN");
-  if (!rootTokenEnv) {
-    std::cout << "The VAULT_ROOT_TOKEN environment variable must be set"
-              << std::endl;
-    exit(-1);
-  }
-  Vault::Token rootToken{rootTokenEnv};
+  Vault::Token rootToken{getEnv("VAULT_ROOT_TOKEN")};
   Vault::Client rootClient = getRootClient(rootToken);
   Vault::Sys::Mounts mountAdmin{rootClient};
   Vault::SecretMount mount{"pki"};
@@ -52,6 +46,28 @@ int main(void) {
       std::cout << data["private_key"] << std::endl;
     } else {
       std::cout << "Could not issue certificate" << std::endl;
+    }
+
+    auto certificates = pkiAdmin.listCertificates();
+    if (certificates) {
+      auto data = nlohmann::json::parse(certificates.value())["data"]["keys"];
+      std::cout << "Certificates" << std::endl;
+      for (auto &certificate : data) {
+        std::cout << certificate << std::endl;
+      }
+    } else {
+      std::cout << "Could not list certificates" << std::endl;
+    }
+
+    auto revoked = pkiAdmin.listRevoked();
+    if (revoked) {
+      auto data = nlohmann::json::parse(*revoked)["data"]["keys"];
+      std::cout << "Revoked certificates" << std::endl;
+      for (auto &certificate : data) {
+        std::cout << certificate << std::endl;
+      }
+    } else {
+      std::cout << "Could not list revoked certificates" << std::endl;
     }
   } else {
     std::cout << "Unable to authenticate to Vault" << std::endl;

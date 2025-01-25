@@ -15,4 +15,4 @@ clean:
 	rm -f example.o example
 
 vault:
-	docker run -p 8200:8200 vault
+	docker run -p 8200:8200 hashicorp/vault

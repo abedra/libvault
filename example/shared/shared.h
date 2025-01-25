@@ -170,3 +170,16 @@ disablePki(const Vault::Sys::Mounts &mountAdmin,
            const Vault::SecretMount &mount) {
   return mountAdmin.disable(mount);
 }
+
+template <typename T>
+inline T getEnv(const std::string &key, std::function<T(std::string)> f) {
+  auto value = std::getenv(key.c_str());
+  if (value == nullptr) {
+    throw std::runtime_error("Could not get " + key + " from environment");
+  }
+  return f(value);
+}
+
+inline std::string getEnv(const std::string &key) {
+  return getEnv<std::string>(key, [](std::string value) { return value; });
+}
