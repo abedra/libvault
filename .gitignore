@@ -14,3 +14,4 @@ venv
 *.gch
 example/**/example
 .cache
+compile_commands.json
