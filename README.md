@@ -225,7 +225,9 @@ for the tests to pass.
 Use the provided scripts to setup and run your Vault environment:
 
 ```shell script
-$ script/bootstrap
+cd docker && docker compose up --build
+# In another terminal
+script/bootstrap
 ```
 
 This will ensure you have a working instance of Vault that will work with the
